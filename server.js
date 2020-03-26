@@ -80,8 +80,8 @@ var TransactionSchema = mongoose.Schema({
 
 var Transaction = mongoose.model('Transaction', TransactionSchema);
 
-// Functions for database
-// Category functions
+// Database functions
+// Create functions
 function createCategory(name, callback)
 {
   var category = new Category({
@@ -103,112 +103,6 @@ function createCategory(name, callback)
 	});
 }
 
-function findCategory(search_params, search_result, exact, callback)
-{
-	if (exact == true)
-	{
-		Category.findOne(
-			search_params,
-			search_result,
-			function(err, docs) {
-				var result = null;
-
-				if (err)
-					console.log(err);
-				else if (docs === null)
-					console.log("Category does not exists!")
-				else
-					result = docs
-
-				callback(result);
-		});
-	}
-	else
-	{
-		Category.find(
-			search_params,
-			search_result,
-			function(err, docs) {
-				var result = null;
-
-				if (err)
-					console.log(err);
-				else if (docs === null)
-					console.log("Category does not exists!")
-				else
-					result = docs
-
-				callback(result);
-		});
-	}
-}
-
-
-function findCategoryMain(search_params, callback)
-{
-	if (Object.keys(search_params).length == 1)
-	{
-		if (Object.keys(search_params)[0] == "id")
-			findCategory({_id: search_params["id"]}, '_id name', true, function(result){callback(result)});
-		else if (Object.keys(search_params)[0] == "name")
-			findCategory({name: {$regex: search_params["name"]}}, '_id name', false, function(result){callback(result)});
-		else
-			console.log("Search param not recognized! Returning null...");
-	}
-	else if (Object.keys(search_params).length == 2)
-	{
-		if (("name" in search_params) || ("id" in search_params))
-			findCategory({_id: search_params["id"], name: search_params["name"]}, '_id name', true, function(result){callback(result)});
-		else
-			console.log("Search param not recognized! Returning null...");
-	}
-	else
-	{
-		result = null
-
-		console.log("Search param has wrong number of arguments! Returning null...");
-		callback(result);
-	}
-}
-
-function updateCategory(id, name, callback)
-{
-	Category.findOneAndUpdate(
-		{_id: id},
-		{name: name},
-		function(err, docs)
-    {
-      var result = null;
-
-      if (err)
-        console.log(err);
-			else
-				result = docs;
-
-      callback(result);
-    }
-	);
-}
-
-function deleteCategory(id, callback)
-{
-  Category.findOneAndDelete(
-    {_id: id},
-    function(err, docs)
-    {
-      var docs = null;
-
-      if (err)
-        console.log(err);
-			else
-				result = docs;
-
-      callback(result);
-    }
-  );
-}
-
-// Service functions
 function createService(category_id, username, password, name, address, details, callback)
 {
   var service = new Service({
@@ -236,88 +130,6 @@ function createService(category_id, username, password, name, address, details, 
  });
 }
 
-function findService(search_params, search_result, exact, callback)
-{
-	if (exact == true)
-	{
-		Service.findOne(
-			search_params,
-			search_result,
-			function(err, docs) {
-				var result = null;
-
-				if (err)
-					console.log(err);
-				else if (docs === null)
-					console.log("Service does not exists!")
-				else
-					result = docs
-
-				callback(result);
-		});
-	}
-	else
-	{
-		Service.find(
-			search_params,
-			search_result,
-			function(err, docs) {
-				var result = null;
-
-				if (err)
-					console.log(err);
-				else if (docs === null)
-					console.log("Service does not exists!")
-				else
-					result = docs
-
-				callback(result);
-		});
-	}
-}
-
-function updateService(id, category_id, username, password, name, address, details, callback)
-{
-	Service.findOneAndUpdate(
-		{_id: id},
-		{category_id: category_id,
-		 username: username,
-		 password: password,
-	   address: address,
-	   details: details},
-		function(err, docs)
-    {
-      var result = null;
-
-      if (err)
-        console.log(err);
-			else
-				result = docs;
-
-      callback(result);
-    }
-	);
-}
-
-function deleteService(id, callback)
-{
-	Service.findOneAndDelete(
-    {_id: id},
-    function(err, docs)
-    {
-      var docs = null;
-
-      if (err)
-        console.log(err);
-			else
-				result = docs;
-
-      callback(result);
-    }
-  );
-}
-
-// Review functions
 function createReview(service_id, review_date, rating, customer_id, customer_review, callback)
 {
   var review = new Review({
@@ -344,88 +156,6 @@ function createReview(service_id, review_date, rating, customer_id, customer_rev
  });
 }
 
-function findReview(search_params, search_result, exact, callback)
-{
-	if (exact == true)
-	{
-		Review.findOne(
-			search_params,
-			search_result,
-			function(err, docs) {
-				var result = null;
-
-				if (err)
-					console.log(err);
-				else if (docs === null)
-					console.log("Review does not exists!")
-				else
-					result = docs
-
-				callback(result);
-		});
-	}
-	else
-	{
-		Review.find(
-			search_params,
-			search_result,
-			function(err, docs) {
-				var result = null;
-
-				if (err)
-					console.log(err);
-				else if (docs === null)
-					console.log("Review does not exists!")
-				else
-					result = docs
-
-				callback(result);
-		});
-	}
-}
-
-function updateReview(id, service_id, review_date, rating, customer_id, customer_review, callback)
-{
-	Review.findOneAndUpdate(
-		{_id: id},
-		{service_id: service_id,
-     review_date: review_date,
-     rating: rating,
-     customer_id: customer_id,
-     customer_review: customer_review},
-		function(err, docs)
-    {
-      var result = null;
-
-      if (err)
-        console.log(err);
-			else
-				result = docs;
-
-      callback(result);
-    }
-	);
-}
-
-function deleteReview(id, callback)
-{
-	Review.findOneAndDelete(
-    {_id: id},
-    function(err, docs)
-    {
-      var docs = null;
-
-      if (err)
-        console.log(err);
-			else
-				result = docs;
-
-      callback(result);
-    }
-  );
-}
-
-// Customer functions
 function createCustomer(username, password, name, details, callback)
 {
   var customer = new Customer({
@@ -451,87 +181,6 @@ function createCustomer(username, password, name, details, callback)
  });
 }
 
-function findCustomer(search_params, search_result, exact, callback)
-{
-	if (exact == true)
-	{
-		Customer.findOne(
-			search_params,
-			search_result,
-			function(err, docs) {
-				var result = null;
-
-				if (err)
-					console.log(err);
-				else if (docs === null)
-					console.log("Customer does not exists!")
-				else
-					result = docs
-
-				callback(result);
-		});
-	}
-	else
-	{
-		Customer.find(
-			search_params,
-			search_result,
-			function(err, docs) {
-				var result = null;
-
-				if (err)
-					console.log(err);
-				else if (docs === null)
-					console.log("Customer does not exists!")
-				else
-					result = docs
-
-				callback(result);
-		});
-	}
-}
-
-function updateCustomer(id, username, password, name, details, callback)
-{
-	Customer.findOneAndUpdate(
-		{_id: id},
-		{username: username,
-     password: password,
-     name: name,
-     details: details},
-		function(err, docs)
-    {
-      var result = null;
-
-      if (err)
-        console.log(err);
-			else
-				result = docs;
-
-      callback(result);
-    }
-	);
-}
-
-function deleteCustomer(id, callback)
-{
-	Customer.findOneAndDelete(
-    {_id: id},
-    function(err, docs)
-    {
-      var docs = null;
-
-      if (err)
-        console.log(err);
-			else
-				result = docs;
-
-      callback(result);
-    }
-  );
-}
-
-// Customer functions
 function createBookmark(customer_id, service_id, callback)
 {
   var bookmark = new Bookmark({
@@ -555,85 +204,6 @@ function createBookmark(customer_id, service_id, callback)
  });
 }
 
-function findBookmark(search_params, search_result, exact, callback)
-{
-	if (exact == true)
-	{
-		Bookmark.findOne(
-			search_params,
-			search_result,
-			function(err, docs) {
-				var result = null;
-
-				if (err)
-					console.log(err);
-				else if (docs === null)
-					console.log("Bookmark does not exists!")
-				else
-					result = docs
-
-				callback(result);
-		});
-	}
-	else
-	{
-		Bookmark.find(
-			search_params,
-			search_result,
-			function(err, docs) {
-				var result = null;
-
-				if (err)
-					console.log(err);
-				else if (docs === null)
-					console.log("Bookmark does not exists!")
-				else
-					result = docs
-
-				callback(result);
-		});
-	}
-}
-
-function updateBookmark(id, customer_id, service_id, callback)
-{
-	Review.findOneAndUpdate(
-		{_id: id},
-		{customer_id: customer_id,
-     service_id: service_id},
-		function(err, docs)
-    {
-      var result = null;
-
-      if (err)
-        console.log(err);
-			else
-				result = docs;
-
-      callback(result);
-    }
-	);
-}
-
-function deleteBookmark(id, callback)
-{
-	Bookmark.findOneAndDelete(
-    {_id: id},
-    function(err, docs)
-    {
-      var docs = null;
-
-      if (err)
-        console.log(err);
-			else
-				result = docs;
-
-      callback(result);
-    }
-  );
-}
-
-// Customer functions
 function createTransaction(customer_id, service_id, transaction_date, details, isAccepted, callback)
 {
   var transcation = new Transaction({
@@ -659,44 +229,268 @@ function createTransaction(customer_id, service_id, transaction_date, details, i
  });
 }
 
-function findTransaction(search_params, search_result, exact, callback)
+// Find Functions
+function findCategory(search_params, sorting, callback)
 {
-	if (exact == true)
+	var search_obj = null;
+	var result_obj = null;
+	var sorter = null;
+
+	if (Object.keys(search_params).length == 1)
 	{
-		Transaction.findOne(
-			search_params,
-			search_result,
-			function(err, docs) {
-				var result = null;
+		if (Object.keys(search_params)[0] == "id")
+		{
+			search_obj = {_id: search_params["id"]};
+			result_obj = '_id name';
+		}
+		else if (Object.keys(search_params)[0] == "name")
+		{
+			search_obj = {name: {$regex: search_params["name"]}};
+			result_obj = '_id name';
+		}
+		else
+			console.log("Search param not recognized!");
+	}
+	else if (Object.keys(search_params).length == 2)
+	{
+		if (("name" in search_params) || ("id" in search_params))
+		{
+			search_obj = {_id: search_params["id"], name: search_params["name"]};
+			result_obj = '_id name';
+		}
+		else
+			console.log("Search param not recognized!");
+	}
+	else
+		console.log("Search param has wrong number of arguments!");
 
-				if (err)
-					console.log(err);
-				else if (docs === null)
-					console.log("Transaction does not exists!")
-				else
-					result = docs
+	if (search_obj == null || result_obj == null || sorting == null)
+	{
+		console.log("Null objects detected! Returning false...");
 
-				callback(result);
-		});
+		callback(false);
 	}
 	else
 	{
-		Transaction.find(
-			search_params,
-			search_result,
+		Category.find(
+			search_obj,
+			result_obj,
 			function(err, docs) {
 				var result = null;
 
 				if (err)
 					console.log(err);
 				else if (docs === null)
-					console.log("Transaction does not exists!")
+					console.log("Category does not exists!")
 				else
 					result = docs
 
 				callback(result);
-		});
+		}).sort(sorting);
 	}
+}
+
+function findService(search_params, search_result, sorting, callback)
+{
+	Service.find(search_params, search_result).populate("category_id").exec(
+		function(err, docs) {
+			var result = null;
+
+			if (err)
+				console.log(err);
+			else if (docs === null)
+				console.log("Service does not exists!")
+			else
+				result = docs
+
+			callback(result);
+	}).sort(sorting);
+}
+
+function findReview(search_params, search_result, sorting, callback)
+{
+	Review.find(
+		search_params,
+		search_result,
+		function(err, docs) {
+			var result = null;
+
+			if (err)
+				console.log(err);
+			else if (docs === null)
+				console.log("Review does not exists!")
+			else
+				result = docs
+
+			callback(result);
+	}).sort(sorting);
+}
+
+function findCustomer(search_params, search_result, sorting, callback)
+{
+	Customer.find(
+		search_params,
+		search_result,
+		function(err, docs) {
+			var result = null;
+
+			if (err)
+				console.log(err);
+			else if (docs === null)
+				console.log("Customer does not exists!")
+			else
+				result = docs
+
+			callback(result);
+	}).sort(sorting);
+}
+
+
+function findBookmark(search_params, search_result, sorting, callback)
+{
+	Bookmark.find(
+		search_params,
+		search_result,
+		function(err, docs) {
+			var result = null;
+
+			if (err)
+				console.log(err);
+			else if (docs === null)
+				console.log("Bookmark does not exists!")
+			else
+				result = docs
+
+			callback(result);
+	}).sort(sorting);
+}
+
+
+function findTransaction(search_params, search_result, sorting, callback)
+{
+	Transaction.find(
+		search_params,
+		search_result,
+		function(err, docs) {
+			var result = null;
+
+			if (err)
+				console.log(err);
+			else if (docs === null)
+				console.log("Transaction does not exists!")
+			else
+				result = docs
+
+			callback(result);
+	}).sort(sorting);
+}
+
+// Update functions
+function updateCategory(id, name, callback)
+{
+	Category.findOneAndUpdate(
+		{_id: id},
+		{name: name},
+		function(err, docs)
+    {
+      var result = null;
+
+      if (err)
+        console.log(err);
+			else
+				result = docs;
+
+      callback(result);
+    }
+	);
+}
+
+function updateService(id, category_id, username, password, name, address, details, callback)
+{
+	Service.findOneAndUpdate(
+		{_id: id},
+		{category_id: category_id,
+		 username: username,
+		 password: password,
+	   address: address,
+	   details: details},
+		function(err, docs)
+    {
+      var result = null;
+
+      if (err)
+        console.log(err);
+			else
+				result = docs;
+
+      callback(result);
+    }
+	);
+}
+
+function updateReview(id, service_id, review_date, rating, customer_id, customer_review, callback)
+{
+	Review.findOneAndUpdate(
+		{_id: id},
+		{service_id: service_id,
+     review_date: review_date,
+     rating: rating,
+     customer_id: customer_id,
+     customer_review: customer_review},
+		function(err, docs)
+    {
+      var result = null;
+
+      if (err)
+        console.log(err);
+			else
+				result = docs;
+
+      callback(result);
+    }
+	);
+}
+
+function updateCustomer(id, username, password, name, details, callback)
+{
+	Customer.findOneAndUpdate(
+		{_id: id},
+		{username: username,
+     password: password,
+     name: name,
+     details: details},
+		function(err, docs)
+    {
+      var result = null;
+
+      if (err)
+        console.log(err);
+			else
+				result = docs;
+
+      callback(result);
+    }
+	);
+}
+
+function updateBookmark(id, customer_id, service_id, callback)
+{
+	Review.findOneAndUpdate(
+		{_id: id},
+		{customer_id: customer_id,
+     service_id: service_id},
+		function(err, docs)
+    {
+      var result = null;
+
+      if (err)
+        console.log(err);
+			else
+				result = docs;
+
+      callback(result);
+    }
+	);
 }
 
 function updateTransaction(id, customer_id, service_id, transaction_date, details, isAccepted, callback)
@@ -721,6 +515,97 @@ function updateTransaction(id, customer_id, service_id, transaction_date, detail
 	);
 }
 
+// Delete functions
+function deleteCategory(id, callback)
+{
+  Category.findOneAndDelete(
+    {_id: id},
+    function(err, docs)
+    {
+      var docs = null;
+
+      if (err)
+        console.log(err);
+			else
+				result = docs;
+
+      callback(result);
+    }
+  );
+}
+
+function deleteService(id, callback)
+{
+	Service.findOneAndDelete(
+    {_id: id},
+    function(err, docs)
+    {
+      var docs = null;
+
+      if (err)
+        console.log(err);
+			else
+				result = docs;
+
+      callback(result);
+    }
+  );
+}
+
+function deleteReview(id, callback)
+{
+	Review.findOneAndDelete(
+    {_id: id},
+    function(err, docs)
+    {
+      var docs = null;
+
+      if (err)
+        console.log(err);
+			else
+				result = docs;
+
+      callback(result);
+    }
+  );
+}
+
+function deleteCustomer(id, callback)
+{
+	Customer.findOneAndDelete(
+    {_id: id},
+    function(err, docs)
+    {
+      var docs = null;
+
+      if (err)
+        console.log(err);
+			else
+				result = docs;
+
+      callback(result);
+    }
+  );
+}
+
+function deleteBookmark(id, callback)
+{
+	Bookmark.findOneAndDelete(
+    {_id: id},
+    function(err, docs)
+    {
+      var docs = null;
+
+      if (err)
+        console.log(err);
+			else
+				result = docs;
+
+      callback(result);
+    }
+  );
+}
+
 function deleteTransaction(id, callback)
 {
 	Transaction.findOneAndDelete(
@@ -739,6 +624,7 @@ function deleteTransaction(id, callback)
   );
 }
 
+// Server functions
 app.get('/', function(req, res)
 {
 });
