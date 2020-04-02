@@ -4,7 +4,6 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
-
 var app = express();
 
 // Initialize body parser
@@ -14,6 +13,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 // Connect to MongoDB
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
+//mongoose.connect('mongodb://admin:admin@localhost/csci3100');
 mongoose.connect('mongodb://localhost:27017/data');
 var db = mongoose.connection;
 
@@ -26,7 +26,15 @@ db.once('open', function ()
   console.log("Connection is open...");
 });
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('./route/index');
+
+// Database modules
+var category = require('./route/category.js');
+var review = require('./route/review.js');
+var service = require('./route/service.js');
+var bookmark = require('./route/bookmark.js');
+var customer = require('./route/customer.js');
+var transaction = require('./route/transaction.js');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -45,6 +53,14 @@ app.use(function(req,res,next){
 });
 
 app.use('/', indexRouter);
+
+// Handling database requests
+app.use('/category', category);
+app.use('/service', service);
+app.use('/transaction', transaction);
+app.use('/review', review);
+app.use('/bookmark', bookmark);
+app.use('/customer', customer);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
