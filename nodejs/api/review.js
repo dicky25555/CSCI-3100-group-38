@@ -1,3 +1,4 @@
+// haven't test
 var express = require('express');
 var router = express.Router();
 
@@ -39,19 +40,20 @@ router.post("/",function(req, res)
     res.send("Post parameters undefined");
 });
 
-router.get('/find', function(req, res)
+router.get('/', function(req, res)
 {
   // Assume sorting ascending date;
   var sort_params = {review_date: 1};
 
-  // Assume input is json. search service_id or customer_id, sortDate sortRating
-  // No input means show all
-  if (Object.keys(req.query).length === 0)
-    search_params = {};
-  else if (req.query["service_id"] !== undefined)
+  // Assume input is query. search service_id or customer_id, sortDate sortRating
+  if (req.query["service_id"] !== undefined)
+  {
     search_params = {service_id: req.query["service_id"]};
+  }
   else if (req.query["customer_id"] !== undefined)
+  {
     search_params = {customer_id: req.query["customer_id"]};
+  }
 
   if ((req.query["sortDate"] !== undefined) && (req.query["sortDate"] == "desc"))
     sort_params = {review_date: -1};
@@ -68,8 +70,8 @@ router.get('/find', function(req, res)
   {
     Review.find(search_params)
       .sort(sort_params)
-      .populate('customer_id')
-      .populate('service_id')
+      .populate('customer_id', '_id name details')
+      .populate('service_id', '_id name address details')
       .exec(
       function(err, docs) {
         if (err)
@@ -93,11 +95,11 @@ router.get('/find', function(req, res)
     res.send("Cannot Find! Not found!");
 });
 
-router.delete('/delete', function(req, res)
+router.delete('/:id', function(req, res)
 {
-  // Assume input is using query. id=id
-  if (req.query["id"] !== undefined)
-    var id = req.query["id"];
+  // Assume input is using url and data
+  if (req.params["id"] !== undefined)
+    var id = req.params["id"];
 
   if (id !== undefined)
   {
@@ -124,10 +126,10 @@ router.delete('/delete', function(req, res)
     );
   }
   else
-    res.send("Cannot Remove! Wrong Query!");
+    res.send("Cannot Remove! Wrong Body!");
 });
 
-router.put('/update', function(req, res)
+router.put('/', function(req, res)
 {
   // Assume the input in JSON. {id, service_id, review_date, rating, costumer_id, customer_review}
   var condition = (req.body["service_id"] !== undefined) && (req.body["review_date"] !== undefined);

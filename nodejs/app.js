@@ -17,6 +17,9 @@ var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/data');
 var db = mongoose.connection;
 
+// Encrypter
+global.crypto = require('crypto');
+
 // Execute on connection failure
 db.on('error', console.error.bind(console, 'Connection error:'));
 
@@ -26,15 +29,16 @@ db.once('open', function ()
   console.log("Connection is open...");
 });
 
-var indexRouter = require('./route/index');
+// Router modules
+var indexRouter = require('./routes/index');
 
-// Database modules
-var category = require('./route/category.js');
-var review = require('./route/review.js');
-var service = require('./route/service.js');
-var bookmark = require('./route/bookmark.js');
-var customer = require('./route/customer.js');
-var transaction = require('./route/transaction.js');
+// API modules
+var category = require('./api/category.js');
+var review = require('./api/review.js');
+var service = require('./api/service.js');
+var bookmark = require('./api/bookmark.js');
+var customer = require('./api/customer.js');
+var transaction = require('./api/transaction.js');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));

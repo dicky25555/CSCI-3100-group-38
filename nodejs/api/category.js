@@ -1,6 +1,4 @@
-/*  This route assumes all inputs (except post) to be in query
-    because of the little number of inputs, hence more compact  */
-
+// Completed!
 var express = require('express');
 var router = express.Router();
 
@@ -36,11 +34,11 @@ router.post('/', function(req, res)
     res.send("Post parameters undefined");
 });
 
-router.delete('/delete', function(req, res)
+router.delete('/:id', function(req, res)
 {
-  // Assume input is using query. id=id
-  if (req.query["id"] !== undefined)
-    var id = req.query["id"];
+  // Assume input is using url and data
+  if (req.params["id"] !== undefined)
+    var id = req.params["id"];
 
   if (id !== undefined)
   {
@@ -84,16 +82,16 @@ router.delete('/delete', function(req, res)
     });
   }
   else
-    res.send("Cannot Remove! Wrong Query!");
+    res.send("Cannot Remove! Wrong Body!");
 });
 
-router.put('/update', function(req, res)
+router.put('/:id', function(req, res)
 {
-  // Assume the input is using query. id=id&name=name
-  if ((req.query["id"] !== undefined) && (req.query["name"] !== undefined))
+  // Assume the input is using param and data
+  if ((req.params["id"] !== undefined) && (req.body["name"] !== undefined))
   {
-    var id = req.query["id"];
-    var name = req.query["name"];
+    var id = req.params["id"];
+    var name = req.body["name"];
 
     Category.findOneAndUpdate(
       {_id: id},
@@ -118,10 +116,10 @@ router.put('/update', function(req, res)
     });
   }
   else
-    res.send("Cannot Update! Wrong query!");
+    res.send("Cannot Update! Wrong URL!");
 });
 
-router.get('/find', function(req, res)
+router.get('/', function(req, res)
 {
   // Assume sorting ascending order name;
   var sort_params = {name: 1};
@@ -168,11 +166,6 @@ router.get('/find', function(req, res)
   }
   else
     res.send("Cannot Find! Not found!");
-});
-
-router.get('/', function(req, res)
-{
-  res.sendFile(__dirname + "\\testerhtml\\newCategory.html");
 });
 
 module.exports = router;

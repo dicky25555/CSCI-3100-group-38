@@ -1,3 +1,4 @@
+// haven't test
 var express = require('express');
 var router = express.Router();
 
@@ -34,11 +35,11 @@ router.post('/', function(req, res)
     res.send("Post parameters undefined");
 });
 
-router.delete('/delete', function(req, res)
+router.delete('/:id', function(req, res)
 {
-  // Assume input is using query. id=id
-  if (req.query["id"] !== undefined)
-    var id = req.query["id"];
+  // Assume input is using param and data
+  if (req.params["id"] !== undefined)
+    var id = req.params["id"];
 
   if (id !== undefined)
   {
@@ -65,10 +66,10 @@ router.delete('/delete', function(req, res)
     );
   }
   else
-    res.send("Cannot Remove! Wrong Query!");
+    res.send("Cannot Remove! Wrong Body!");
 });
 
-router.get('/find', function(req, res)
+router.get('/', function(req, res)
 {
   // Assume sorting ascending order name of service
   var sort_params = {"service_id.name": 1};
@@ -86,26 +87,26 @@ router.get('/find', function(req, res)
   if (search_params !== undefined)
   {
     Bookmark.find(search_params)
-        .populate("service_id")
-        .sort(sort_params)
-        .exec(
-        function(err, docs) {
-          if (err)
-          {
-            console.log(err);
-            res.send("Server: find error!");
-          }
-          else if (docs.length == 0)
-          {
-            console.log("Bookmark do not exist!");
-            res.send("Not found");
-          }
-          else
-          {
-            console.log("Found bookmark!");
-            res.send(docs);
-          }
-        });
+      .populate("service_id", '_id name address details')
+      .sort(sort_params)
+      .exec(
+      function(err, docs) {
+        if (err)
+        {
+          console.log(err);
+          res.send("Server: find error!");
+        }
+        else if (docs.length == 0)
+        {
+          console.log("Bookmark do not exist!");
+          res.send("Not found");
+        }
+        else
+        {
+          console.log("Found bookmark!");
+          res.send(docs);
+        }
+      });
   }
   else
     res.send("Cannot Find! Not found!");
