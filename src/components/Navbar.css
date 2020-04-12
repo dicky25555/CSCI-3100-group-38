@@ -1,0 +1,36 @@
+.Nav-bar{
+    background-color: #FFFFFF;
+}
+
+.Nav-bar a{
+    padding: 0px 12px;
+}
+.header-right{
+    float: right;
+}
+
+.header-left{
+    float: left;
+}
+.Navbar-button-login {
+    background: #FFFFFF;
+    /* Actionable Item */
+    color: #5318FB;
+    height: 30px;
+    width: 100px;
+    border: 1px solid #5318FB;
+    box-sizing: border-box;
+    border-radius: 6px;
+}
+
+.Navbar-button-signup {
+    font-family: Montserrat;
+    font-size: 15px;
+    align-items: center;
+    color: #FFFFFF;
+    height: 30px;
+    width: 100px;
+    border: 1px;
+    background: #5318FB;
+    border-radius: 6px;
+}
