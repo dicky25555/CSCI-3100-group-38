@@ -1,30 +1,35 @@
 // tested till delete
 var express = require('express');
+var mongoose = require('mongoose');
 var router = express.Router();
 
-var Customer = require('./models/Customer.js');
-var Review = require('./models/Review.js');
-var Bookmark = require('./models/Bookmark.js');
-var Chat = require('./models/Chat.js');
+var Service = mongoose.model('Service');
+var Review = mongoose.model('Review');
+var Bookmark = mongoose.model('Bookmark');
+var Chat = mongoose.model('Chat');
 
 router.post('/', function(req, res)
 {
-  // Assume the input {username, password, name, details} using POST
+  // Assume the input {username, password, category_id, name, address, details} using POST
   var condition = (req.body["username"] !== undefined) && (req.body["password"] !== undefined);
+  condition = condition && (req.body["category_id"] !== undefined);
   condition = condition && (req.body["name"] !== undefined);
+  condition = condition && (req.body["address"] !== undefined);
   condition = condition && (req.body["details"] !== undefined);
 
   if (condition)
   {
-    var customer = new Customer({
-        username: req.body["username"],
-        name: req.body["name"],
-        details: req.body["details"]
+    var service = new Service({
+      category_id: req.body["category_id"],
+      username: req.body["username"],
+      name: req.body["name"],
+      address: req.body["address"],
+      details: req.body["details"]
     });
 
-    customer.setPassword(req.body["password"]);
+    service.setPassword(req.body["password"]);
 
-    customer.save(function(err) {
+    service.save(function(err) {
       if (err)
       {
         console.log(err);
@@ -53,7 +58,7 @@ router.delete('/:id', function(req, res)
   if (id !== undefined)
   {
     Review.deleteMany(
-      {customer_id: id},
+      {service_id: id},
       function(err)
       {
         if (err)
@@ -66,7 +71,7 @@ router.delete('/:id', function(req, res)
           console.log("Deleted related reviews!");
 
           Bookmark.deleteMany(
-            {customer_id: id},
+            {service_id: id},
             function(err)
             {
               if (err)
@@ -79,7 +84,7 @@ router.delete('/:id', function(req, res)
                 console.log("Deleted related bookmarks!");
 
                 Chat.deleteMany(
-                  {customer_id: id},
+                  {service_id: id},
                   function(err)
                   {
                     if (err)
@@ -91,7 +96,7 @@ router.delete('/:id', function(req, res)
                     {
                       console.log("Deleted related chats!");
 
-                      Customer.findOneAndDelete(
+                      Service.findOneAndDelete(
                         {_id: id},
                         function(err, docs)
                         {
@@ -102,13 +107,13 @@ router.delete('/:id', function(req, res)
                           }
                           else if (docs === null)
                           {
-                            console.log("Customer does not exist!");
+                            console.log("Service does not exist!");
                             res.send("Not found");
                           }
                           else
-                            console.log("Deleted customer!");
-                    });
-                  }
+                            console.log("Deleted service!");
+                      });
+                    }
                 });
               }
           });
@@ -130,16 +135,15 @@ router.get('/', function(req, res)
 
   if (search_params !== undefined)
   {
-    Customer.findOne(
-      search_params,
-      'username name details',
-      function(err, doc) {
+    Service.findOne(search_params, 'username category_id name address details')
+      .populate('category_id')
+      .exec(function(err, doc) {
         if (err)
         {
           console.log(err);
           res.send("Server: find error!");
         }
-        else if (doc == null)
+        else if (doc.length == 0)
         {
           console.log("User does not exist!");
           res.send("Not found");
@@ -160,13 +164,13 @@ router.get('/', function(req, res)
 // either update passord only, or update data
 router.put('/', function(req, res)
 {
-  // Assume the input in JSON. {username, name, details} or {username, password}
+  // Assume the input in JSON. {username, category_id, name, details, address} or {username, password}
   if (req.body["username"] !== undefined)
     search_param = {username: req.body["username"]};
 
-  if ((req.body["name"] !== undefined) && (req.body["details"] !== undefined))
+  if ((req.body["name"] !== undefined) && (req.body["details"] !== undefined) && (req.body["category_id"] !== undefined) && (req.body["address"] !== undefined))
   {
-    update_params = {name: req.body["name"], details: req.body["details"]};
+    update_params = {name: req.body["name"], details: req.body["details"], category_id: req.body["category_id"], address: req.body["address"]};
   }
   else if (req.body["password"] !== undefined)
   {
@@ -178,7 +182,7 @@ router.put('/', function(req, res)
 
   if ((search_param !== undefined) && (update_params !== undefined))
   {
-    Customer.findOneAndUpdate(
+    Service.findOneAndUpdate(
       search_param,
       update_params,
       function(err, doc)
@@ -188,9 +192,9 @@ router.put('/', function(req, res)
           console.log(err);
           res.send("Server: update error!");
         }
-        else if (doc == null)
+        else if (doc === null)
         {
-          console.log("User does not exist!");
+          console.log("Service does not exist!");
           res.send("Not found");
         }
         else
@@ -198,10 +202,12 @@ router.put('/', function(req, res)
           var undo = {
             username: doc.username,
             name: doc.name,
-            details: doc.details
+            details: doc.details,
+            address: doc.address,
+            category_id: doc.category_id
           };
 
-          console.log("Updated user!");
+          console.log("Updated service!");
           res.send(undo);
         }
       }

@@ -22,5 +22,3 @@ CustomerSchema.methods.validatePassword = function(pwd)
 };
 
 var Customer = mongoose.model('Customer', CustomerSchema);
-
-module.exports = Customer;

@@ -1,9 +1,10 @@
 // Completed! Havent test delete with service
 var express = require('express');
+var mongoose = require('mongoose');
 var router = express.Router();
 
-var Category = require('./models/Category.js');
-var Service = require('./models/Service.js');
+var Category = mongoose.model('Category');
+var Service = mongoose.model('Service');
 
 router.post('/', function(req, res)
 {

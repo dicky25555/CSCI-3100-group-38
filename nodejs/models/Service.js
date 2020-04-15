@@ -24,5 +24,3 @@ ServiceSchema.methods.validatePassword = function(pwd)
 };
 
 var Service = mongoose.model('Service', ServiceSchema);
-
-module.exports = Service;

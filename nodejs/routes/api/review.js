@@ -1,8 +1,9 @@
 // Completed!
 var express = require('express');
+var mongoose = require('mongoose');
 var router = express.Router();
 
-var Review = require('./models/Review.js');
+var Review = mongoose.model('Review');
 
 router.post("/",function(req, res)
 {

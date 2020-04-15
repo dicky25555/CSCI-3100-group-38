@@ -1,8 +1,9 @@
 // tested!
 var express = require('express');
+var mongoose = require('mongoose');
 var router = express.Router();
 
-var Bookmark = require('./models/Bookmark.js');
+var Bookmark = mongoose.model('Bookmark');
 
 router.post('/', function(req, res)
 {

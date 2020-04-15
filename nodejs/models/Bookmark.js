@@ -7,5 +7,3 @@ var BookmarkSchema = mongoose.Schema({
 });
 
 var Bookmark = mongoose.model('Bookmark', BookmarkSchema);
-
-module.exports = Bookmark;

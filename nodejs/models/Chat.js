@@ -9,5 +9,3 @@ var ChatSchema = mongoose.Schema({
 });
 
 var Chat = mongoose.model('Chat', ChatSchema);
-
-module.exports = Chat;

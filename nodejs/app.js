@@ -30,16 +30,16 @@ db.once('open', function ()
   console.log("Connection is open...");
 });
 
+// Models
+require('./models/Customer.js');
+require('./models/Service.js');
+require('./models/Category.js');
+require('./models/Chat.js');
+require('./models/Bookmark.js');
+require('./models/Review.js');
+
 // Router modules
 var indexRouter = require('./routes/index');
-
-// API modules
-var category = require('./api/category.js');
-var review = require('./api/review.js');
-var service = require('./api/service.js');
-var bookmark = require('./api/bookmark.js');
-var customer = require('./api/customer.js');
-var chat = require('./api/chat.js');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -59,13 +59,7 @@ app.use(function(req,res,next){
 
 app.use('/', indexRouter);
 
-// Handling database requests
-app.use('/category', category);
-app.use('/service', service);
-app.use('/review', review);
-app.use('/bookmark', bookmark);
-app.use('/customer', customer);
-app.use('/chat', chat);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -6,5 +6,3 @@ var CategorySchema = mongoose.Schema({
 });
 
 var Category = mongoose.model('Category', CategorySchema);
-
-module.exports = Category;

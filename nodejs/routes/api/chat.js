@@ -1,9 +1,10 @@
 // Completed!
 // Assume no updating chat (obviously)
 var express = require('express');
+var mongoose = require('mongoose');
 var router = express.Router();
 
-var Chat = require('./models/Chat.js')
+var Chat = mongoose.model('Chat');
 
 router.post('/', function(req, res)
 {
