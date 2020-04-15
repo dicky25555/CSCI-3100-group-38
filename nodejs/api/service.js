@@ -1,8 +1,11 @@
-// Logical problems in deleting, haven't develop authentication, haven't test
+// tested till delete
 var express = require('express');
 var router = express.Router();
 
 var Service = require('./models/Service.js');
+var Review = require('./models/Review.js');
+var Bookmark = require('./models/Bookmark.js');
+var Chat = require('./models/Chat.js');
 
 router.post('/', function(req, res)
 {
@@ -79,22 +82,37 @@ router.delete('/:id', function(req, res)
               {
                 console.log("Deleted related bookmarks!");
 
-                Service.findOneAndDelete(
-                  {_id: id},
-                  function(err, docs)
+                Chat.deleteMany(
+                  {service_id: id},
+                  function(err)
                   {
                     if (err)
                     {
                       console.log(err);
                       res.send("Server: delete error!");
                     }
-                    else if (docs === null)
-                    {
-                      console.log("Customer does not exist!");
-                      res.send("Not found");
-                    }
                     else
-                      console.log("Deleted customer!");
+                    {
+                      console.log("Deleted related chats!");
+
+                      Service.findOneAndDelete(
+                        {_id: id},
+                        function(err, docs)
+                        {
+                          if (err)
+                          {
+                            console.log(err);
+                            res.send("Server: delete error!");
+                          }
+                          else if (docs === null)
+                          {
+                            console.log("Service does not exist!");
+                            res.send("Not found");
+                          }
+                          else
+                            console.log("Deleted service!");
+                      });
+                    }
                 });
               }
           });
@@ -145,13 +163,13 @@ router.get('/', function(req, res)
 // either update passord only, or update data
 router.put('/', function(req, res)
 {
-  // Assume the input in JSON. {username, category_id, name, details} or {username, password}
+  // Assume the input in JSON. {username, category_id, name, details, address} or {username, password}
   if (req.body["username"] !== undefined)
     search_param = {username: req.body["username"]};
 
-  if ((req.body["name"] !== undefined) && (req.body["details"] !== undefined) && (req.body["category_id"] !== undefined))
+  if ((req.body["name"] !== undefined) && (req.body["details"] !== undefined) && (req.body["category_id"] !== undefined) && (req.body["address"] !== undefined))
   {
-    update_params = {name: req.body["name"], details: req.body["details"], category_id: req.body["category_id"]};
+    update_params = {name: req.body["name"], details: req.body["details"], category_id: req.body["category_id"], address: req.body["address"]};
   }
   else if (req.body["password"] !== undefined)
   {
@@ -161,27 +179,35 @@ router.put('/', function(req, res)
     update_params = {salt: salt, hash: hash};
   }
 
-  if ((search_param !== undefined) && (update_param !== undefined))
+  if ((search_param !== undefined) && (update_params !== undefined))
   {
     Service.findOneAndUpdate(
       search_param,
       update_params,
-      function(err, docs)
+      function(err, doc)
       {
-        if (err, docs)
+        if (err)
         {
           console.log(err);
           res.send("Server: update error!");
         }
-        else if (docs === null)
+        else if (doc === null)
         {
-          console.log("Review does not exist!");
+          console.log("Service does not exist!");
           res.send("Not found");
         }
         else
         {
-          console.log("Updated review!");
-          res.send(docs);
+          var undo = {
+            username: doc.username,
+            name: doc.name,
+            details: doc.details,
+            address: doc.address,
+            category_id: doc.category_id
+          };
+
+          console.log("Updated service!");
+          res.send(undo);
         }
       }
     );

@@ -1,4 +1,4 @@
-// haven't test
+// Completed!
 var express = require('express');
 var router = express.Router();
 
@@ -7,7 +7,7 @@ var Review = require('./models/Review.js');
 router.post("/",function(req, res)
 {
   // Assume the input {service_id, review_date, rating, costumer_id, customer_review} using POST
-  var condition = (req.body["service_id"] !== undefined) && (req.body["review_date"] !== undefined);
+  var condition = (req.body["service_id"] !== undefined);
   condition = condition && (req.body["rating"] !== undefined);
   condition = condition && (req.body["customer_id"] !== undefined);
   condition = condition && (req.body["customer_review"] !== undefined);
@@ -16,7 +16,6 @@ router.post("/",function(req, res)
   {
     var review = new Review({
       service_id: req.body["service_id"],
-      review_date: req.body["review_date"],
       rating: req.body["rating"],
       customer_id: req.body["customer_id"],
       customer_review: req.body["customer_review"]
@@ -47,13 +46,9 @@ router.get('/', function(req, res)
 
   // Assume input is query. search service_id or customer_id, sortDate sortRating
   if (req.query["service_id"] !== undefined)
-  {
     search_params = {service_id: req.query["service_id"]};
-  }
   else if (req.query["customer_id"] !== undefined)
-  {
     search_params = {customer_id: req.query["customer_id"]};
-  }
 
   if ((req.query["sortDate"] !== undefined) && (req.query["sortDate"] == "desc"))
     sort_params = {review_date: -1};
@@ -131,10 +126,8 @@ router.delete('/:id', function(req, res)
 
 router.put('/', function(req, res)
 {
-  // Assume the input in JSON. {id, service_id, review_date, rating, costumer_id, customer_review}
-  var condition = (req.body["service_id"] !== undefined) && (req.body["review_date"] !== undefined);
-  condition = condition && (req.body["rating"] !== undefined);
-  condition = condition && (req.body["customer_id"] !== undefined);
+  // Assume the input in JSON. {id, customer_review, rating}
+  var condition = (req.body["rating"] !== undefined);
   condition = condition && (req.body["customer_review"] !== undefined);
   condition = condition && (req.body["id"] !== undefined);
 
@@ -142,10 +135,8 @@ router.put('/', function(req, res)
   {
     Review.findOneAndUpdate(
       {_id: req.body["id"]},
-      {service_id: req.body["service_id"],
-        review_date: req.body["review_date"],
+      {review_date: Date.now(),
         rating: req.body["rating"],
-        customer_id: req.body["customer_id"],
         customer_review: req.body["customer_review"]},
       function(err, docs)
       {

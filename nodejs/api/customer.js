@@ -1,11 +1,11 @@
-// Logical problems in deleting, haven't develop authentication
+// tested till delete
 var express = require('express');
 var router = express.Router();
 
 var Customer = require('./models/Customer.js');
-var Transaction = require('./models/Transaction.js');
 var Review = require('./models/Review.js');
 var Bookmark = require('./models/Bookmark.js');
+var Chat = require('./models/Chat.js');
 
 router.post('/', function(req, res)
 {
@@ -78,22 +78,37 @@ router.delete('/:id', function(req, res)
               {
                 console.log("Deleted related bookmarks!");
 
-                Customer.findOneAndDelete(
-                  {_id: id},
-                  function(err, docs)
+                Chat.deleteMany(
+                  {customer_id: id},
+                  function(err)
                   {
                     if (err)
                     {
                       console.log(err);
                       res.send("Server: delete error!");
                     }
-                    else if (docs === null)
-                    {
-                      console.log("Customer does not exist!");
-                      res.send("Not found");
-                    }
                     else
-                      console.log("Deleted customer!");
+                    {
+                      console.log("Deleted related chats!");
+
+                      Customer.findOneAndDelete(
+                        {_id: id},
+                        function(err, docs)
+                        {
+                          if (err)
+                          {
+                            console.log(err);
+                            res.send("Server: delete error!");
+                          }
+                          else if (docs === null)
+                          {
+                            console.log("Customer does not exist!");
+                            res.send("Not found");
+                          }
+                          else
+                            console.log("Deleted customer!");
+                    });
+                  }
                 });
               }
           });
@@ -124,7 +139,7 @@ router.get('/', function(req, res)
           console.log(err);
           res.send("Server: find error!");
         }
-        else if (doc.length == 0)
+        else if (doc == null)
         {
           console.log("User does not exist!");
           res.send("Not found");
@@ -166,22 +181,28 @@ router.put('/', function(req, res)
     Customer.findOneAndUpdate(
       search_param,
       update_params,
-      function(err, docs)
+      function(err, doc)
       {
-        if (err, docs)
+        if (err)
         {
           console.log(err);
           res.send("Server: update error!");
         }
-        else if (docs === null)
+        else if (doc == null)
         {
           console.log("User does not exist!");
           res.send("Not found");
         }
         else
         {
+          var undo = {
+            username: doc.username,
+            name: doc.name,
+            details: doc.details
+          };
+
           console.log("Updated user!");
-          res.send(docs);
+          res.send(undo);
         }
       }
     );

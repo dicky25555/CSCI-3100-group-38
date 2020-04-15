@@ -1,4 +1,4 @@
-// haven't test
+// tested!
 var express = require('express');
 var router = express.Router();
 
@@ -75,10 +75,7 @@ router.get('/', function(req, res)
   var sort_params = {"service_id.name": 1};
 
   // Assume input is query. id=id or id=id&sortService=desc
-  // If no query, just send everything
-  if (Object.keys(req.query).length === 0)
-    search_params = {};
-  else if (req.query["customer_id"] !== undefined)
+  if (req.query["customer_id"] !== undefined)
     search_params = {customer_id: req.query["customer_id"]};
 
   if ((req.query["sortService"] !== undefined) && (req.query["sortService"] == "desc"))

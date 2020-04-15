@@ -1,4 +1,4 @@
-// Completed!
+// Completed! Havent test delete with service
 var express = require('express');
 var router = express.Router();
 
@@ -126,7 +126,7 @@ router.get('/', function(req, res)
 
   // Assume input is query. id=id or name=name or name=name&exact=false
   // If no query, just send everything
-  if (Object.keys(req.query).length === 0)
+  if ((Object.keys(req.query).length === 0) || ((Object.keys(req.query).length === 1) && (req.query["sortName"] !== undefined)))
     search_params = {};
   else if (req.query["id"] !== undefined)
     search_params = {_id: req.query["id"]};
@@ -136,10 +136,10 @@ router.get('/', function(req, res)
       search_params = {name: {$regex: req.query["name"]}};
     else
       search_params = {name: req.query["name"]};
-
-    if ((req.query["sortName"] !== undefined) && (req.query["sortName"] == "desc"))
-      sort_params = {name: -1};
   }
+
+  if ((req.query["sortName"] !== undefined) && (req.query["sortName"] == "desc"))
+    sort_params = {name: -1};
 
   if (search_params !== undefined)
   {

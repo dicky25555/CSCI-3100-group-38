@@ -1,3 +1,4 @@
+// NEED TO AUTHENTICATE - NEED TO MODIFY GET METHOD FOR ALL API
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
@@ -13,8 +14,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 // Connect to MongoDB
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
-//mongoose.connect('mongodb://admin:admin@localhost/csci3100');
-mongoose.connect('mongodb://localhost:27017/data');
+mongoose.connect('mongodb://admin:admin@localhost/csci3100');
+//mongoose.connect('mongodb://localhost:27017/data');
 var db = mongoose.connection;
 
 // Encrypter
@@ -38,7 +39,7 @@ var review = require('./api/review.js');
 var service = require('./api/service.js');
 var bookmark = require('./api/bookmark.js');
 var customer = require('./api/customer.js');
-var transaction = require('./api/transaction.js');
+var chat = require('./api/chat.js');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -61,10 +62,10 @@ app.use('/', indexRouter);
 // Handling database requests
 app.use('/category', category);
 app.use('/service', service);
-app.use('/transaction', transaction);
 app.use('/review', review);
 app.use('/bookmark', bookmark);
 app.use('/customer', customer);
+app.use('/chat', chat);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
