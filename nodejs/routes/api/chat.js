@@ -3,22 +3,39 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
+var auth = require('../auth');
 
 var Chat = mongoose.model('Chat');
 
-router.post('/', function(req, res)
+router.post('/', auth.required, function(req, res)
 {
-  // Assume the input using POST
-  var condition = (req.body["service_id"] !== undefined) && (req.body["customer_id"] !== undefined);
-  condition = condition && (req.body["content"] !== undefined);
+  var user_id = req.user.id;
+  var valid = true;
 
-  if (condition)
+  if (req.user.status == 'C')
   {
-    var chat = new Chat({
-        service_id: req.body["service_id"],
-        customer_id: req.body["customer_id"],
-        content: req.body["content"]
-    });
+    add_params = {customer_id: user_id};
+
+    if (req.body["service_id"] !== undefined)
+      addparams.service_id = req.body["service_id"];
+    else
+      valid = false;
+  }
+  else if (req.user.status == 'S')
+  {
+    add_params = {service_id: user_id};
+
+    if (req.body["customer_id"] !== undefined)
+      addparams.customer_id = req.body["customer_id"];
+    else
+      valid = false;
+  }
+
+  if ((req.body["content"] !== undefined) && valid)
+  {
+    add_params.content = req.body["content"];
+
+    var chat = new Chat({add_params});
 
     chat.save(function(err) {
         if (err)
@@ -38,16 +55,22 @@ router.post('/', function(req, res)
     res.send("Post parameters undefined");
 });
 
-router.delete('/:id', function(req, res)
+router.delete('/:id', auth.required, function(req, res)
 {
-  // Assume input is using url and data
-  if (req.params["id"] !== undefined)
-    var id = req.params["id"];
+  var user_id = req.user.id;
 
-  if (id !== undefined)
+  if (req.params["id"] !== undefined)
+    search_params = {_id: req.params["id"]};
+
+  if (req.user.status == 'C')
+    search_params.customer_id = user_id;
+  else if (req.user.status == 'S')
+    search_params.service_id = user_id;
+
+  if (req.params["id"] !== undefined)
   {
     Chat.findOneAndDelete(
-      {_id: id},
+      search_params,
       function(err, docs)
       {
           if (err)
@@ -71,16 +94,17 @@ router.delete('/:id', function(req, res)
     res.send("Cannot Remove! Wrong Body!");
 });
 
-router.get('/', function(req, res)
+router.get('/', auth.required, function(req, res)
 {
+  var user_id = req.user.id;
+
   // Sort ascending time
   sort_params = {date: 1};
 
-  // Assume input is query. service_id=service_id or customer_id=customer_id
-  if (req.query["service_id"] !== undefined)
-    search_params = {service_id: req.query["service_id"]};
-  else if (req.query["customer_id"] !== undefined)
-    search_params = {customer_id: req.query["customer_id"]};
+  if (req.user.status == 'C')
+    search_params = {customer_id: user_id};
+  else if (req.user.status == 'S')
+    search_params = {service_id: user_id};
 
   if (search_params !== undefined)
   {

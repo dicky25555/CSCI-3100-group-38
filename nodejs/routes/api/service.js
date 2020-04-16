@@ -2,13 +2,15 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
+var auth = require('../auth');
+var passport = require('passport');
 
 var Service = mongoose.model('Service');
 var Review = mongoose.model('Review');
 var Bookmark = mongoose.model('Bookmark');
 var Chat = mongoose.model('Chat');
 
-router.post('/', function(req, res)
+router.post('/signup', auth.optional, function(req, res)
 {
   // Assume the input {username, password, category_id, name, address, details} using POST
   var condition = (req.body["username"] !== undefined) && (req.body["password"] !== undefined);
@@ -37,9 +39,9 @@ router.post('/', function(req, res)
       }
       else
       {
-        console.log("Created new customer!");
+        console.log("Created new service!");
         res.status(201);
-        res.send("Created new customer!");
+        res.send("Created new service!");
       }
     });
   }
@@ -47,13 +49,23 @@ router.post('/', function(req, res)
     res.send("Post parameters undefined");
 });
 
+// Login post
+router.post('/login', auth.optional, passport.authenticate('local-service', {}), function(req, res){
+  res.send(req.isAuthenticated());
+});
+
+// Logout post
+router.post('/logout', auth.required, function(req, res)
+{
+  req.logout();
+  res.send(true);
+});
+
 // NOT FINISHED - for now delete other than transaction
 // Need auth first - option to delete account of self
-router.delete('/:id', function(req, res)
+router.delete('/', auth.required, auth.service, function(req, res)
 {
-  // Assume input is using url
-  if (req.params["id"] !== undefined)
-    var id = req.params["id"];
+  var id = req.user.id;
 
   if (id !== undefined)
   {
@@ -124,14 +136,10 @@ router.delete('/:id', function(req, res)
     res.send("Cannot Remove! Wrong Body!");
 });
 
-// Need auth first - for getting personal info of self
-router.get('/', function(req, res)
+router.get('/profile', auth.required, auth.service, function(req, res)
 {
-  // Assume input is query. search id or username
-  if (req.query["id"] !== undefined)
-    search_params = {_id: req.query["id"]};
-  else if (req.query["username"] !== undefined)
-    search_params = {username: req.query["username"]};
+  var id = req.user.id;
+  var search_params = {_id: id};
 
   if (search_params !== undefined)
   {
@@ -159,14 +167,58 @@ router.get('/', function(req, res)
     res.send("Cannot Find! Not found!");
 });
 
-// Need auth first - for updating personal info of self
+router.get('/', function(req, res)
+{
+  // Assume sorting ascending date;
+  var sort_params = {name: 1};
+  var search_params = {};
+
+  // Assume input is query. search service_id or customer_id, sortDate sortRating
+  if (req.query["name"] !== undefined)
+    search_params.name = req.query["service_id"];
+
+  if (req.query["address"] !== undefined)
+    search_params.address = req.query["address"];
+
+  if (req.query["details"] !== undefined)
+    search_params.details = req.query["details"];
+
+  if ((req.query["sortName"] !== undefined) && (req.query["sortName"] == "desc"))
+    sort_params = {name: -1};
+
+  if (search_params !== undefined)
+  {
+    Service.findOne(search_params, 'username category_id name address details')
+      .populate('category_id')
+      .sort(sort_params)
+      .exec(function(err, doc) {
+        if (err)
+        {
+          console.log(err);
+          res.send("Server: find error!");
+        }
+        else if (doc.length == 0)
+        {
+          console.log("User does not exist!");
+          res.send("Not found");
+        }
+        else
+        {
+          console.log("Found user!");
+          res.send(doc);
+        }
+      });
+  }
+  else
+    res.send("Cannot Find! Not found!");
+});
+
 // CANNOT UPDATE USERNAME
 // either update passord only, or update data
-router.put('/', function(req, res)
+router.put('/', auth.required, auth.service, function(req, res)
 {
-  // Assume the input in JSON. {username, category_id, name, details, address} or {username, password}
-  if (req.body["username"] !== undefined)
-    search_param = {username: req.body["username"]};
+  var id = req.user.id;
+  search_param = {_id: id};
 
   if ((req.body["name"] !== undefined) && (req.body["details"] !== undefined) && (req.body["category_id"] !== undefined) && (req.body["address"] !== undefined))
   {

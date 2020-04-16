@@ -2,13 +2,16 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
+var auth = require('../auth');
+var passport = require('passport');
 
 var Customer = mongoose.model('Customer');
 var Review = mongoose.model('Review');
 var Bookmark = mongoose.model('Bookmark');
 var Chat = mongoose.model('Chat');
 
-router.post('/', function(req, res)
+// Register post
+router.post('/signup', auth.optional, function(req, res)
 {
   // Assume the input {username, password, name, details} using POST
   var condition = (req.body["username"] !== undefined) && (req.body["password"] !== undefined);
@@ -43,13 +46,22 @@ router.post('/', function(req, res)
     res.send("Post parameters undefined");
 });
 
-// NOT FINISHED - for now delete other than transaction
-// Need auth first - option to delete account of self
-router.delete('/:id', function(req, res)
+// Login post
+router.post('/login', auth.optional, passport.authenticate('local-customer', {}), function(req, res){
+  res.send(req.isAuthenticated());
+});
+
+// Logout post
+router.post('/logout', auth.required, function(req, res)
 {
-  // Assume input is using url
-  if (req.params["id"] !== undefined)
-    var id = req.params["id"];
+  req.logout();
+  res.send(true);
+});
+
+// Delete self and related properties
+router.delete('/', auth.required, auth.customer, function(req, res)
+{
+  var id = req.user.id;
 
   if (id !== undefined)
   {
@@ -107,7 +119,10 @@ router.delete('/:id', function(req, res)
                             res.send("Not found");
                           }
                           else
-                            console.log("Deleted customer!");
+                          {
+                            req.logout();
+                            res.send();
+                          }
                     });
                   }
                 });
@@ -121,13 +136,10 @@ router.delete('/:id', function(req, res)
 });
 
 // Need auth first - for getting personal info of self
-router.get('/', function(req, res)
+router.get('/profile', auth.required, auth.customer, function(req, res)
 {
-  // Assume input is query. search id or username
-  if (req.query["id"] !== undefined)
-    search_params = {_id: req.query["id"]};
-  else if (req.query["username"] !== undefined)
-    search_params = {username: req.query["username"]};
+  var id = req.user.id;
+  search_params = {_id: id};
 
   if (search_params !== undefined)
   {
@@ -159,11 +171,10 @@ router.get('/', function(req, res)
 // Need auth first - for updating personal info of self
 // CANNOT UPDATE USERNAME
 // either update passord only, or update data
-router.put('/', function(req, res)
+router.put('/', auth.required, auth.customer, function(req, res)
 {
-  // Assume the input in JSON. {username, name, details} or {username, password}
-  if (req.body["username"] !== undefined)
-    search_param = {username: req.body["username"]};
+  var id = req.user.id;
+  search_params = {_id: id};
 
   if ((req.body["name"] !== undefined) && (req.body["details"] !== undefined))
   {

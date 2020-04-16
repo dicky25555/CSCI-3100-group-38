@@ -6,6 +6,7 @@ var router = express.Router();
 var Category = mongoose.model('Category');
 var Service = mongoose.model('Service');
 
+// What to do with this?
 router.post('/', function(req, res)
 {
   // Assume the input {name: name} using POST
@@ -35,6 +36,7 @@ router.post('/', function(req, res)
     res.send("Post parameters undefined");
 });
 
+// What to do with this?
 router.delete('/:id', function(req, res)
 {
   // Assume input is using url and data

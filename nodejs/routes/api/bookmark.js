@@ -2,15 +2,16 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
+var auth = require('../auth');
 
 var Bookmark = mongoose.model('Bookmark');
 
-router.post('/', function(req, res)
+router.post('/', auth.required, auth.customer, function(req, res)
 {
   // Assume the input {service_id, customer_id} using POST
-  if ((req.body["service_id"] !== undefined) && (req.body["customer_id"] !== undefined))
+  if (req.body["customer_id"] !== undefined)
   {
-    var customer_id = req.body["customer_id"];
+    var customer_id = req.user.id;
     var service_id = req.body["service_id"];
 
     var bookmark = new Bookmark({
@@ -36,16 +37,19 @@ router.post('/', function(req, res)
     res.send("Post parameters undefined");
 });
 
-router.delete('/:id', function(req, res)
+router.delete('/:id', auth.required, auth.customer, function(req, res)
 {
-  // Assume input is using param and data
-  if (req.params["id"] !== undefined)
-    var id = req.params["id"];
+  var user_id = req.user.id;
 
-  if (id !== undefined)
+  if (req.params["id"] !== undefined)
+    search_params = {_id: req.params["id"]};
+
+  search_params.customer_id = user_id;
+
+  if (req.params["id"] !== undefined)
   {
     Bookmark.findOneAndDelete(
-        {_id: id},
+        search_params,
         function(err, docs)
         {
           if (err)
@@ -70,14 +74,13 @@ router.delete('/:id', function(req, res)
     res.send("Cannot Remove! Wrong Body!");
 });
 
-router.get('/', function(req, res)
+router.get('/', auth.required, auth.customer, function(req, res)
 {
   // Assume sorting ascending order name of service
   var sort_params = {"service_id.name": 1};
+  var user_id = req.user.id;
 
-  // Assume input is query. id=id or id=id&sortService=desc
-  if (req.query["customer_id"] !== undefined)
-    search_params = {customer_id: req.query["customer_id"]};
+  search_params = {customer_id: user_id};
 
   if ((req.query["sortService"] !== undefined) && (req.query["sortService"] == "desc"))
     sort_params = {"service_id.name": -1};

@@ -17,7 +17,7 @@ CustomerSchema.methods.setPassword = function(pwd)
 
 CustomerSchema.methods.validatePassword = function(pwd)
 {
-  const hash = crypto.pbkdf2Sync(password, this.salt, 10000, 512, 'sha512').toString('hex');
+  const hash = crypto.pbkdf2Sync(pwd, this.salt, 10000, 512, 'sha512').toString('hex');
   return this.hash === hash;
 };
 

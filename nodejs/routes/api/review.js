@@ -2,15 +2,16 @@
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
+var auth = require('../auth');
 
 var Review = mongoose.model('Review');
 
-router.post("/",function(req, res)
+router.post("/", auth.required, auth.customer, function(req, res)
 {
+  var id = req.user.id;
   // Assume the input {service_id, review_date, rating, costumer_id, customer_review} using POST
   var condition = (req.body["service_id"] !== undefined);
   condition = condition && (req.body["rating"] !== undefined);
-  condition = condition && (req.body["customer_id"] !== undefined);
   condition = condition && (req.body["customer_review"] !== undefined);
 
   if (condition)
@@ -18,7 +19,7 @@ router.post("/",function(req, res)
     var review = new Review({
       service_id: req.body["service_id"],
       rating: req.body["rating"],
-      customer_id: req.body["customer_id"],
+      customer_id: id,
       customer_review: req.body["customer_review"]
     });
 
@@ -44,6 +45,7 @@ router.get('/', function(req, res)
 {
   // Assume sorting ascending date;
   var sort_params = {review_date: 1};
+  var search_params = {};
 
   // Assume input is query. search service_id or customer_id, sortDate sortRating
   if (req.query["service_id"] !== undefined)
@@ -91,13 +93,14 @@ router.get('/', function(req, res)
     res.send("Cannot Find! Not found!");
 });
 
-router.delete('/:id', function(req, res)
+router.delete('/:id', auth.required, auth.customer, function(req, res)
 {
-  // Assume input is using url and data
-  if (req.params["id"] !== undefined)
-    var id = req.params["id"];
+  var user_id = req.user.id;
 
-  if (id !== undefined)
+  if (req.params["id"] !== undefined)
+    search_params = {_id: req.params["id"]};
+
+  if (req.params["id"] !== undefined)
   {
     Review.findOneAndDelete(
         {_id: id},
@@ -125,7 +128,7 @@ router.delete('/:id', function(req, res)
     res.send("Cannot Remove! Wrong Body!");
 });
 
-router.put('/', function(req, res)
+router.put('/', auth.required, auth.customer, function(req, res)
 {
   // Assume the input in JSON. {id, customer_review, rating}
   var condition = (req.body["rating"] !== undefined);

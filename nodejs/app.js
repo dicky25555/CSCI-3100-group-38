@@ -1,9 +1,11 @@
 // NEED TO AUTHENTICATE - NEED TO MODIFY GET METHOD FOR ALL API
 var createError = require('http-errors');
 var express = require('express');
+const session = require('express-session');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var passport = require('passport');
 
 var app = express();
 
@@ -38,6 +40,21 @@ require('./models/Chat.js');
 require('./models/Bookmark.js');
 require('./models/Review.js');
 
+// Config
+require('./config/passport.js');
+
+app.use(session({
+    secret: 'Key',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 1000 * 30
+    }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Router modules
 var indexRouter = require('./routes/index');
 
@@ -58,8 +75,6 @@ app.use(function(req,res,next){
 });
 
 app.use('/', indexRouter);
-
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
