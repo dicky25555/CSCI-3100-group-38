@@ -65,12 +65,12 @@ class loginSP extends React.Component{
                                             <tr>
                                                 <td colspan="2">
                                                     <br />
-                                                    <input value={this.state.email} onChange={e => this.handleChange(e)} type="text1" id="email" name="email" placeholder="Email Adress"/>
+                                                    <input value={this.state.email} onChange={e => this.handleChange(e)} type="email" className="inputStyle1" id="email" name="email" placeholder="Email Adress" required/>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
-                                                    <input value={this.state.password} onChange={e => this.handleChange(e)} type="text1" id="pwd" name="password" placeholder="Password"/>
+                                                    <input value={this.state.password} onChange={e => this.handleChange(e)} type="password" className="inputStyle1" id="pwd" name="password" placeholder="Password" required/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -87,6 +87,7 @@ class loginSP extends React.Component{
                                 </td>
                             </tr>
                         </table>
+                        <br/><br/><br/>
                     </div>
                 </div>
                 <div className="div3">

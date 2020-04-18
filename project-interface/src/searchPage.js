@@ -39,6 +39,11 @@ class searchPage extends React.Component{
             data: dataJSON
         })
     }
+
+    clickService = (e)=>{
+
+    }
+
     //Test out list of services
     render(){
         const { data } = this.props.location;
@@ -61,7 +66,7 @@ class searchPage extends React.Component{
                         <p class="header" style={{color:"#5318FB"}}>9.7</p>
                     </td>
                     <td style={{paddingTop:"30px"}}>
-                        <p class="header">Service name</p>
+                        <p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e)}>Service name</p>
                     </td>
                     <td style={{paddingTop:"30px", width:"60px"}}>
                         <sub style={{color:"#5318FB"}}>BOOKMARK</sub>
@@ -111,11 +116,11 @@ class searchPage extends React.Component{
                                                 </tr>
                                                 <tr>
                                                     <td>
-                                                        <input value={this.state.serviceName} onChange={e => this.handleChange(e)} type="text1" id="sname" name="servicename" placeholder="Enter service keyword"/>
+                                                        <input value={this.state.serviceName} onChange={e => this.handleChange(e)} type="text1" id="sname" name="serviceName" placeholder="Enter service keyword"/>
                                                     </td>
                                                     <td>&nbsp; &nbsp;</td>
                                                     <td>
-                                                        <input value={this.state.serviceName} onChange={e => this.handleChange(e)} type="text1" id="loc" name="location" placeholder="Enter your city, e.g. Sheung Wan"/>
+                                                        <input value={this.state.location} onChange={e => this.handleChange(e)} type="text1" id="loc" name="location" placeholder="Enter your city, e.g. Sheung Wan"/>
                                                     </td>
                                                     <td>&nbsp; &nbsp;</td>
                                                     <td colspan="2">

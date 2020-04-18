@@ -68,6 +68,37 @@ label{
     color: rgba(0, 0, 0, 0.8);
 }
 
+.inputStyle1{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+  border: 1px solid #ccc;
+    box-sizing: border-box;
+    align-items: center;
+
+}
+
+.inputStyle2{
+    width: 100%;
+        padding: 12px 20px;
+        height: 240px;
+        margin: 8px 0;
+        display: inline-block;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+        align-items: center;
+    }
+
+.inputStyle3{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+  border: 1px solid #ccc;
+    box-sizing: border-box;
+    align-items: center;
+}    
 .text3{
     font-family: Montserrat;
     font-style: normal;
@@ -115,6 +146,31 @@ input[type=submit] {
 }
 
 input[type=submit]:hover {
+    font-family: Montserrat;
+    font-style: normal;
+    font-size: 15px;
+      background-color: white;
+      border-radius: 6px;
+      color: #5318FB;
+      border: 1px solid #5318FB;
+}
+
+.signupStyle{
+    font-family: Montserrat;
+    font-style: normal;
+    font-size: 15px;
+      width: 50%;
+      background-color: #5318FB;
+      color: white;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      align-items: left;
+}
+
+.signupStyle:hover{
     font-family: Montserrat;
     font-style: normal;
     font-size: 15px;

@@ -17,7 +17,8 @@ class signup extends React.Component {
             firstname: '', 
             lastname: '', 
             email: '', 
-            password: ''
+            password: '',
+            formValid: false
         };
     }
     handleChange = (e) =>{
@@ -25,16 +26,43 @@ class signup extends React.Component {
             [e.target.name]: e.target.value
         })
     }
+
+    validateSignUp(){
+        var inputFirstName = document.getElementById("fname");
+        var inputLastName = document.getElementById("lname");
+        var inputEmail = document.getElementById("email");
+        var inputPassword = document.getElementById("pwd");
+
+        if(!inputFirstName.checkValidity()){
+            alert("Check your first name !");
+        } else if(!inputLastName.checkValidity()){
+            alert("Check your last name !");
+        } else if(!inputEmail.checkValidity()){
+            alert("Check your email!");
+        } else if(!inputPassword.checkValidity()){
+            alert("Check your password, make sure it is at least 8 characters !");
+        } else {
+            this.state.formValid = true;
+        }
+    }
+
     onSubmit = (e) =>{
         e.preventDefault();
-        const signUpForm = {
-            firstname: this.state.firstname,
-            lastname: this.state.lastname,
-            email: this.state.email,
-            password: this.state.password
+        this.validateSignUp();
+        if(this.state.formValid){
+            const signUpForm = {
+                firstname: this.state.firstname,
+                lastname: this.state.lastname,
+                email: this.state.email,
+                password: this.state.password
+            }
+            var dataJSON = JSON.stringify(signUpForm);
+            console.log(dataJSON);
+            document.getElementById("firstForm")
+            document.getElementById("firstForm").innerHTML = document.getElementById("receipt").innerHTML;
+        }else{
+            alert("Please check your form again!");
         }
-        var dataJSON = JSON.stringify(signUpForm);
-        console.log(dataJSON);
     }
     render(){
     return (
@@ -51,7 +79,7 @@ class signup extends React.Component {
                     <p className="text2">In Service On Sight we make sure everyone is hassle-free.</p>
                 </div>
             </div>
-            <div className="row">
+            <div id="firstForm" className="row">
                 <div className="col-md-3"></div>
                 <div className="col-md-6">
                     <br /><br />
@@ -69,21 +97,21 @@ class signup extends React.Component {
                                         </tr>
                                         <tr>
                                             <td>
-                                                <input value={this.state.firstname} onChange={e => this.handleChange(e)} type="text" id="fname" name="firstname" placeholder="First Name"/>
+                                                <input value={this.state.firstname} onChange={e => this.handleChange(e)} className="inputStyle3" id="fname" name="firstname" placeholder="First Name" required/>
                                             </td>
                                             <td width="1%"></td>
                                             <td>
-                                                <input value={this.state.secondname} onChange={e => this.handleChange(e)} type="text" id="lname" name="lastname" placeholder="Last Name"/>
+                                                <input value={this.state.secondname} onChange={e => this.handleChange(e)} className="inputStyle3" id="lname" name="lastname" placeholder="Last Name" required/>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="3">
-                                                <input value={this.state.email} onChange={e => this.handleChange(e)} type="text1" id="email" name="email" placeholder="Email Adress"/>
+                                                <input value={this.state.email} onChange={e => this.handleChange(e)} className="inputStyle1" type="email" id="email" name="email" placeholder="Email Adress" required/>
                                             </td>
                                         </tr>
                                         <tr>
                                             <td colspan="3">
-                                                <input value={this.state.password} onChange={e => this.handleChange(e)} type="text1" id="pwd" name="password" placeholder="Create password"/>
+                                                <input value={this.state.password} onChange={e => this.handleChange(e)} type="password" className="inputStyle1" id="pwd" name="password" placeholder="Create password" pattern=".{8,}" required/>
                                             </td>
                                         </tr>
                                         <tr>
@@ -100,6 +128,14 @@ class signup extends React.Component {
                             </td>
                         </tr>
                     </table>
+                    <br/><br/><br/>
+                </div>
+            </div>
+            <div className="row" id="receipt" style={{display:"None"}}>
+                <div class="col-md-12">
+                    <br/><br/><br/>
+                    <p className="text1" style={{color:"#5318FB"}}>Your registration is received</p>
+                    <br/><br/><br/>
                 </div>
             </div>
             <div className="div3">

@@ -67,12 +67,12 @@ class Login extends React.Component {
                                             <tr>
                                                 <td colspan="2">
                                                     <br />
-                                                    <input value={this.state.email} onChange={e => this.handleChange(e)} type="text1" id="email" name="email" placeholder="Email Adress"/>
+                                                    <input value={this.state.email} onChange={e => this.handleChange(e)} className="inputStyle1" type="email" id="email" name="email" placeholder="Email Adress"/>
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td colspan="2">
-                                                    <input value={this.state.password} onChange={e => this.handleChange(e)} type="password" class="text1" style={{webKitTextSecurity : "disc"}} id="pwd" name="password" placeholder="Password"/>
+                                                    <input value={this.state.password} onChange={e => this.handleChange(e)}className="inputStyle1" type="password"  id="pwd" name="password" placeholder="Password"/>
                                                 </td>
                                             </tr>
                                             <tr>
@@ -89,6 +89,7 @@ class Login extends React.Component {
                                 </td>
                             </tr>
                         </table>
+                        <br/><br/><br/>
                     </div>
                 </div>
                 <div className="div3">
