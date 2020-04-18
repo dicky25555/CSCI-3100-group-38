@@ -6,6 +6,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var passport = require('passport');
+var cors = require('cors');
 
 var app = express();
 
@@ -43,6 +44,7 @@ require('./models/Review.js');
 // Config
 require('./config/passport.js');
 
+// Session
 app.use(session({
     secret: 'Key',
     resave: false,
@@ -52,8 +54,12 @@ app.use(session({
     }
 }));
 
+// Authenticator
 app.use(passport.initialize());
 app.use(passport.session());
+
+// CORS
+app.use(cors());
 
 // Router modules
 var indexRouter = require('./routes/index');

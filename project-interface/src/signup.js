@@ -14,9 +14,9 @@ class signup extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            firstname: '', 
-            lastname: '', 
-            email: '', 
+            firstname: '',
+            lastname: '',
+            email: '',
             password: '',
             formValid: false,
             apiResponse: ''
@@ -24,7 +24,7 @@ class signup extends React.Component {
     }
 
     callAPI(data){
-        fetch("http://localhost:3000/api/customer/signup", {
+        fetch("http://localhost:9000/api/customer/signup", {
             method: 'POST',
             body: data
         })
@@ -165,5 +165,5 @@ class signup extends React.Component {
     );
     }
   }
-  
+
   export default signup;
