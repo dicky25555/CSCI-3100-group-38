@@ -18,14 +18,26 @@ class signup extends React.Component {
             lastname: '', 
             email: '', 
             password: '',
-            formValid: false
+            formValid: false,
+            apiResponse: ''
         };
     }
+
+    callAPI(data){
+        fetch("http://localhost:3000/api/customer/signup", {
+            method: 'POST',
+            body: data
+        })
+            .then(res=> res.text())
+            .then(res => this.setState({apiResponse: res}))
+    }
+
     handleChange = (e) =>{
         this.setState({
             [e.target.name]: e.target.value
         })
     }
+
 
     validateSignUp(){
         var inputFirstName = document.getElementById("fname");
@@ -51,15 +63,14 @@ class signup extends React.Component {
         this.validateSignUp();
         if(this.state.formValid){
             const signUpForm = {
-                firstname: this.state.firstname,
-                lastname: this.state.lastname,
-                email: this.state.email,
+                name: this.state.firstname + " " + this.state.lastname,
+                username: this.state.email,
                 password: this.state.password
             }
             var dataJSON = JSON.stringify(signUpForm);
             console.log(dataJSON);
-            document.getElementById("firstForm")
             document.getElementById("firstForm").innerHTML = document.getElementById("receipt").innerHTML;
+            this.callAPI(dataJSON);
         }else{
             alert("Please check your form again!");
         }

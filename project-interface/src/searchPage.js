@@ -40,8 +40,8 @@ class searchPage extends React.Component{
         })
     }
 
-    clickService = (e)=>{
-
+    clickService = (e, value)=>{
+        console.log(value)
     }
 
     //Test out list of services
@@ -66,7 +66,7 @@ class searchPage extends React.Component{
                         <p class="header" style={{color:"#5318FB"}}>9.7</p>
                     </td>
                     <td style={{paddingTop:"30px"}}>
-                        <p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e)}>Service name</p>
+                        <p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e,{i})}>Service name {i}</p>
                     </td>
                     <td style={{paddingTop:"30px", width:"60px"}}>
                         <sub style={{color:"#5318FB"}}>BOOKMARK</sub>
