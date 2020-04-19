@@ -48,10 +48,7 @@ require('./config/passport.js');
 app.use(session({
     secret: 'Key',
     resave: false,
-    saveUninitialized: true,
-    cookie: {
-        maxAge: 1000 * 30
-    }
+    saveUninitialized: true
 }));
 
 // Authenticator
