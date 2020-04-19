@@ -191,8 +191,8 @@ router.get('/', function(req, res)
     Service.findOne(search_params, 'username category_id name address details')
       .populate('category_id')
       .sort(sort_params)
-      .skip(req.query["limit"] * (req.query["page"] - 1))
-      .limit(req.query["limit"])
+      .skip(parseInt(req.query["limit"]) * (parseInt(req.query["page"]) - 1))
+      .limit(parseInt(req.query["limit"]))
       .exec(function(err, doc) {
         if (err)
         {
