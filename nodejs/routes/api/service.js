@@ -173,7 +173,7 @@ router.get('/', function(req, res)
   var sort_params = {name: 1};
   var search_params = {};
 
-  // Assume input is query. search service_id or customer_id, sortDate sortRating
+  // Assume input is query. search service_id or customer_id, sortDate sortRating, limit page
   if (req.query["name"] !== undefined)
     search_params.name = req.query["service_id"];
 
@@ -186,11 +186,13 @@ router.get('/', function(req, res)
   if ((req.query["sortName"] !== undefined) && (req.query["sortName"] == "desc"))
     sort_params = {name: -1};
 
-  if (search_params !== undefined)
+  if ((req.query["limit"] !== undefined) && (req.query["page"] !== undefined) && (search_params !== undefined))
   {
     Service.findOne(search_params, 'username category_id name address details')
       .populate('category_id')
       .sort(sort_params)
+      .skip(req.query["limit"] * (req.query["page"] - 1))
+      .limit(req.query["limit"])
       .exec(function(err, doc) {
         if (err)
         {
