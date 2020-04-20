@@ -7,6 +7,7 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var passport = require('passport');
 var cors = require('cors');
+var MongoStore = require('connect-mongo')(session);
 
 var app = express();
 
@@ -48,7 +49,14 @@ require('./config/passport.js');
 app.use(session({
     secret: 'Key',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: true,
+    cookie: {
+        maxAge: 24 * 60 * 60 * 1000
+    },
+    store: new MongoStore({
+        mongooseConnection: mongoose.connection,
+        ttl: 24 * 60 * 60 // Keeps session open for 1 day
+    })
 }));
 
 // Authenticator
