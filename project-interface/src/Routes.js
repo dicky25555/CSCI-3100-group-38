@@ -9,6 +9,8 @@ import SignupSP from './signupSP';
 import history from './history';
 import serviceCategories from './serviceCategories';
 import searchPage from './searchPage';
+import chatBox from './chatBox';
+import mainChatBox from './mainChatBox';
 
 export default class Routes extends Component{
     render(){
@@ -22,6 +24,8 @@ export default class Routes extends Component{
                     <Route path="/signupServiceProvider" component={SignupSP}/>
                     <Route path="/serviceCategories" component={serviceCategories}/>
                     <Route path="/searchPage" component={searchPage}/>
+                    <Route path="/mainChatBox" component={mainChatBox}/>
+                    <Route path="/chatBox" component={chatBox}/>
                 </Switch>
             </Router>
         )
