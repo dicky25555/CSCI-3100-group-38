@@ -28,8 +28,7 @@ class chatBox extends React.Component{
     onSubmit = (e) =>{
         e.preventDefault();
         const signUpForm = {
-            serviceName: this.state.serviceName,
-            location: this.state.location
+            customerName: this.state.customerName
         }
         var dataJSON = JSON.stringify(signUpForm);
         console.log(dataJSON);
@@ -49,112 +48,127 @@ class chatBox extends React.Component{
         const { data } = this.props.location;
         if(data){
             var parsedData = JSON.parse(data);
-            var searchedName = parsedData.serviceName;
-            var searchedLocation = parsedData.location;
+            var customerName = parsedData.customerName;
             console.log(data)
         }else{
             var searchedName = '(empty name)';
-            var searchedLocation = '(empty location)';
         }
 
-        let servicesArray = [];
-        for (let i = 0; i < 10; i++){
-            servicesArray.push(
-                <div>
-                <tr>
-                    <td style={{width:"100px", textAlign:"right", paddingTop:"30px"}}>
-                        <p class="header" style={{color:"#5318FB"}}>9.7</p>
-                    </td>
-                    <td style={{paddingTop:"30px"}}>
-                        <p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e,{i})}>Service name {i}</p>
-                    </td>
-                    <td style={{paddingTop:"30px", width:"60px"}}>
-                        <sub style={{color:"#5318FB"}}>BOOKMARK</sub>
-                    </td>
-                </tr>
-                <tr>
-                    <td style= {{textAlign:"right", verticalAlign:"top", paddingRight:"20px", borderBottom: "1px solid #ddd"}}>
-                        <sub>/10</sub>
-                    </td>
-                    <td colspan="2" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd"}}>
-                        <sub>Category</sub> <br />Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
-                    </td>
-                </tr>
-                </div>
+        let chatBoxArray = [];
+        for (let i = 0; i < 3; i++){
+            chatBoxArray.push(
+				<div>
+					<div class="row">
+						<div class="col-md-1"></div>
+						<div class="col-md-6">
+							<table>
+								<tr>
+
+									<td style={{paddingTop:"30px"}}>
+										<p style={{fontWeight:"bold", color:"white"}}>Customer name</p>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<p style={{color:"white"}}>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet</p>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<div class="row">
+					</div>
+					
+					<div class="row">
+						<div class="col-md-5"></div>
+						<div class="col-md-6">
+							<table>
+								<tr>
+
+									<td style={{paddingTop:"30px", textAlign:"right"}}>
+										<p style={{fontWeight:"bold", textAlign:"right", color:"white"}}>You</p>
+									</td>
+								</tr>
+								<tr>
+									<td style={{textAlign:"right"}}>
+										<p style={{color:"white", textAlign:"right"}}>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet</p>
+									</td>
+								</tr>
+							</table>	
+						</div>
+					</div>
+					
+				</div>
             );
         }
 
         return(
             <div>
                 <Navbar/>
-                <div class="row">
+                <div class="row" style={{paddingTop:"20px"}}>
                     <div class="col-md-1"></div>
                     <div class="col-md-10">
-                        <br /><br /><br /><br /><br /><br /><br />
-                        <table><tr><td><p class="textmain">Results for: </p></td><td><p className="textmain" style={{color:"#5318FB"}}>{searchedName} in {searchedLocation}</p></td></tr></table>
-                        <p className="text2" style={{textAlign:"left"}}> Search again:</p>
+						<sub style={{color:"#5318FB"}}>Back</sub>
                     </div>
                 </div>
 
-                <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-10">
-                        <table width="100%" bgcolor="FFFFFF">
-                            <tr style={{border: "1px solid rgba(0, 0, 0, 0.5)"}}>
-                                <td>
-                                    <form action="">
-                                        <center>
-                                            <table border="0" width="95%">
-                                                <tr>
-                                                    <td>
-                                                        <p style={{fontSize: "18px", fontWeight: "bold"}}><br />Service</p>
-                                                    </td>
-                                                    <td>&nbsp; &nbsp;</td>
-                                                    <td colspan="4">
-                                                        <p style={{fontSize: "18px", fontWeight: "bold"}}><br />Location</p>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <input value={this.state.serviceName} onChange={e => this.handleChange(e)} type="text1" id="sname" name="serviceName" placeholder="Enter service keyword"/>
-                                                    </td>
-                                                    <td>&nbsp; &nbsp;</td>
-                                                    <td>
-                                                        <input value={this.state.location} onChange={e => this.handleChange(e)} type="text1" id="loc" name="location" placeholder="Enter your city, e.g. Sheung Wan"/>
-                                                    </td>
-                                                    <td>&nbsp; &nbsp;</td>
-                                                    <td colspan="2">
-                                                        <input onClick={e => this.onSubmit(e)} type="submit" value="Search"/>
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </center>
-                                    </form>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-                <br /><br /><br /><br />
-                <div class="row">
-                    <div class="col-md-1"></div>
-                    <div class="col-md-10">
-                        <table>
-                            {servicesArray}
-                        </table>
-                    </div>
-                    <div class="div3">
-                        <div class="row">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-10">
-                                <p class="text3">
-                                    <br /><br /><br />
-                                    We serve to make sure you get the service you need, <br />in the most convenient way possible
-                                </p>
-                            </div>
-                        </div>
-                    </div> 
-                    </div>   
+                <div class="row" style={{borderBottom : "1px solid #ddd"}}>
+					<div class="col-md-1"></div>
+					<div class="col-md-10">
+						<p class="textmain">Chatbox</p>
+						<br /><br /><br />
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-md-1"></div>
+					<div class="col-md-10">
+						<table>
+							<tr>
+								<td style={{paddingTop:"50px"}}>
+									<p class="header" style={{fontSize:"25px"}}>Customer name</p>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+				
+				 <div class="row">
+					<div class="col-md-1"></div>
+					<div class="col-md-10">
+						<div style={{overflowY:"scroll", overflowX:"hidden", maxHeight:"350px", backgroundColor:"black"}}>
+							{chatBoxArray}
+						</div>
+					</div>
+				</div>
+				
+				<div>
+					<div class="row" style={{paddingTop:"50px", paddingBottom:"30px", borderBottom: "1px solid #ddd"}}>
+						<div class="col-md-1"></div>
+						<div class="col-md-10">
+							<table align="center" width="100%">
+								<tr>
+									<td colspan="2">
+										<p style={{fontSize: "18px", fontWeight: "bold"}}>Send message</p>
+									</td>
+								</tr>
+
+								<tr>
+									<td style={{paddingBottom:"10px", verticalAlign:"bottom"}}>
+										<textarea style={{resize:"none"}} id="message" placeholder="Write your message here." cols="140" rows="2" ></textarea>
+									</td>
+									<td style={{textAlign:"right", verticalAlign:"bottom"}}>
+										<input type="submit" value="Send" />
+									</td>
+								</tr>
+							</table>
+
+
+
+						</div>
+					</div>
+				</div>
+				
                 <Buttombar/>
             </div>
         );

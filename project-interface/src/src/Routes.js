@@ -12,6 +12,7 @@ import searchPage from './searchPage';
 import setting from './setting';
 import mainChatBox from './mainChatBox';
 import chatBox from './chatBox';
+import bookmarkPage from './bookmarkPage';
 
 export default class Routes extends Component{
     render(){
@@ -28,6 +29,7 @@ export default class Routes extends Component{
                     <Route path="/setting" component={setting}/>
                     <Route path="/mainChatBox" component={mainChatBox}/>
                     <Route path="/chatBox" component={chatBox}/>
+                    <Route path="/bookmarkPage" component={bookmarkPage}/>
                 </Switch>
             </Router>
         )

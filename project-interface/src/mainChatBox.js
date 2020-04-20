@@ -58,16 +58,16 @@ class mainChatBox extends React.Component{
             customerArray.push(
 				//customer boxes
                 <div>
-                <tr>
-                    <td style={{paddingTop:"50px"}}>
-                        <p class="header" style={{fontSize:"25px"}}>Customer name</p>
-                    </td>
-                </tr>
-                <tr>
-                    <td style= {{paddingBottom:"40px",paddingRight:"20px", borderBottom: "1px solid #ddd"}}>
-                        <br />Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
-                    </td>
-                </tr>
+					<tr>
+						<td style={{paddingTop:"50px"}}>
+							<p class="header" style={{fontSize:"25px"}}>Customer name</p>
+						</td>
+					</tr>
+					<tr>
+						<td style= {{paddingBottom:"40px",paddingRight:"20px", borderBottom: "1px solid #ddd"}}>
+							You: Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
+						</td>
+					</tr>
                 </div>
             );
         }
@@ -79,12 +79,11 @@ class mainChatBox extends React.Component{
                     <div class="col-md-1"></div>
                     <div class="col-md-10">
                         <br /><br /><br /><br /><br /><br /><br />
-						<p className="textmain"> Chatbox</p>
-						<br /><br />
+						<p class="textmain"> Chatbox</p>
+						<br /><br /><br />
                     </div>
                 </div>
 
-                <br />
                 <div class="row">
                     <div class="col-md-1"></div>
                     <div class="col-md-10">
@@ -92,18 +91,7 @@ class mainChatBox extends React.Component{
                             {customerArray}
                         </table>
                     </div>
-                    <div class="div3">
-                        <div class="row">
-                            <div class="col-md-1"></div>
-                            <div class="col-md-10">
-                                <p class="text3">
-                                    <br /><br /><br />
-                                    We serve to make sure you get the service you need, <br />in the most convenient way possible
-                                </p>
-                            </div>
-                        </div>
-                    </div> 
-                    </div>   
+                </div>   
                 <Buttombar/>
             </div>
         );
