@@ -1,0 +1,17 @@
+.buttom-bar{
+    position: relative;
+    width: 100%;
+    background: #FFFFFF;
+}
+
+.buttom-bar a{
+    padding: 0px 12px;
+}
+
+.header-center{
+    float: center;
+}
+
+.App-logo{
+    height: 10px;
+}
