@@ -1,10 +1,4 @@
 import React from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
 import history from './history';
 import Navbar from './components/Navbar';
 import Buttombar from './components/Buttombar';
@@ -14,22 +8,24 @@ class signup extends React.Component {
     constructor(props){
         super(props);
         this.state = {
-            firstname: '',
-            lastname: '',
-            email: '',
+            firstname: '', 
+            lastname: '', 
+            email: '', 
             password: '',
             formValid: false,
             apiResponse: ''
         };
     }
 
-    callAPI(data){
+    sendData(data){
         fetch("http://localhost:9000/api/customer/signup", {
             method: 'POST',
-            body: data
+            body: data,
+            headers: {"Content-Type": "application/json"}
         })
             .then(res=> res.text())
             .then(res => this.setState({apiResponse: res}))
+            .catch(err => err);
     }
 
     handleChange = (e) =>{
@@ -63,14 +59,15 @@ class signup extends React.Component {
         this.validateSignUp();
         if(this.state.formValid){
             const signUpForm = {
-                name: this.state.firstname + " " + this.state.lastname,
                 username: this.state.email,
-                password: this.state.password
+                name: this.state.firstname + " " + this.state.lastname,
+                password: this.state.password,
+                details : "Newcomer"
             }
             var dataJSON = JSON.stringify(signUpForm);
             console.log(dataJSON);
             document.getElementById("firstForm").innerHTML = document.getElementById("receipt").innerHTML;
-            this.callAPI(dataJSON);
+            this.sendData(dataJSON);
         }else{
             alert("Please check your form again!");
         }
@@ -79,13 +76,13 @@ class signup extends React.Component {
     return (
         <div>
             <Navbar/>
-            <div className="row">
+            <div className="row" id="page">
                 <div className="col-md-12">
                     <br /><br /><br /><br /><br />
                     <p className="text1">Receive the service you need</p>
                 </div>
             </div>
-            <div className="row">
+            <div className="row" id="page">
                 <div className="col-md-12">
                     <p className="text2">In Service On Sight we make sure everyone is hassle-free.</p>
                 </div>
@@ -149,7 +146,7 @@ class signup extends React.Component {
                     <br/><br/><br/>
                 </div>
             </div>
-            <div className="div3">
+            <div className="div3" id="page">
                 <div className="row">
                     <div className="col-md-1"></div>
                     <div className="col-md-10">
@@ -165,5 +162,5 @@ class signup extends React.Component {
     );
     }
   }
-
+  
   export default signup;

@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-  Link
-} from "react-router-dom";
-
 import './App.css';
 import Navbar from './components/Navbar';
+import NavbarSigned from './components/Navbar-signed';
 import Buttombar from './components/Buttombar';
 import './components/font/Montserrat-Regular.ttf';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -16,8 +10,10 @@ class App extends Component {
     constructor(props){
         super(props);
         this.state={
-            serviceName:'',
-            location:''
+            email: '',
+            signedIn: false,
+            serviceName: '',
+            location: ''
         }
     }
 
@@ -41,11 +37,35 @@ class App extends Component {
             data: dataJSON
         })
     }
+
     render(){
-        
+        const { data } = this.props.location;
+        if(data){
+            var parsedData = JSON.parse(data);
+            this.state.email = data.username;
+            this.state.signedIn = true;
+            console.log(parsedData);
+        }
+        console.log(this.state.signedIn);
+        var navigationBar = [];
+        if (!this.state.signedIn){
+            navigationBar.push(
+                <div>
+                    <Navbar/>
+                </div>
+            )
+        }
+        else{
+            navigationBar.push(
+                    <NavbarSigned/>
+ 
+            )
+        }
         return (
             <div>
-                <Navbar />
+                <div class="row" >
+                    {navigationBar}
+                </div>
                 <div class="row" style={{backgroundColor:"black"}}>
                 <div class="col-md-1"></div>
                 <div class="col-md-10">

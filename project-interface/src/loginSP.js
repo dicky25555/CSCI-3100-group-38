@@ -18,6 +18,19 @@ class loginSP extends React.Component{
             password:''
         }
     }
+
+    sendData(data){
+        fetch("http://localhost:9000/api/service/login", {
+            method: 'POST',
+            body: data,
+            headers: {"Content-Type": "application/json"}
+        })
+            .then(res=> res.text())
+            .then(res => this.setState({apiResponse: res}))
+
+        
+    }
+
     handleChange = (e) =>{
         this.setState({
             [e.target.name]: e.target.value

@@ -26,9 +26,39 @@ class signupSP extends React.Component{
             address: '',
             description: '',
             formValid : false,
-            
+            categoriesList: [],  
         };
     }
+
+    sendData(data){
+        fetch("http://localhost:9000/api/service/signup", {
+            method: 'POST',
+            body: data,
+            headers: {"Content-Type": "application/json"}
+        })
+            .then(res=> res.text())
+            .then(res => this.setState({apiResponse: res}))
+
+            console.log(this.state.categoriesList)
+            
+        
+    }
+
+    componentDidMount(){
+        fetch("http://localhost:9000/api/category")
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.status, res.data);
+                this.setState({
+                    categoriesList: res.data
+                })
+            })
+        )
+    }
+
     handleChange = (e) =>{
         this.setState({
             [e.target.name]: e.target.value
@@ -54,11 +84,7 @@ class signupSP extends React.Component{
         var inputAddress = document.getElementById("address");
         var inputDescription = document.getElementById("description");
 
-        if(!inputFirstName.checkValidity()){
-            alert("Check your first name !");
-        } else if(!inputLastName.checkValidity()){
-            alert("Check your last name !");
-        } else if(!inputEmail.checkValidity()){
+        if(!inputEmail.checkValidity()){
             alert("Check your email!");
         } else if(!inputPassword.checkValidity()){
             alert("Check your password, make sure it is at least 8 characters !");
@@ -80,37 +106,39 @@ class signupSP extends React.Component{
     onFinish = (e) =>{
         e.preventDefault();
         this.validateSignUp();
+        
         if(this.state.formValid){
             e.preventDefault();
             console.log("test")
-            const signUpForm = {
-                firstname: this.state.firstname, 
-                lastname: this.state.lastname, 
-                email: this.state.email, 
+            const signUpForm = { 
+                username: this.state.email, 
                 password: this.state.password,
-                ID: this.state.ID,
-                companyName: this.state.companyName,
-                category: this.state.category,
+                name: this.state.companyName,
+                category_id: this.state.category,
                 address: this.state.address,
-                description: this.state.description
-
+                details: this.state.description
             }
             
             console.log(signUpForm);
             var dataJSON = JSON.stringify(signUpForm);
             console.log(dataJSON);
-            
+            this.sendData(dataJSON);
             document.getElementById("firstForm").innerHTML = document.getElementById("receipt").innerHTML;
         }else{
             alert("Please check your form again!");
         }
     }
 
-    
+
 
     render(){
-        var signUpForm = {
-            
+        
+        console.log(this.state.categoriesList[1][_id]);
+        var categoriesOptionArray = [];
+        for (let count = 0; count < this.state.categoriesList.length; count++){
+            categoriesOptionArray.push(
+            <option value="">{this.state.categoriesList[count].name}</option>
+            )
         }
         return(
             <div>
@@ -148,13 +176,6 @@ class signupSP extends React.Component{
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td>
-                                                    <input value={this.state.firstname} onChange={e => this.handleChange(e)} className="inputStyle3" id="fname" name="firstname" placeholder="First Name" required/>
-                                                </td>
-                                                <td width="1%"></td>
-                                                <td><input value={this.state.lastname} onChange={e => this.handleChange(e)} className="inputStyle3" id="lname" name="lastname" placeholder="Last Name" required/></td>
-                                            </tr>
-                                            <tr>
                                                 <td colspan="3">
                                                     <input value={this.state.email} onChange={e => this.handleChange(e)} className="inputStyle3"type="email" id="email" name="email" placeholder="Email Adress" required/>
                                                 </td>
@@ -177,9 +198,7 @@ class signupSP extends React.Component{
                                             <td>
                                                 <select className="inputStyle3" id="category" name="category" required>
                                                     <option value="">- Select Category -</option>
-                                                    <option value="Category1">Category 1</option>
-                                                    <option value="Category2">Category 2</option>
-                                                    <option value="Category3">Category 3</option>
+                                                    {categoriesOptionArray}
                                                 </select>
                                             </td>
                                             </tr>

@@ -43,8 +43,5 @@ function Navbar() {
     );
 }
 
-function Login(){
-  return <div>Login page</div>
-}
 
 export default Navbar;

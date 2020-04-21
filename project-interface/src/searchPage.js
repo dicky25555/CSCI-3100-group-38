@@ -44,6 +44,16 @@ class searchPage extends React.Component{
         console.log(value)
     }
 
+    componentDidMount(){
+        fetch("http://localhost:9000/api/category")
+        .then(
+            
+        )
+    }
+    
+    sendData(){
+
+    }
     //Test out list of services
     render(){
         const { data } = this.props.location;
@@ -61,25 +71,25 @@ class searchPage extends React.Component{
         for (let i = 0; i < 10; i++){
             servicesArray.push(
                 <div>
-					<tr>
-						<td style={{width:"100px", textAlign:"right", paddingTop:"30px"}}>
-							<p class="header" style={{color:"#5318FB"}}>9.7</p>
-						</td>
-						<td style={{paddingTop:"30px"}}>
-							<p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e,{i})}>Service name {i}</p>
-						</td>
-						<td style={{paddingTop:"30px", width:"60px"}}>
-							<sub style={{color:"#5318FB"}}>BOOKMARK</sub>
-						</td>
-					</tr>
-					<tr>
-						<td style= {{textAlign:"right", verticalAlign:"top", paddingRight:"20px", borderBottom: "1px solid #ddd"}}>
-							<sub>/10</sub>
-						</td>
-						<td colspan="2" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd"}}>
-							<sub>Category</sub> <br />Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
-						</td>
-					</tr>
+                <tr>
+                    <td style={{width:"100px", textAlign:"right", paddingTop:"30px"}}>
+                        <p class="header" style={{color:"#5318FB"}}>9.7</p>
+                    </td>
+                    <td style={{paddingTop:"30px"}}>
+                        <p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e,{i})}>Service name {i}</p>
+                    </td>
+                    <td style={{paddingTop:"30px", width:"60px"}}>
+                        <sub style={{color:"#5318FB"}}>BOOKMARK</sub>
+                    </td>
+                </tr>
+                <tr>
+                    <td style= {{textAlign:"right", verticalAlign:"top", paddingRight:"20px", borderBottom: "1px solid #ddd"}}>
+                        <sub>/10</sub>
+                    </td>
+                    <td colspan="2" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd"}}>
+                        <sub>Category</sub> <br />Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
+                    </td>
+                </tr>
                 </div>
             );
         }
