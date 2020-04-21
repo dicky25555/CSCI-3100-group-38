@@ -39,7 +39,8 @@ class App extends Component {
     }
 
     componentDidMount(){
-        fetch("http://localhost:9000/api/customer/profile")
+        fetch("http://localhost:9000/api/customer/profile", {withCredentials: true,
+        credentials: 'include'})
         .then(
             res => res.json().then(
                 console.log(res)
@@ -67,7 +68,7 @@ class App extends Component {
         else{
             navigationBar.push(
                     <NavbarSigned/>
- 
+
             )
         }
         return (
@@ -83,7 +84,7 @@ class App extends Component {
                     <p class="textmain" style={{color:"white"}}>Search the service you need</p>
                 </div>
             </div>
-        
+
             <div class="row" style={{backgroundColor:"black", paddingBottom:"300px"}}>
                 <div class="col-md-1"></div>
                 <div class="col-md-10">
@@ -137,7 +138,7 @@ class App extends Component {
             </div>
             <Buttombar/>
             </div>
-            
+
         );
     }
 }

@@ -24,22 +24,23 @@ class Login extends React.Component {
     sendData(data){
         fetch("http://localhost:9000/api/customer/login", {
             method: 'POST',
+            withCredentials: true,
             body: data,
             headers: {"Content-Type": "application/json"}
-        })   
+        })
         .then((response) => {
             console.log(response);
             this.state.apiResponse = response.ok;
             console.log(this.state.apiResponse);
             if(!response.ok){
-                alert('Your username or password is wrong');    
+                alert('Your username or password is wrong');
             } else{
                 const loggedInStatus ={
                     signedIn: response.ok,
                     username: this.state.email
                 }
-                var loggedInJSON = JSON.stringify(loggedInStatus); 
-                
+                var loggedInJSON = JSON.stringify(loggedInStatus);
+
                 console.log(loggedInJSON)
                 this.props.history.push({
                     pathname: "/",
@@ -52,7 +53,7 @@ class Login extends React.Component {
         )
         console.log(this.state.apiResponse);
     }
-     
+
     handleChange = (e) =>{
         this.setState({
             [e.target.name]: e.target.value
@@ -68,10 +69,10 @@ class Login extends React.Component {
         console.log(dataJSON);
         this.sendData(dataJSON);
         console.log(this.state.apiResponse);
-        
+
     }
 
-    
+
 
     render(){
         return (
@@ -146,5 +147,5 @@ class Login extends React.Component {
         );
     }
 }
-  
+
   export default Login;
