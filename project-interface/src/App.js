@@ -38,6 +38,15 @@ class App extends Component {
         })
     }
 
+    componentDidMount(){
+        fetch("http://localhost:9000/api/customer/profile")
+        .then(
+            res => res.json().then(
+                console.log(res)
+            )
+        )
+    }
+
     render(){
         const { data } = this.props.location;
         if(data){

@@ -6,53 +6,61 @@ import './components/font/Montserrat-Regular.ttf';
 import './serviceCategories.css';
 
 class serviceCategories extends Component{
+    constructor(props){
+        super(props);
+        this.state = {
+            categoriesList : []
+        }
+    }
+
     exportCategories = (e) =>{
         
     }
 
+    componentDidMount(){
+        fetch("http://localhost:9000/api/category")
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.status, res.data);
+                this.setState({
+                    categoriesList: res.data
+                })
+            })
+        )
+    }
+
+    getCategoriesList = (e, selectedCategories) => {
+        e.preventDefault();
+        console.log(selectedCategories )
+        this.props.history.push({
+            pathname: "/categoriesList",
+            data: selectedCategories
+        })
+    }
     render(){
-        let categoriesArray = [];
-        for(let i=0; i < 9; i++){
+        var categoriesArray = [];
+        for(let i=0; i < this.state.categoriesList.length; i++){
             if(i%2 == 0){
                 categoriesArray.push(
                     <div>
-                        <div class="col-md-1"></div>
-                        <div class="col-md-4">
-                            <table>
                                 <tr>
                                     <td style={{paddingTop:"30px"}}>
-                                        <p style={{fontWeight:"bold" ,color:"#5318fb"}}>Category {i + 1}</p>
+                                        <p style={{fontWeight:"bold" ,color:"#5318fb", cursor:"pointer"}} onClick={e => this.getCategoriesList(e, this.state.categoriesList[i])}>{this.state.categoriesList[i].name}</p>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                        <div class="col-md-1"></div>
                     </div>
                 );
             } else{
                 categoriesArray.push(
                     <div>
-                    <div class="col-md-1"></div>
-                    <div class="col-md-4">
-                        <table>
                             <tr>
                                 <td style={{paddingTop:"30px"}}>
-                                    <p style={{fontWeight:"bold", color:"#5318fb"}}>Category 2</p>
+                                    <p style={{fontWeight:"bold", color:"#5318fb", cursor:"pointer"}} onClick={e => this.getCategoriesList(e, this.state.categoriesList[i])}>{this.state.categoriesList[i].name}</p>
                                 </td>
                             </tr>
-                            <tr>
-                                <td>
-                                    Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-md-1"></div>
                     </div>
                 );
             }
@@ -73,17 +81,7 @@ class serviceCategories extends Component{
                     <div class="col-md-1"></div>
                     <div class="col-md-4">
                         <table>
-                            <tr>
-
-                                <td style={{paddingTop:"30px"}}>
-                                    <p style={{fontWeight:"bold", color:"#5318fb"}}>Category 2</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
-                                </td>
-                            </tr>
+                            {categoriesArray}
                         </table>
                     </div>
                     <div class="col-md-1"></div>

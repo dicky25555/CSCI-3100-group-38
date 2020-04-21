@@ -93,7 +93,7 @@ class signupSP extends React.Component{
         } else if(!inputCompanyName.checkValidity()){
             alert("Check your company name !");
         } else if(!inputCategory.checkValidity()){
-            alert("Check your category !");
+            alert("Check your category !"); 
         } else if(!inputAddress.checkValidity()){
             alert("Check your address !");
         } else if(!inputDescription.checkValidity()){
@@ -107,6 +107,10 @@ class signupSP extends React.Component{
         e.preventDefault();
         this.validateSignUp();
         
+        var categoryOption = document.getElementById("category");
+        var selectedCategory = categoryOption.options[categoryOption.selectedIndex].value;
+        console.log(selectedCategory)
+
         if(this.state.formValid){
             e.preventDefault();
             console.log("test")
@@ -114,7 +118,7 @@ class signupSP extends React.Component{
                 username: this.state.email, 
                 password: this.state.password,
                 name: this.state.companyName,
-                category_id: this.state.category,
+                category_id: selectedCategory,
                 address: this.state.address,
                 details: this.state.description
             }
@@ -133,13 +137,14 @@ class signupSP extends React.Component{
 
     render(){
         
-        console.log(this.state.categoriesList[1][_id]);
         var categoriesOptionArray = [];
         for (let count = 0; count < this.state.categoriesList.length; count++){
             categoriesOptionArray.push(
-            <option value="">{this.state.categoriesList[count].name}</option>
+                <option value={this.state.categoriesList[count]._id}>{this.state.categoriesList[count].name}</option>
+            
             )
         }
+
         return(
             <div>
                 <Navbar/>
