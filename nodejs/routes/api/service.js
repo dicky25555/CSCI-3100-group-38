@@ -183,6 +183,9 @@ router.get('/', function(req, res)
   if (req.query["details"] !== undefined)
     search_params.details = req.query["details"];
 
+  if (req.query["category_id"] !== undefined)
+    search_params.category_id = req.query["category_id"];
+
   if ((req.query["sortName"] !== undefined) && (req.query["sortName"] == "desc"))
     sort_params = {name: -1};
 
