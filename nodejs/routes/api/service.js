@@ -191,7 +191,7 @@ router.get('/', function(req, res)
 
   if ((req.query["limit"] !== undefined) && (req.query["page"] !== undefined) && (search_params !== undefined))
   {
-    Service.findOne(search_params, 'username category_id name address details')
+    Service.find(search_params, 'username category_id name address details')
       .populate('category_id')
       .sort(sort_params)
       .skip(parseInt(req.query["limit"]) * (parseInt(req.query["page"]) - 1))
