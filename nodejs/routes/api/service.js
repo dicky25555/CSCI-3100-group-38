@@ -175,13 +175,13 @@ router.get('/', function(req, res)
 
   // Assume input is query. search service_id or customer_id, sortDate sortRating, limit page
   if (req.query["name"] !== undefined)
-    search_params.name = req.query["service_id"];
+    search_params.name = {$regex: req.query["name"]};
 
   if (req.query["address"] !== undefined)
-    search_params.address = req.query["address"];
+    search_params.address = {$regex: req.query["address"]};
 
   if (req.query["details"] !== undefined)
-    search_params.details = req.query["details"];
+    search_params.details = {$regex: req.query["details"]};
 
   if (req.query["category_id"] !== undefined)
     search_params.category_id = req.query["category_id"];
