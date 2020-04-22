@@ -155,7 +155,7 @@ class setting extends React.Component{
                         <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.deleteAccount(e)} >Delete Account </p>
 						<tr id="deleteAccount" style={{display:"none"}}>
 							<td colspan="3">
-								<input value={this.state.passwordConfirm} onChange={e => this.handleChange(e)} type="password" className="inputStyle1" id="pwdConfirm" name="password" placeholder="Confirm your password" pattern=".{8,}" required/>
+								<input value={this.state.passwordConfirm} onChange={e => this.handleChange(e)} type="password" className="inputStyle1" id="pwdConfirm" name="passwordConfirm" placeholder="Confirm your password" pattern=".{8,}" required/>
 							</td>
 							<td width="1%"></td>
 							<td>
