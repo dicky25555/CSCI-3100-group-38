@@ -16,7 +16,8 @@ class searchPage extends React.Component{
         super(props);
         this.state={
             serviceName:'',
-            location:''
+            location:'',
+            serviceList: [],
         }  
     } 
     handleChange = (e) =>{
@@ -42,12 +43,54 @@ class searchPage extends React.Component{
 
     clickService = (e, value)=>{
         console.log(value)
-    }
+        e.preventDefault();
+        const getService = {
+            service_id: value,
+        }
+        var dataJSON = JSON.stringify(getService);
+        console.log(dataJSON);
 
-    componentDidMount(){
-        fetch("http://localhost:9000/api/category")
-        .then(
+        this.props.history.push({
+            pathname: "/serviceSpecific",
+            data: dataJSON
+        })
+    }
+    sendData(data){
+        fetch("http://localhost:9000/api/bookmark", {
+            method: 'POST',
+            body: data,
+            headers: {"Content-Type": "application/json"}
+        })
+            .then(res=> res.text())
+            .then(res => this.setState({apiResponse: res}))
+
+            console.log(this.state.categoriesList)
             
+        
+    }
+    bookmarkService = (e, value)=>{
+        console.log(value)
+        e.preventDefault();
+        const getService = {
+            service_id: value,
+        }
+        var dataJSON = JSON.stringify(getService);
+        console.log(dataJSON);
+
+        this.sendData(dataJSON);
+    }
+    componentDidMount(){
+        fetch("http://localhost:9000/api/service")
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.status, res.data);
+                this.setState({
+                    serviceList: res.data
+                })
+            })
         )
     }
     
@@ -68,26 +111,22 @@ class searchPage extends React.Component{
         }
 
         let servicesArray = [];
-        for (let i = 0; i < 10; i++){
+        for (let i = 0; i < this.state.serviceList.length; i++){
             servicesArray.push(
                 <div>
                 <tr>
-                    <td style={{width:"100px", textAlign:"right", paddingTop:"30px"}}>
-                        <p class="header" style={{color:"#5318FB"}}>9.7</p>
-                    </td>
+       
                     <td style={{paddingTop:"30px"}}>
-                        <p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e,{i})}>Service name {i}</p>
+                        <p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e,{serviceList[i]._id})}>serviceList[i].name</p>
                     </td>
                     <td style={{paddingTop:"30px", width:"60px"}}>
-                        <sub style={{color:"#5318FB"}}>BOOKMARK</sub>
+                        <sub style={{color:"#5318FB"}} onClick={e => this.bookmarkService(e,{serviceList[i]._id})}>BOOKMARK</sub>
                     </td>
                 </tr>
                 <tr>
-                    <td style= {{textAlign:"right", verticalAlign:"top", paddingRight:"20px", borderBottom: "1px solid #ddd"}}>
-                        <sub>/10</sub>
-                    </td>
+        
                     <td colspan="2" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd"}}>
-                        <sub>Category</sub> <br />Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
+                        <sub>serviceList[i].category_id.name</sub> <br />serviceList[i].details
                     </td>
                 </tr>
                 </div>
