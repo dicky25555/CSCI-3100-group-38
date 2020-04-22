@@ -145,6 +145,7 @@ class setting extends React.Component{
 							<td colspan="3">
 								<input value={this.state.password} onChange={e => this.handleChange(e)} type="password" className="inputStyle1" id="pwd" name="password" placeholder="New password" pattern=".{8,}" required/>
 							</td>
+							<td width="1%"></td>
 							<td>
 								<input onClick={e => this.onSubmit(e, 2)} type="submit" value="Confirm"/>
 							</td>
@@ -155,6 +156,7 @@ class setting extends React.Component{
 							<td colspan="3">
 								<input value={this.state.password} onChange={e => this.handleChange(e)} type="password" className="inputStyle1" id="pwdConfirm" name="password" placeholder="Confirm your password" pattern=".{8,}" required/>
 							</td>
+							<td width="1%"></td>
 							<td>
 								<input onClick={e => this.onSubmit(e, 3)} type="submit" value="Confirm"/>
 							</td>
