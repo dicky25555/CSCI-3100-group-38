@@ -7,6 +7,7 @@ import {
 } from "react-router-dom";
 import history from './history';
 import Navbar from './components/Navbar';
+import NavbarSigned from './components/Navbar-signed';
 import Buttombar from './components/Buttombar';
 import './searchPage.css';
 
@@ -91,6 +92,21 @@ class searchPage extends React.Component{
                     serviceList: res.data
                 })
             })
+        )        
+		fetch("http://localhost:9000/api/customer/profile", {
+        credentials: 'include'})
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.stats, res.data);
+                this.setState({
+                    signedData: res.data
+                })
+            }
+
+            )
         )
     }
     
@@ -110,32 +126,52 @@ class searchPage extends React.Component{
             var searchedLocation = '(empty location)';
         }
 
+        var navigationBar = [];
         let servicesArray = [];
         for (let i = 0; i < this.state.serviceList.length; i++){
-            servicesArray.push(
+			if(this.state.serviceList[i].name == searchedName){
+				servicesArray.push(
+					<div>
+					<tr>
+		   
+						<td style={{paddingTop:"30px"}}>
+							<p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e,this.state.serviceList[i]._id)}>this.state.serviceList[i].name</p>
+						</td>
+						<td style={{paddingTop:"30px", width:"60px"}}>
+							<sub style={{color:"#5318FB"}} onClick={e => this.bookmarkService(e,this.state.serviceList[i]._id)}>BOOKMARK</sub>
+						</td>
+					</tr>
+					<tr>
+			
+						<td colspan="2" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd"}}>
+							<sub>serviceList[i].category_id.name</sub> <br />serviceList[i].details
+						</td>
+					</tr>
+					</div>
+				);
+			}
+        }
+		
+        if (!this.state.signedData){
+            navigationBar.push(
                 <div>
-                <tr>
-       
-                    <td style={{paddingTop:"30px"}}>
-                        <p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e,{serviceList[i]._id})}>serviceList[i].name</p>
-                    </td>
-                    <td style={{paddingTop:"30px", width:"60px"}}>
-                        <sub style={{color:"#5318FB"}} onClick={e => this.bookmarkService(e,{serviceList[i]._id})}>BOOKMARK</sub>
-                    </td>
-                </tr>
-                <tr>
-        
-                    <td colspan="2" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd"}}>
-                        <sub>serviceList[i].category_id.name</sub> <br />serviceList[i].details
-                    </td>
-                </tr>
+                    <Navbar/>
                 </div>
-            );
+            )
+        }
+        else{
+            navigationBar.push(
+                <div>
+                    <NavbarSigned/>
+                </div>
+            )
         }
 
         return(
             <div>
-                <Navbar/>
+                <div>
+                    {navigationBar}
+                </div>
                 <div class="row">
                     <div class="col-md-1"></div>
                     <div class="col-md-10">

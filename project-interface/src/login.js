@@ -20,11 +20,11 @@ class Login extends React.Component {
             apiResponse: ''
         }
     }
-
+ 
     sendData(data){
         fetch("http://localhost:9000/api/customer/login", {
             method: 'POST',
-            withCredentials: true,
+            credentials: 'include',
             body: data,
             headers: {"Content-Type": "application/json"}
         })
@@ -40,7 +40,7 @@ class Login extends React.Component {
                     username: this.state.email
                 }
                 var loggedInJSON = JSON.stringify(loggedInStatus);
-
+ 
                 console.log(loggedInJSON)
                 this.props.history.push({
                     pathname: "/",

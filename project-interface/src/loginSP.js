@@ -15,20 +15,42 @@ class loginSP extends React.Component{
         super(props);
         this.state={
             email:'',
-            password:''
+            password:'',
+            apiResponse: ''
         }
     }
 
     sendData(data){
         fetch("http://localhost:9000/api/service/login", {
             method: 'POST',
+            credentials: 'include',
             body: data,
             headers: {"Content-Type": "application/json"}
         })
-            .then(res=> res.text())
-            .then(res => this.setState({apiResponse: res}))
+        .then((response) => {
+            console.log(response);
+            this.state.apiResponse = response.ok;
+            console.log(this.state.apiResponse);
+            if(!response.ok){
+                alert('Your username or password is wrong');
+            } else{
+                const loggedInStatus ={
+                    signedIn: response.ok,
+                    username: this.state.email
+                }
+                var loggedInJSON = JSON.stringify(loggedInStatus);
 
-        
+                console.log(loggedInJSON)
+                this.props.history.push({
+                    pathname: "/",
+                    data: loggedInJSON
+                })
+            }
+        })
+        .catch(
+            error => null
+        )
+        console.log(this.state.apiResponse);
     }
 
     handleChange = (e) =>{
@@ -39,11 +61,14 @@ class loginSP extends React.Component{
     onSubmit = (e) =>{
         e.preventDefault();
         const signUpForm = {
-            email: this.state.email,
+            username: this.state.email,
             password: this.state.password
         }
         var dataJSON = JSON.stringify(signUpForm);
         console.log(dataJSON);
+        this.sendData(dataJSON);
+        console.log(this.state.apiResponse);
+
     }
     render(){
         return(
