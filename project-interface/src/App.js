@@ -107,7 +107,7 @@ class App extends Component {
         }
         return (
             <div>
-                <div class="row" >
+                <div>
                     {navigationBar}
                 </div>
                 <div class="row" style={{backgroundColor:"black"}}>
