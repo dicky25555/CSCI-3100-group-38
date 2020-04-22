@@ -12,7 +12,16 @@ class setting extends React.Component{
         super(props);
 
     }
-
+    logOut = (e) =>{
+        fetch("http://localhost:9000/api/customer/logout",{
+            method: 'POST',
+            credentials: 'include'})
+            .then( res => {
+                this.props.history.push({
+                    pathname:"/"
+                })
+            })
+    }
     render(){
         return(
         <div>
@@ -31,7 +40,7 @@ class setting extends React.Component{
                         <br/><br/>
                         <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} >Delete Account </p>
                         <br/><br/>
-                        <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} >Log out </p>
+                        <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.logOut(e)}>Log out </p>
                         
                     </td>
 

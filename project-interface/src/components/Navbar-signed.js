@@ -3,7 +3,7 @@ import './Navbar.css';
 
 import history from './../history';
 import logo from './logo.png';
-import profile from './profile.png';
+import profilebutton from './profile-button.png';
 
 import 'bootstrap/dist/css/bootstrap.css';
 
@@ -17,16 +17,16 @@ function NavbarSigned(){
                             <img src={logo} width="70%" style={{paddingLeft: "25px", cursor:"pointer"}} onClick={() => history.push('/')}/>
                         </td>
                         <td width="12%">
-                            <span class="service">Services</span>
+                            <span class="service" style={{cursor:"pointer"}} onClick={() => history.push('/serviceCategories')}>Services</span>
                         </td>
                         <td width="12%">
-                            <span class="service">Bookmarks</span>
+                            <span class="service" style={{cursor:"pointer"}} onClick={() => history.push('/bookmarkPage')}>Bookmarks</span>
                         </td>
                         <td width="12%">
-                            <span class="service">Chatbox</span>
+                            <span class="service" style={{cursor:"pointer"}} onClick={() => history.push('/mainChatBox')}>Chatbox</span>
                         </td>
                         <td align="right" style={{paddingRight:"2%", cursor:"pointer"}} onClick={() => history.push('/setting')}>
-                            Setting
+                            <img src={profilebutton} width="22%" style={{paddingTop: "5px", alignItems: "right", paddingBottom: "5px", cursor:"pointer"}} onClick={() => history.push('/signup')}/>
                         </td>
 
                     </tr>

@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import NavbarSigned from './components/Navbar-signed';
 import Navbar from './components/Navbar';
 import Buttombar from './components/Buttombar';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -9,7 +10,8 @@ class categoriesList extends Component{
     constructor(props){
         super(props);
         this.state = {
-            apiResponse: []
+            apiResponse: [],
+            signedData: ''
         }
         
     }
@@ -19,6 +21,7 @@ class categoriesList extends Component{
         })
     }
 
+    
     componentDidMount(){
         const {data} = this.props.location;
         if(data){
@@ -34,11 +37,34 @@ class categoriesList extends Component{
                         })
                     })
                 )
+                fetch("http://localhost:9000/api/customer/profile", {
+                    credentials: 'include'})
+                    .then(
+                        res => res.json().then( data => ({
+                            data: data,
+                            status: res.status
+                        })).then(res => {
+                            console.log(res.stats, res.data);
+                            this.setState({
+                                signedData: res.data
+                            })
+                        })
+                    )
         }
+
+    }
+
+    goesSpecificService = (e, companyData) =>{
+        e.preventDefault();
+        this.props.history.push({
+            pathname:"/serviceSpecific",
+            data: companyData
+        })
     }
     render(){
         const { data } = this.props.location;
-        var listOfCompanies = []
+        var listOfCompanies = [];
+        var navigationBar = [];
         if(data){
             console.log(data.name)
             var categoryName = data.name; 
@@ -53,9 +79,9 @@ class categoriesList extends Component{
 
                             </td>
                             <td style={{paddingTop:"30px"}}>
-                                <p class="header">{this.state.apiResponse[count].name}</p>
+                                <p class="header" style={{cursor:"pointer"}} onClick={e => this.goesSpecificService(e, this.state.apiResponse[count])}>{this.state.apiResponse[count].name}</p>
                             </td>
-                            <td style={{paddingTop:"30px", width:"60px"}}>
+                            <td style={{ paddingTop:"30px", width:"60px"}}>
                                 <sub style={{color:"#5318FB"}}>BOOKMARK</sub>
                             </td>
                         </tr>
@@ -75,9 +101,25 @@ class categoriesList extends Component{
         }else{
             this.returnPage();
         }
+        if (!this.state.signedData){
+            navigationBar.push(
+                <div>
+                    <Navbar/>
+                </div>
+            )
+        }
+        else{
+            navigationBar.push(
+                <div>
+                    <NavbarSigned/>
+                </div>
+            )
+        }
         return(
             <div>
-                <Navbar/>
+                <div>
+                    {navigationBar}
+                </div>
                 <div class="row" style={{paddingTop:"20px"}}>
                     <div class="col-md-1"></div>
                     <div class="col-md-10">
@@ -96,9 +138,13 @@ class categoriesList extends Component{
             
                 </div>
                 <div class="row">
+                    
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
                     <table>
                         {listOfCompanies}
                     </table>
+                    </div>
                 </div>
                 <Buttombar/>
             </div>

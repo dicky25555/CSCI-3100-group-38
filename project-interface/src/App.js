@@ -11,7 +11,7 @@ class App extends Component {
         super(props);
         this.state={
             email: '',
-            signedIn: false,
+            signedData: '',
             serviceName: '',
             location: ''
         }
@@ -39,16 +39,25 @@ class App extends Component {
     }
 
     componentDidMount(){
-        fetch("http://localhost:9000/api/customer/profile", {withCredentials: true,
+        fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
-            res => res.json().then(
-                console.log(res)
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.stats, res.data);
+                this.setState({
+                    signedData: res.data
+                })
+            }
+
             )
         )
     }
 
     render(){
+
         const { data } = this.props.location;
         if(data){
             var parsedData = JSON.parse(data);
@@ -56,9 +65,9 @@ class App extends Component {
             this.state.signedIn = true;
             console.log(parsedData);
         }
-        console.log(this.state.signedIn);
+        console.log(this.state.signedData);
         var navigationBar = [];
-        if (!this.state.signedIn){
+        if (!this.state.signedData){
             navigationBar.push(
                 <div>
                     <Navbar/>

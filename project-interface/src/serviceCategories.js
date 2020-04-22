@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import Navbar from './components/Navbar';
+import NavbarSigned from './components/Navbar-signed';
 import Buttombar from './components/Buttombar';
 import 'bootstrap/dist/css/bootstrap.css';
 import './components/font/Montserrat-Regular.ttf';
@@ -9,7 +10,8 @@ class serviceCategories extends Component{
     constructor(props){
         super(props);
         this.state = {
-            categoriesList : []
+            categoriesList : [],
+            signedData: ''
         }
     }
 
@@ -30,6 +32,22 @@ class serviceCategories extends Component{
                 })
             })
         )
+
+        fetch("http://localhost:9000/api/customer/profile", {
+        credentials: 'include'})
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.stats, res.data);
+                this.setState({
+                    signedData: res.data
+                })
+            }
+
+            )
+        )
     }
 
     getCategoriesList = (e, selectedCategories) => {
@@ -42,6 +60,7 @@ class serviceCategories extends Component{
     }
     render(){
         var categoriesArray = [];
+        var navigationBar = [];
         for(let i=0; i < this.state.categoriesList.length; i++){
             if(i%2 == 0){
                 categoriesArray.push(
@@ -65,9 +84,25 @@ class serviceCategories extends Component{
                 );
             }
         }
+        if (!this.state.signedData){
+            navigationBar.push(
+                <div>
+                    <Navbar/>
+                </div>
+            )
+        }
+        else{
+            navigationBar.push(
+                <div>
+                    <NavbarSigned/>
+                </div>
+            )
+        }
         return(
             <div>
-                <Navbar/>
+                <div>
+                    {navigationBar}
+                </div>
                 <div class="row" style={{borderBottom: "1px solid #DDD", paddingBottom:"60px",paddingTop:"20px"}}>
                     <div class="col-md-1"></div>
                     <div class="col-md-10">
