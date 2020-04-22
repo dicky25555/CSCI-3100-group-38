@@ -18,63 +18,71 @@ class bookmarkPage extends React.Component{
         this.state={
             serviceName:'',
             location:'',
-            signedData: ''
+            signedData: '',
+            bookmarkList: []
         }  
     } 
-    handleChange = (e) =>{
-        this.setState({
-            [e.target.name]: e.target.value
+    removeBookmark = (e, id) => {
+        fetch("http://localhost:9000/api/bookmark/" + id, {
+            credentials: 'include',
+            method: 'DELETE',
+            headers: {"Content-Type" : "application/json"}
         })
-    }
-
-    onSubmit = (e) =>{
-        e.preventDefault();
-        const signUpForm = {
-            customerName: this.state.customerName
-        }
-        var dataJSON = JSON.stringify(signUpForm);
-        console.log(dataJSON);
-
-        this.props.history.push({
-            pathname: "/searchPage",
-            data: dataJSON
-        })
+        .then(
+            res => console.log(res)
+        )
+        .then(
+            window.location.reload()
+        )
     }
 
     componentDidMount(){
         fetch("http://localhost:9000/api/customer/profile", {
-                    credentials: 'include'})
-                    .then(
-                        res => res.json().then( data => ({
-                            data: data,
-                            status: res.status
-                        })).then(res => {
-                            console.log(res.stats, res.data);
-                            this.setState({
-                                signedData: res.data
-                            })
-                        })
-                    )
-    }
+        credentials: 'include'})
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.stats, res.data);
+                this.setState({
+                    signedData: res.data
+                })
+            }
 
-    clickService = (e, value)=>{
-        console.log(value)
-    }
+            )
+        )
+        console.log(this.state.signedData)
+        fetch("http://localhost:9000/api/bookmark?customer_id=" + this.state.signedData._id + "&limit=10&page=1",{
+            credentials: 'include',
+            method: 'GET',
+            headers: {"Content-Type" : "application/json"}
+        }).then(res => res.json()
+            .then(data => ({
+                data: data,
+                status: res.status
+            }))
+            .then(res => {
+                console.log(res.status, res.data)
+                this.setState({
+                bookmarkList: res.data
+            })
+        })
+        )
+        }
+
 
     //Test out list of services
     render(){
-        const { data } = this.props.location;
-        if(data){
-            var parsedData = JSON.parse(data);
-            var customerName = parsedData.customerName;
-            console.log(data)
-        }else{
-            var searchedName = '(empty name)';
-        }
-        var navigationBar = [];
+        console.log(this.state.signedData)
         let bookmarkArray = [];
+        
+        console.log(this.state.bookmarkList);
+    
+        console.log(this.state.bookmarkList)
         if(this.state.signedData){
-            for (let i = 0; i < 3; i++){
+            if(this.state.bookmarkList){
+            for (let i = 0; i < this.state.bookmarkList.length; i++){
                 bookmarkArray.push(
                     <div>
                         <tr>
@@ -82,10 +90,10 @@ class bookmarkPage extends React.Component{
                                 <p class="header" style={{color:"#5318FB"}}>9.7</p>
                             </td>
                             <td style={{paddingTop:"30px"}}>
-                                <p class="header">Service name</p>
+                                <p class="header">{this.state.bookmarkList[i].service_id.name}</p>
                             </td>
                             <td style={{paddingTop:"30px", width:"60px"}}>
-                                <sub style={{color:"#5318FB"}}>REMOVE</sub>
+                                <sub style={{color:"#5318FB", cursor:"pointer"}} onClick={e => this.removeBookmark(e, this.state.bookmarkList[i]._id)}>REMOVE</sub>
                             </td>
                         </tr>
                         <tr>
@@ -93,12 +101,13 @@ class bookmarkPage extends React.Component{
                                 <sub>/10</sub>
                             </td>
                             <td colspan="2" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd"}}>
-                                <sub>Category</sub> <br />Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
+                                <sub>Category</sub> <br />{this.state.bookmarkList[i].service_id.details}
                             </td>
                         </tr>
                     </div>
                 );
             }
+        }
 
             return(
                 <div>

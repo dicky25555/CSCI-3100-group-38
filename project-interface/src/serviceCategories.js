@@ -40,7 +40,7 @@ class serviceCategories extends Component{
                 data: data,
                 status: res.status
             })).then(res => {
-                console.log(res.stats, res.data);
+                console.log(res.status, res.data);
                 this.setState({
                     signedData: res.data
                 })

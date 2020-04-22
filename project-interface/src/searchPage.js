@@ -35,38 +35,40 @@ class searchPage extends React.Component{
         }
         var dataJSON = JSON.stringify(signUpForm);
         console.log(dataJSON);
-
+        
+        this.getService(signUpForm);
+        /*
         this.props.history.push({
             pathname: "/searchPage",
             data: dataJSON
         })
+        */
+       console.log(this.state.serviceList);
     }
 
-    clickService = (e, value)=>{
-        console.log(value)
-        e.preventDefault();
-        const getService = {
-            service_id: value,
-        }
-        var dataJSON = JSON.stringify(getService);
-        console.log(dataJSON);
-
-        this.props.history.push({
-            pathname: "/serviceSpecific",
-            data: dataJSON
+    
+    getService(data){
+        console.log(data.serviceName)
+        this.setState({
+            serviceList: []
         })
-    }
-    sendData(data){
-        fetch("http://localhost:9000/api/bookmark", {
-            method: 'POST',
-            body: data,
-            headers: {"Content-Type": "application/json"}
-        })
-            .then(res=> res.text())
-            .then(res => this.setState({apiResponse: res}))
-
-            console.log(this.state.categoriesList)
-            
+        fetch("http://localhost:9000/api/service?name=" + data.serviceName + "&address=" + data.location + "&limit=10&page=1", {
+                credentials: 'include',
+                method: 'GET',
+                headers: {"Content-Type" : "application/json"}
+            })
+            .then(
+                res => res.json().then( data => ({
+                    data: data,
+                    status: res.status
+                })).then(res => {
+                    console.log(res.status, res.data);
+                    this.setState({
+                        serviceList: res.data
+                    })
+                })
+            )            
+        console.log(this.state.serviceList)
         
     }
     bookmarkService = (e, value)=>{
@@ -80,19 +82,49 @@ class searchPage extends React.Component{
 
         this.sendData(dataJSON);
     }
+
     componentDidMount(){
-        fetch("http://localhost:9000/api/service")
-        .then(
-            res => res.json().then( data => ({
-                data: data,
-                status: res.status
-            })).then(res => {
-                console.log(res.status, res.data);
-                this.setState({
-                    serviceList: res.data
-                })
+        const {data} = this.props.location;
+        
+        console.log(data)
+        if(data){
+            var parsedData = JSON.parse(data)
+            console.log(parsedData.serviceName)
+            fetch("http://localhost:9000/api/service?name=" + parsedData.serviceName + "&address=" + parsedData.location + "&limit=10&page=1", {
+                credentials: 'include',
+                method: 'GET',
+                headers: {"Content-Type" : "application/json"}
             })
-        )        
+            .then(
+                res => res.json().then( data => ({
+                    data: data,
+                    status: res.status
+                })).then(res => {
+                    console.log(res.status, res.data);
+                    this.setState({
+                        serviceList: res.data
+                    })
+                })
+            )  
+        } else{
+            fetch("http://localhost:9000/api/service?limit=10&page=1", {
+                credentials: 'include',
+                method: 'GET',
+                headers: {"Content-Type" : "application/json"}
+            })
+            .then(
+                res => res.json().then( data => ({
+                    data: data,
+                    status: res.status
+                })).then(res => {
+                    console.log(res.status, res.data);
+                    this.setState({
+                        serviceList: res.data
+                    })
+                })
+            )  
+        }      
+
 		fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -126,16 +158,17 @@ class searchPage extends React.Component{
             var searchedLocation = '(empty location)';
         }
 
+        console.log(this.state.serviceList.length);
         var navigationBar = [];
         let servicesArray = [];
         for (let i = 0; i < this.state.serviceList.length; i++){
-			if(this.state.serviceList[i].name == searchedName){
+
 				servicesArray.push(
 					<div>
 					<tr>
 		   
 						<td style={{paddingTop:"30px"}}>
-							<p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e,this.state.serviceList[i]._id)}>this.state.serviceList[i].name</p>
+							<p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e,this.state.serviceList[i]._id)}>{this.state.serviceList[i].name}</p>
 						</td>
 						<td style={{paddingTop:"30px", width:"60px"}}>
 							<sub style={{color:"#5318FB"}} onClick={e => this.bookmarkService(e,this.state.serviceList[i]._id)}>BOOKMARK</sub>
@@ -143,13 +176,19 @@ class searchPage extends React.Component{
 					</tr>
 					<tr>
 			
-						<td colspan="2" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd"}}>
-							<sub>serviceList[i].category_id.name</sub> <br />serviceList[i].details
+						<td colspan="2" style={{paddingBottom:"40px", paddingRight:"20px"}}>
+							<sub>{this.state.serviceList[i].category_id.name}</sub> <br />{this.state.serviceList[i].details}
 						</td>
 					</tr>
+                    <tr>
+						<td colspan="2" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd"}}>
+							<br />{this.state.serviceList[i].address}
+						</td>
+					</tr>
+                    <br/>
 					</div>
-				);
-			}
+                );
+			
         }
 		
         if (!this.state.signedData){

@@ -11,7 +11,8 @@ class serviceSpecific extends React.Component{
         this.state = {
             signedData: '',
             reviewText: '',
-            rating: ''
+            rating: '',
+            reviewData:[]
         }
     }
 
@@ -35,12 +36,7 @@ class serviceSpecific extends React.Component{
         })
     }
 
-    bookmarkService = (e, serviceId) => {
-        console.log(this.state.signedData._id)
-        console.log(serviceId)
-        const data = {
-            service_id: serviceId
-        }
+    submitBookmark(data){
         fetch("http://localhost:9000/api/bookmark/", {
             credentials: 'include',
             method: 'POST',
@@ -53,23 +49,54 @@ class serviceSpecific extends React.Component{
         )
     }
 
+    bookmarkService = (e, serviceId) => {
+        console.log(this.state.signedData._id)
+        console.log(serviceId)
+        const data = {
+            service_id: serviceId,
+            customer_id: this.state.signedData._id
+        }
+        console.log(data)
+        var dataJSON = JSON.stringify(data)
+        console.log(dataJSON)
+        this.submitBookmark(dataJSON)
+    }
+
     postReview = (e, serviceId) => {
         e.preventDefault();
         console.log(this.state.reviewText);
         console.log(this.state.rating);
         console.log(serviceId);
-        if (this.state.reviewText !== null && this.state.rating !== null){
+        if (this.state.reviewText && this.state.rating ){
             const data = {
                 service_id: serviceId,
                 rating: this.state.rating,
                 customer_review: this.state.reviewText
             }
+            var dataJSON = JSON.stringify(data);
             fetch("http://localhost:9000/api/review/",{
+                credentials: 'include',
                 method: 'POST',
-                body: data,
+                body: dataJSON,
                 headers: {"Content-Type" : "application/json"}
             }).then(res => res.text())
             .then(res => console.log(res))
+            .then(fetch("http://localhost:9000/api/review?service_id=" + serviceId + "&limit=10&page=1",{
+                credentials: 'include',
+                method: 'GET',
+                headers: {"Content-Type" : "application/json"}
+            }).then(res => res.json()
+            .then(data => ({
+                data: data,
+                status: res.status
+            })))
+            .then(res =>{
+                console.log(res.status, res.data)
+                this.setState({
+                    reviewData: res.data
+                })
+            }))
+
         } else{
             alert("Input your review accordingly!")
         }
@@ -89,10 +116,38 @@ class serviceSpecific extends React.Component{
                             })
                         })
                     )
+        const { data } = this.props.location;
+        
+        if(data){
+            fetch("http://localhost:9000/api/review?service_id=" + data._id + "&limit=10&page=1",{
+                credentials: 'include',
+                method: 'GET',
+                headers: {"Content-Type" : "application/json"}
+            }).then(res => res.json()
+            .then(data => ({
+                data: data,
+                status: res.status
+            })))
+            .then(res =>{
+                console.log(res.status, res.data)
+                this.setState({
+                    reviewData: res.data
+                })
+            })
+
+            console.log(this.state.reviewData)
+        }
+    }
+
+    goesToChat = (e, data)=>{
+        this.props.history.push({
+            pathname:'/chatbox',
+            data: data
+        })    
     }
 
     render(){
-        var review = '';
+        var reviewList = [];
         const { data } = this.props.location;
         if(data){
             var navigationBar = [];
@@ -107,6 +162,40 @@ class serviceSpecific extends React.Component{
                 navigationBar.push(
                     <div>
                         <NavbarSigned/>
+                    </div>
+                )
+            }
+
+            for(let count = 0; count < this.state.reviewData.length; count++){
+                var reviewerName = ''
+                if(this.state.reviewData[count].customer_id){
+                    reviewerName = this.state.reviewData[count].customer_id.name
+                }else {
+                    reviewerName = 'Former User'
+                }
+                reviewList.push(
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
+                            <table>
+                                <tr>
+                                    <td style={{width:"100px", textAlign:"right" ,paddingTop:"30px"}}>
+                                        <p class="header" style={{color:"#5318FB", fontSize:"30px"}}> {this.state.reviewData[count].rating}<sub>/10</sub></p>
+
+                                    </td>
+                                    <td style={{paddingTop:"30px"}}>
+                                        <p style={{fontWeight:"bold"}}>{reviewerName}</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style={{textAlign:"right", verticalAlign:"top", paddingRight:"20px"}}></td>
+                                    <td style={{paddingRight:"20px"}}>
+                                        {this.state.reviewData[count].customer_review}
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                        </div>
                     </div>
                 )
             }
@@ -147,6 +236,12 @@ class serviceSpecific extends React.Component{
                                     <br />{data.details}
                                 </td>
                             </tr>
+                            <tr>
+                                    <td colspan="3" style={{textAlign:"right"}}>
+                                        <input type="submit" onClick={e => this.goesToChat(e, data)} value="Chat Them"/>
+                                    </td>
+                                </tr>
+                                
                         </table>
                     </div>
 
@@ -184,37 +279,11 @@ class serviceSpecific extends React.Component{
                         </div>
                     </div>
                 </div>
+                <div>
+                    {reviewList}
+                </div>
 
-
-        <div class="row">
-
-            <div class="col-md-1"></div>
-            <div class="col-md-10">
-                <table>
-                    <tr>
-                        <td style={{width:"100px", textAlign:"right" ,paddingTop:"30px"}}>
-                            <p class="header" style={{color:"#5318FB", fontSize:"30px"}}> 9<sub>/10</sub></p>
-
-                        </td>
-                        <td style={{paddingTop:"30px"}}>
-                            <p style={{fontWeight:"bold"}}>Review1 Title</p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td style={{textAlign:"right", verticalAlign:"top", paddingRight:"20px"}}></td>
-                        <td style={{paddingRight:"20px"}}>
-                            Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style={{paddingBottom:"40px", textAlign:"right", borderBottom: "1px solid #ddd"}}>
-                            <sub>Username</sub>
-                        </td>
-                    </tr>
-                    
-                </table>
-            </div>
-            </div>
+        
 
                     <Buttombar/>
                 </div>

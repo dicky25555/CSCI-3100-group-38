@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import Navbar from './components/Navbar';
 import NavbarSigned from './components/Navbar-signed';
+import NavbarSignedSP from './components/Navbar-signedSP';
 import Buttombar from './components/Buttombar';
 import './components/font/Montserrat-Regular.ttf';
 import 'bootstrap/dist/css/bootstrap.css';
@@ -12,6 +13,7 @@ class App extends Component {
         this.state={
             email: '',
             signedData: '',
+            signedDataSP: '',
             serviceName: '',
             location: ''
         }
@@ -54,6 +56,21 @@ class App extends Component {
 
             )
         )
+        fetch("http://localhost:9000/api/service/profile", {
+        credentials: 'include'})
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.stats, res.data);
+                this.setState({
+                    signedDataSP: res.data
+                })
+            }
+
+            )
+        )
     }
 
     render(){
@@ -67,17 +84,25 @@ class App extends Component {
         }
         console.log(this.state.signedData);
         var navigationBar = [];
-        if (!this.state.signedData){
+        if (!this.state.signedData && !this.state.signedDataSP){
             navigationBar.push(
                 <div>
                     <Navbar/>
                 </div>
             )
         }
+        else if(this.state.signedDataSP){
+            navigationBar.push(
+                <div>
+                    <NavbarSignedSP/>
+                </div>
+            )
+        }
         else{
             navigationBar.push(
+                <div>
                     <NavbarSigned/>
-
+                </div>
             )
         }
         return (
