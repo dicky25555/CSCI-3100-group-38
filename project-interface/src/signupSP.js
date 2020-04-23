@@ -27,6 +27,8 @@ class signupSP extends React.Component{
             description: '',
             formValid : false,
             categoriesList: [],  
+            signedData: '',
+            signedDataSP: ''
         };
     }
 
@@ -45,6 +47,36 @@ class signupSP extends React.Component{
     }
 
     componentDidMount(){
+        fetch("http://localhost:9000/api/customer/profile", {
+        credentials: 'include'})
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.stats, res.data);
+                this.setState({
+                    signedData: res.data
+                })
+            }
+
+            )
+        )
+        fetch("http://localhost:9000/api/service/profile", {
+        credentials: 'include'})
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.stats, res.data);
+                this.setState({
+                    signedDataSP: res.data
+                })
+            }
+
+            )
+        )
         fetch("http://localhost:9000/api/category")
         .then(
             res => res.json().then( data => ({
@@ -144,118 +176,127 @@ class signupSP extends React.Component{
             
             )
         }
+        if(!this.state.signedData && !this.state.signedDataSP){
 
-        return(
-            <div>
-                <Navbar/>
-                <div class="row">
-                    <div class="col-md-12">
-                        <br /><br /><br /><br /><br />
-                        <p class="text1">Let your business reach thousands</p>
+            return(
+
+                <div>
+                    <Navbar/>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <br /><br /><br /><br /><br />
+                            <p class="text1">Let your business reach thousands</p>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-12">
-                        <p class="text2">In Service On Sight we make sure everyone is hassle-free.</p>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p class="text2">In Service On Sight we make sure everyone is hassle-free.</p>
+                        </div>
                     </div>
-                </div>
-                <div id="firstForm" class="row">
-                    <div class="col-md-3"></div>
-                    <div class="col-md-6">
-                        <br /><br />
-                        <table width="100%">
-                            <tr  style={{border: "1px solid rgba(0, 0, 0, 0.5)", height: "900px"}}>
-                                <td>
-                                    <form action="">
-                                        <center>
-                                        <table border="0" width="85%">
-                                            <tr>
-                                                <td colspan="2"><p></p></td>
+                    <div id="firstForm" class="row">
+                        <div class="col-md-3"></div>
+                        <div class="col-md-6">
+                            <br /><br />
+                            <table width="100%">
+                                <tr  style={{border: "1px solid rgba(0, 0, 0, 0.5)", height: "900px"}}>
+                                    <td>
+                                        <form action="">
+                                            <center>
+                                            <table border="0" width="85%">
+                                                <tr>
+                                                    <td colspan="2"><p></p></td>
+                                                    <td>
+                                                        
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <p></p><p style={{fontSize: "24px", fontWeight: "bold"}}>Let us know about you and your business!</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <input value={this.state.email} onChange={e => this.handleChange(e)} className="inputStyle3"type="email" id="email" name="email" placeholder="Email Adress" required/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <input value={this.state.password} onChange={e => this.handleChange(e)} type="password" className="inputStyle3" id="pwd" name="password" pattern=".{8,}" placeholder="Create password" required/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <input value={this.state.ID} onChange={e => this.handleChange(e)} className="inputStyle3" id="ID" name="ID" placeholder="ID card Number" required/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
                                                 <td>
-                                                    
+                                                    <input value={this.state.companyName} onChange={e => this.handleChange(e)} className="inputStyle3" id="companyName" name="companyName" placeholder="Company Name" required/>
                                                 </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3">
-                                                    <p></p><p style={{fontSize: "24px", fontWeight: "bold"}}>Let us know about you and your business!</p>
+                                                <td width="1%"></td>
+                                                <td>
+                                                    <select className="inputStyle3" id="category" name="category" required>
+                                                        <option value="">- Select Category -</option>
+                                                        {categoriesOptionArray}
+                                                    </select>
                                                 </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3">
-                                                    <input value={this.state.email} onChange={e => this.handleChange(e)} className="inputStyle3"type="email" id="email" name="email" placeholder="Email Adress" required/>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3">
-                                                    <input value={this.state.password} onChange={e => this.handleChange(e)} type="password" className="inputStyle3" id="pwd" name="password" pattern=".{8,}" placeholder="Create password" required/>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3">
-                                                    <input value={this.state.ID} onChange={e => this.handleChange(e)} className="inputStyle3" id="ID" name="ID" placeholder="ID card Number" required/>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                            <td>
-                                                <input value={this.state.companyName} onChange={e => this.handleChange(e)} className="inputStyle3" id="companyName" name="companyName" placeholder="Company Name" required/>
-                                            </td>
-                                            <td width="1%"></td>
-                                            <td>
-                                                <select className="inputStyle3" id="category" name="category" required>
-                                                    <option value="">- Select Category -</option>
-                                                    {categoriesOptionArray}
-                                                </select>
-                                            </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3">
-                                                    <input className="inputStyle1" value={this.state.address} onChange={e => this.handleChange(e)} id="address" name="address" placeholder="Address" required/>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="3">
-                                                    <textarea value={this.state.description} onChange={e => this.handleChange(e)} className="inputStyle2" id="description" name="description" placeholder="Description" required/>
-                                                </td>
-                                            </tr>
-                                            <tr></tr>
-                                            <tr>
-                                                <td colspan="2"><br />
-                                                <input type="submit" onClick={e => this.onFinish(e)} value="Sign up"/>
-                                                </td>
-                                                <td><br />
-                                                    <span className="signupcustomer" style={{cursor:"pointer"}} onClick={() => history.push("/signup")}><u>Sign up as a customer</u></span>
-                                                </td>
-                                            </tr>
-                                        </table>
-                                        </center>
-                                    </form>
-                                </td>
-                            </tr>
-                        </table>
-                        <br/><br/>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <input className="inputStyle1" value={this.state.address} onChange={e => this.handleChange(e)} id="address" name="address" placeholder="Address" required/>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td colspan="3">
+                                                        <textarea value={this.state.description} onChange={e => this.handleChange(e)} className="inputStyle2" id="description" name="description" placeholder="Description" required/>
+                                                    </td>
+                                                </tr>
+                                                <tr></tr>
+                                                <tr>
+                                                    <td colspan="2"><br />
+                                                    <input type="submit" onClick={e => this.onFinish(e)} value="Sign up"/>
+                                                    </td>
+                                                    <td><br />
+                                                        <span className="signupcustomer" style={{cursor:"pointer"}} onClick={() => history.push("/signup")}><u>Sign up as a customer</u></span>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            </center>
+                                        </form>
+                                    </td>
+                                </tr>
+                            </table>
+                            <br/><br/>
+                        </div>
+                    </div>
+                    
+                    <div className="row" id="receipt" style={{display:"None"}}>
+                        <div class="col-md-12">
+                            <br/><br/><br/>
+                            <p className="text1" style={{color:"#5318FB"}}>Your registration is received</p>
+                            <br/><br/><br/>
+                        </div>
+                    </div>
+                    <div class="div3">
+                    <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <p class="text3"><br /><br /><br />
+                            We serve to make sure you get the service you need, <br />in the most convenient way possible
+                        </p>
+                        </div>
                     </div>
                 </div>
-                
-                <div className="row" id="receipt" style={{display:"None"}}>
-                    <div class="col-md-12">
-                        <br/><br/><br/>
-                        <p className="text1" style={{color:"#5318FB"}}>Your registration is received</p>
-                        <br/><br/><br/>
-                    </div>
+                    <Buttombar/>
                 </div>
-                <div class="div3">
-                <div class="row">
-                <div class="col-md-1"></div>
-                <div class="col-md-10">
-                    <p class="text3"><br /><br /><br />
-                        We serve to make sure you get the service you need, <br />in the most convenient way possible
-                    </p>
-                    </div>
-                </div>
-            </div>
-                <Buttombar/>
-            </div>
-        );
+            );
+        } else{
+            history.push('/')
+            return (
+                <div></div>
+            )
+        }
+            
     }
 }
 
