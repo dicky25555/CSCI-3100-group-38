@@ -49,15 +49,6 @@ class setting extends React.Component{
 			box.style.display = "none";
 		}
     }
-	deleteAccount = (e) =>{
-		var box = document.getElementById("deleteAccount");
-		
-		if (box.style.display === "none") {
-			box.style.display = "block";
-		} else {
-			box.style.display = "none";
-		}
-    }
 	
     componentDidMount(){
         fetch("http://localhost:9000/api/customer/profile", {
@@ -71,8 +62,8 @@ class setting extends React.Component{
                 this.setState({
                     signedData: res.data
                 })
+                console.log(res.data)
             }
-
             )
         )
         fetch("http://localhost:9000/api/service/profile", {
@@ -111,12 +102,6 @@ class setting extends React.Component{
 			} else {
 				this.state.formValid = true;
 			}
-		}else if(value == 3){ 
-			if(!inputPasswordConfirm.checkValidity()){
-				alert("Check your password, make sure it is at least 8 characters !");
-			}  else {
-				this.state.formValid = true;
-			}
 		}
     }
 	
@@ -124,7 +109,9 @@ class setting extends React.Component{
     onSubmitCustomer = (e, value) =>{
         e.preventDefault();
         this.validateChanges(value);
-        if(this.state.formValid){
+        if(!this.state.signedData && !this.state.signedDataSP){
+        }
+        else if(this.state.signedData){
 			if(value == 1){
                 const signUpForm = {
                     name : this.state.firstname + " " + this.state.lastname,
@@ -195,7 +182,12 @@ class setting extends React.Component{
             })
     }
     render(){
-        if(this.state.signedData){
+        console.log(this.state.signedData);
+        if(!this.state.signedData && !this.state.signedDataSP){
+            return(
+                <div></div>
+            )
+        }else if(this.state.signedData){
             return(
             
                 <div>
@@ -244,7 +236,7 @@ class setting extends React.Component{
                                         </td>
                                     </tr>
                                     <br/><br/>
-                                    <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.deleteAccount(e)} >Delete Account </p>
+                                    <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.onSubmitCustomer(e, 3)} >Delete Account </p>
                                     <tr id="deleteAccount" style={{display:"none"}}>
                                         <td colspan="3">
                                             <input value={this.state.passwordConfirm} onChange={e => this.handleChange(e)} type="password" className="inputStyle1" id="pwdConfirm" name="passwordConfirm" placeholder="Confirm your password" pattern=".{8,}" required/>
@@ -265,7 +257,7 @@ class setting extends React.Component{
                     <Buttombar/>
                 </div>
             );
-        } else if (this.state.signedDataSP){
+        } else {
             return(
                 <div>
                     <NavbarSignedSP/>
@@ -302,41 +294,20 @@ class setting extends React.Component{
                                         </tr>
                                         <br/><br/>
                                         <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.deleteAccount(e)} >Delete Account </p>
-                                        <tr id="deleteAccount" style={{display:"none"}}>
-                                            <td colspan="3">
-                                                <input value={this.state.passwordConfirm} onChange={e => this.handleChange(e)} type="password" className="inputStyle1" id="pwdConfirm" name="passwordConfirm" placeholder="Confirm your password" pattern=".{8,}" required/>
-                                            </td>
-                                            <td width="1%"></td>
-                                            <td>
-                                                <input onClick={e => this.onSubmitCustomer(e, 3)} type="submit" value="Confirm"/>
-                                            </td>
-                                        </tr>
+                                        
                                         <br/><br/>
                                         <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.logOutCustomer(e)}>Log out </p>
                                         
                                     </td>
 
 
-                            <td style={{paddingTop:"30px"}}>
-                                <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} >Change your details </p>
-                                <br/><br/>
-                                <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} >Change Password </p>
-                                <br/><br/>
-                                <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} >Delete Account </p>
-                                <br/><br/>
-                                <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.logOutService(e)}>Log out </p>
-                                
-                            </td>
+                            
 
                             </table>
                         </div>
                     </div>
                     <Buttombar/>
                 </div>
-            )
-        } else {
-            return(
-                <div></div>
             )
         }
     }
