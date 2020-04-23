@@ -174,7 +174,7 @@ router.get('/profile', auth.required, auth.customer, function(req, res)
 router.put('/', auth.required, auth.customer, function(req, res)
 {
   var id = req.user.id;
-  search_params = {_id: id};
+  search_param = {_id: id};
 
   if ((req.body["name"] !== undefined) && (req.body["details"] !== undefined))
   {

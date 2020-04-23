@@ -12,10 +12,10 @@ class setting extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            
-            firstname: '', 
-            lastname: '', 
-            email: '', 
+
+            firstname: '',
+            lastname: '',
+            email: '',
             customerPassword: '',
             formValid: false,
             apiResponse: '',
@@ -29,27 +29,27 @@ class setting extends React.Component{
             [e.target.name]: e.target.value
         })
     }
-	
+
     nameChange = (e) =>{
 		var box = document.getElementById("newNames");
-		
+
 		if (box.style.display === "none") {
 			box.style.display = "block";
 		} else {
 			box.style.display = "none";
 		}
     }
-	
+
 	passwordChange = (e) =>{
 		var box = document.getElementById("newPassword");
-		
+
 		if (box.style.display === "none") {
 			box.style.display = "block";
 		} else {
 			box.style.display = "none";
 		}
     }
-	
+
     componentDidMount(){
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
@@ -89,14 +89,14 @@ class setting extends React.Component{
         var inputPassword = document.getElementById("pwd");
         var inputPasswordConfirm = document.getElementById("pwdConfirm");
 
-		if(value == 1){        
+		if(value == 1){
 			if(!inputFirstName.checkValidity()){
             alert("Check your first name !");
 			} else if(!inputLastName.checkValidity()){
 				alert("Check your last name !");
 			} else
 				this.state.formValid = true;
-		}else if(value == 2){ 
+		}else if(value == 2){
 			if(!inputPassword.checkValidity()){
 				alert("Check your password, make sure it is at least 8 characters !");
 			} else {
@@ -104,7 +104,7 @@ class setting extends React.Component{
 			}
 		}
     }
-	
+
 
     onSubmitCustomer = (e, value) =>{
         e.preventDefault();
@@ -129,7 +129,7 @@ class setting extends React.Component{
                 )
 			}else if(value == 2){
 				const signUpForm = {
-                    password: this.state.customerPassword
+                    password: this.state.password
                 }
                 var dataJSON = JSON.stringify(signUpForm);
 				fetch("http://localhost:9000/api/customer/", {
@@ -143,7 +143,7 @@ class setting extends React.Component{
                 )
 			}else if(value == 3){
 				const signUpForm = {
-                    password: this.state.customerPassword
+                    password: this.state.password
                 }
                 var dataJSON = JSON.stringify(signUpForm);
 				fetch("http://localhost:9000/api/customer/", {
@@ -159,7 +159,7 @@ class setting extends React.Component{
             alert("Please check your form again!");
         }
     }
-	
+
 
     logOutCustomer = (e) =>{
         fetch("http://localhost:9000/api/customer/logout",{
@@ -189,7 +189,7 @@ class setting extends React.Component{
             )
         }else if(this.state.signedData){
             return(
-            
+
                 <div>
 
                     <NavbarSigned/>
@@ -203,7 +203,7 @@ class setting extends React.Component{
                         </div>
                     </div>
                     </div>
-                    <div class="row"> 
+                    <div class="row">
                         <div class="col-md-1"/>
                         <div class="col-md-10">
                             <br/>
@@ -248,7 +248,7 @@ class setting extends React.Component{
                                     </tr>
                                     <br/><br/>
                                     <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.logOutCustomer(e)}>Log out </p>
-                                    
+
                                 </td>
 
                             </table>
@@ -261,7 +261,7 @@ class setting extends React.Component{
             return(
                 <div>
                     <NavbarSignedSP/>
-                    <div class="row"> 
+                    <div class="row">
                         <div class="col-md-1"/>
                         <div class="col-md-10">
                             <br/>
@@ -294,14 +294,14 @@ class setting extends React.Component{
                                         </tr>
                                         <br/><br/>
                                         <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.deleteAccount(e)} >Delete Account </p>
-                                        
+
                                         <br/><br/>
                                         <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.logOutCustomer(e)}>Log out </p>
-                                        
+
                                     </td>
 
 
-                            
+
 
                             </table>
                         </div>
