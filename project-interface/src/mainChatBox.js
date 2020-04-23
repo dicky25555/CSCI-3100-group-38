@@ -114,7 +114,7 @@ class mainChatBox extends React.Component{
                     <div>
                         <tr>
                             <td style={{paddingTop:"50px"}}>
-                                <p class="header" style={{fontSize:"25px"}} onClick={e => this.goesChat(e, this.state.previousChat[i].service_id)}>{this.state.previousChat[i].customer_id.name}</p>
+                                <p class="header" style={{fontSize:"25px"}} onClick={e => this.goesChat(e, this.state.previousChat[i].service_id)}>{this.state.previousChat[i].service_id.name}</p>
                             </td>
                         </tr>
                         <tr>

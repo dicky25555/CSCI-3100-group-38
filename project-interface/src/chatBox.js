@@ -221,7 +221,7 @@ class chatBox extends React.Component{
                                             <table>
                                                 <tr>
                                                     <td style={{paddingTop:"30px"}}>
-                                                        <p style={{fontWeight:"bold", color:"white"}}>{this.state.previousChat[i].serviceId.name}</p>
+                                                        <p style={{fontWeight:"bold", color:"white"}}>{this.state.previousChat[i].service_id.name}</p>
                                                     </td>
                                                 </tr>
                                                 <tr>
