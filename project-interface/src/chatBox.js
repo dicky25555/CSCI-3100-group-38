@@ -12,6 +12,13 @@ import Navbar from './components/Navbar';
 import Buttombar from './components/Buttombar';
 import './chatBox.css';
 
+import openSocket from 'socket.io-client';
+
+//const socket = openSocket('http://localhost:9000'); <-- required module and to connect, very important, only initialize after loggedin
+//socket.emit('setOnline', {id: "5e9fe6b981c18930549abdf6", status: 'C'});  <-- Determine that user online, status is C for customer or S
+//socket.emit('receive', msg => {}); <-- upon receiving msg, msg can be consisting of {msg.origin: returns userid of origin, msg.content: msg}
+//socket.emit('sendMessage', dest, msg) <-- send msg to server before send to dest. dest is user id of destination user, msg can be consisting of {msg.origin: returns userid of origin, msg.content: msg}
+//socket.emit('disconnect', function(){}) <-- disconnect after logged out
 
 class chatBox extends React.Component{
     constructor(props){
@@ -21,8 +28,8 @@ class chatBox extends React.Component{
             location:'',
             signedData: '',
             signedDataSP: ''
-        }  
-    } 
+        }
+    }
 
     componentDidMount(){
         fetch("http://localhost:9000/api/customer/profile", {
@@ -116,7 +123,7 @@ class chatBox extends React.Component{
                             </div>
                             <div class="row">
                             </div>
-                            
+
                             <div class="row">
                                 <div class="col-md-5"></div>
                                 <div class="col-md-6">
@@ -132,10 +139,10 @@ class chatBox extends React.Component{
                                                 <p style={{color:"white", textAlign:"right"}}>Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet</p>
                                             </td>
                                         </tr>
-                                    </table>	
+                                    </table>
                                 </div>
                             </div>
-                            
+
                         </div>
                     );
                 }
@@ -157,7 +164,7 @@ class chatBox extends React.Component{
                                 <br /><br /><br />
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-1"></div>
                             <div class="col-md-10">
@@ -170,7 +177,7 @@ class chatBox extends React.Component{
                                 </table>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-md-1"></div>
                             <div class="col-md-10">
@@ -179,7 +186,7 @@ class chatBox extends React.Component{
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div>
                             <div class="row" style={{paddingTop:"50px", paddingBottom:"30px", borderBottom: "1px solid #ddd"}}>
                                 <div class="col-md-1"></div>
@@ -206,11 +213,11 @@ class chatBox extends React.Component{
                                 </div>
                             </div>
                         </div>
-                        
+
                         <Buttombar/>
                     </div>
                 );
-            
+
         }
         else if(this.state.signedDataSP){
             navigationBar.push(
@@ -234,7 +241,7 @@ class chatBox extends React.Component{
             <div></div>
         )
     }
-        
+
     }
 }
 

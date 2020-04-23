@@ -1,4 +1,6 @@
-// NEED TO AUTHENTICATE - NEED TO MODIFY GET METHOD FOR ALL API
+// Encrypter
+global.crypto = require('crypto');
+
 var createError = require('http-errors');
 var express = require('express');
 const session = require('express-session');
@@ -22,9 +24,6 @@ mongoose.connect('mongodb://admin:admin@localhost/csci3100');
 //mongoose.connect('mongodb://localhost:27017/data');
 var db = mongoose.connection;
 
-// Encrypter
-global.crypto = require('crypto');
-
 // Execute on connection failure
 db.on('error', console.error.bind(console, 'Connection error:'));
 
@@ -41,6 +40,7 @@ require('./models/Category.js');
 require('./models/Chat.js');
 require('./models/Bookmark.js');
 require('./models/Review.js');
+require('./models/Online.js');
 
 // Config
 require('./config/passport.js');
