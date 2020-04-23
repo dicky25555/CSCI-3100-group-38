@@ -81,7 +81,9 @@ class categoriesList extends Component{
                             <td style={{paddingTop:"30px"}}>
                                 <p class="header" style={{cursor:"pointer"}} onClick={e => this.goesSpecificService(e, this.state.apiResponse[count])}>{this.state.apiResponse[count].name}</p>
                             </td>
-                            <td style={{ paddingTop:"30px", width:"60px"}}>
+                        </tr>
+                        <tr>
+                            <td style={{ align:"right",paddingTop:"30px", width:"60px"}}>
                                 <sub style={{color:"#5318FB"}}>BOOKMARK</sub>
                             </td>
                         </tr>

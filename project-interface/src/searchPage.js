@@ -142,8 +142,12 @@ class searchPage extends React.Component{
         )
     }
     
-    sendData(){
-
+    serviceSpecific = (e, companyData) => {
+        e.preventDefault();
+        this.props.history.push({
+            pathname:"/serviceSpecific",
+            data: companyData
+        })
     }
     //Test out list of services
     render(){
@@ -168,11 +172,9 @@ class searchPage extends React.Component{
 					<tr>
 		   
 						<td style={{paddingTop:"30px"}}>
-							<p class="header" style={{cursor: "pointer"}} onClick={e => this.clickService(e,this.state.serviceList[i]._id)}>{this.state.serviceList[i].name}</p>
+							<p class="header" style={{cursor: "pointer", color:"#5318FB"}} onClick={e => this.serviceSpecific(e, this.state.serviceList[i])}>{this.state.serviceList[i].name}</p>
 						</td>
-						<td style={{paddingTop:"30px", width:"60px"}}>
-							<sub style={{color:"#5318FB"}} onClick={e => this.bookmarkService(e,this.state.serviceList[i]._id)}>BOOKMARK</sub>
-						</td>
+
 					</tr>
 					<tr>
 			

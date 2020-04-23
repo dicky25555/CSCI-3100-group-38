@@ -12,10 +12,12 @@ class setting extends React.Component{
     constructor(props){
         super(props);
         this.state={
-
-            firstname: '',
-            lastname: '',
-            email: '',
+            companyName:'',
+            companyAddress: '',
+            servicePassword: '',
+            firstname: '', 
+            lastname: '', 
+            email: '', 
             customerPassword: '',
             formValid: false,
             apiResponse: '',
@@ -29,27 +31,27 @@ class setting extends React.Component{
             [e.target.name]: e.target.value
         })
     }
-
+	
     nameChange = (e) =>{
 		var box = document.getElementById("newNames");
-
+		
 		if (box.style.display === "none") {
 			box.style.display = "block";
 		} else {
 			box.style.display = "none";
 		}
     }
-
+	
 	passwordChange = (e) =>{
 		var box = document.getElementById("newPassword");
-
+		
 		if (box.style.display === "none") {
 			box.style.display = "block";
 		} else {
 			box.style.display = "none";
 		}
     }
-
+	
     componentDidMount(){
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
@@ -83,20 +85,20 @@ class setting extends React.Component{
         )
     }
 
-    validateChanges(value){
+    validateChangesCustomer(value){
         var inputFirstName = document.getElementById("fname");
         var inputLastName = document.getElementById("lname");
         var inputPassword = document.getElementById("pwd");
         var inputPasswordConfirm = document.getElementById("pwdConfirm");
 
-		if(value == 1){
+		if(value == 1){        
 			if(!inputFirstName.checkValidity()){
             alert("Check your first name !");
 			} else if(!inputLastName.checkValidity()){
 				alert("Check your last name !");
 			} else
 				this.state.formValid = true;
-		}else if(value == 2){
+		}else if(value == 2){ 
 			if(!inputPassword.checkValidity()){
 				alert("Check your password, make sure it is at least 8 characters !");
 			} else {
@@ -104,12 +106,12 @@ class setting extends React.Component{
 			}
 		}
     }
-
+	
 
     onSubmitCustomer = (e, value) =>{
         e.preventDefault();
-        this.validateChanges(value);
-        if(!this.state.signedData && !this.state.signedDataSP){
+        this.validateChangesCustomer(value);
+        if(this.state.signedDataSP){
         }
         else if(this.state.signedData){
 			if(value == 1){
@@ -129,7 +131,7 @@ class setting extends React.Component{
                 )
 			}else if(value == 2){
 				const signUpForm = {
-                    password: this.state.password
+                    password: this.state.customerPassword
                 }
                 var dataJSON = JSON.stringify(signUpForm);
 				fetch("http://localhost:9000/api/customer/", {
@@ -143,7 +145,7 @@ class setting extends React.Component{
                 )
 			}else if(value == 3){
 				const signUpForm = {
-                    password: this.state.password
+                    password: this.state.customerPassword
                 }
                 var dataJSON = JSON.stringify(signUpForm);
 				fetch("http://localhost:9000/api/customer/", {
@@ -159,7 +161,101 @@ class setting extends React.Component{
             alert("Please check your form again!");
         }
     }
+    
+    onSubmitService = (e, value) =>{
+        e.preventDefault();
+        this.validateChangesCustomer(value);
+        if(!this.state.signedData){
+            if(value == 1){
+                const signUpForm = {
+                    name : this.state.companyName ,
+                    address : this.state.companyAddress
+                }
+                var dataJSON = JSON.stringify(signUpForm);
+                fetch("http://localhost:9000/api/service/", {
+                    method: 'PUT',
+                    credentials: 'include',
+                    body: dataJSON,
+                    headers: {"Content-Type" : "application/json"}
+                }).then(res => res.json())
+                .then(
+                    window.location.reload()
+                )
+            }else if(value == 2){
+                const signUpForm = {
+                    password: this.state.servicePassword
+                }
+                var dataJSON = JSON.stringify(signUpForm);
+                fetch("http://localhost:9000/api/service/", {
+                    method: 'PUT',
+                    credentials: 'include',
+                    body: dataJSON,
+                    headers: {"Content-Type" : "application/json"}
+                }).then(res => res.json())
+                .then(
+                    window.location.reload()
+                )
+            }else if(value == 3){
 
+                fetch("http://localhost:9000/api/service/", {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {"Content-Type" : "application/json"}
+                }).then(res => res.json())
+                .then(
+                    window.location.reload()
+                )
+            }
+        }
+        
+        else if(this.state.signedDataSP){
+			if(value == 1){
+                const signUpForm = {
+                    name : this.state.firstname + " " + this.state.lastname,
+                    details : "Newcomer"
+                }
+                var dataJSON = JSON.stringify(signUpForm);
+				fetch("http://localhost:9000/api/customer/", {
+                    method: 'PUT',
+                    credentials: 'include',
+                    body: dataJSON,
+                    headers: {"Content-Type" : "application/json"}
+                }).then(res => res.json())
+                .then(
+                    window.location.reload()
+                )
+			}else if(value == 2){
+				const signUpForm = {
+                    password: this.state.customerPassword
+                }
+                var dataJSON = JSON.stringify(signUpForm);
+				fetch("http://localhost:9000/api/customer/", {
+                    method: 'PUT',
+                    credentials: 'include',
+                    body: dataJSON,
+                    headers: {"Content-Type" : "application/json"}
+                }).then(res => res.json())
+                .then(
+                    window.location.reload()
+                )
+			}else if(value == 3){
+				const signUpForm = {
+                    password: this.state.customerPassword
+                }
+                var dataJSON = JSON.stringify(signUpForm);
+				fetch("http://localhost:9000/api/customer/", {
+                    method: 'DELETE',
+                    credentials: 'include',
+                    headers: {"Content-Type" : "application/json"}
+                }).then(res => res.json())
+                .then(
+                    window.location.reload()
+                )
+			}
+        }else{
+            alert("Please check your form again!");
+        }
+    }
 
     logOutCustomer = (e) =>{
         fetch("http://localhost:9000/api/customer/logout",{
@@ -189,7 +285,7 @@ class setting extends React.Component{
             )
         }else if(this.state.signedData){
             return(
-
+            
                 <div>
 
                     <NavbarSigned/>
@@ -203,7 +299,7 @@ class setting extends React.Component{
                         </div>
                     </div>
                     </div>
-                    <div class="row">
+                    <div class="row"> 
                         <div class="col-md-1"/>
                         <div class="col-md-10">
                             <br/>
@@ -221,7 +317,7 @@ class setting extends React.Component{
                                         </td>
                                         <td width="1%"></td>
                                         <td>
-                                            <input onClick={e => this.onSubmitCustomer(e, 1)} type="submit" value="Confirm"/>
+                                            <input onClick={e => this.onSubmit(e, 1)} type="submit" value="Confirm"/>
                                         </td>
                                     </tr>
                                     <br/><br/>
@@ -232,23 +328,16 @@ class setting extends React.Component{
                                         </td>
                                         <td width="1%"></td>
                                         <td>
-                                            <input onClick={e => this.onSubmitCustomer(e, 2)} type="submit" value="Confirm"/>
+                                            <input onClick={e => this.onSubmit(e, 2)} type="submit" value="Confirm"/>
                                         </td>
                                     </tr>
                                     <br/><br/>
                                     <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.onSubmitCustomer(e, 3)} >Delete Account </p>
-                                    <tr id="deleteAccount" style={{display:"none"}}>
-                                        <td colspan="3">
-                                            <input value={this.state.passwordConfirm} onChange={e => this.handleChange(e)} type="password" className="inputStyle1" id="pwdConfirm" name="passwordConfirm" placeholder="Confirm your password" pattern=".{8,}" required/>
-                                        </td>
-                                        <td width="1%"></td>
-                                        <td>
-                                            <input onClick={e => this.onSubmitCustomer(e, 3)} type="submit" value="Confirm"/>
-                                        </td>
+                                    <tr id="deleteAccount" onClick={e => this.onSubmit(e, 3)} style={{display:"none"}}>
                                     </tr>
                                     <br/><br/>
                                     <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.logOutCustomer(e)}>Log out </p>
-
+                                    
                                 </td>
 
                             </table>
@@ -261,7 +350,7 @@ class setting extends React.Component{
             return(
                 <div>
                     <NavbarSignedSP/>
-                    <div class="row">
+                    <div class="row"> 
                         <div class="col-md-1"/>
                         <div class="col-md-10">
                             <br/>
@@ -271,14 +360,14 @@ class setting extends React.Component{
                                         <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.nameChange(e)}>Change your details </p>
                                         <tr id="newNames" style={{display:"none"}}>
                                             <td>
-                                                <input value={this.state.firstname} onChange={e => this.handleChange(e)} className="inputStyle3" id="companyName" name="companyName" placeholder="Company Name" required/>
+                                                <input value={this.state.companyName} onChange={e => this.handleChange(e)} className="inputStyle3" id="companyName" name="companyName" placeholder="Company Name" required/>
                                             </td>
                                             <td>
-                                                <input value={this.state.firstname} onChange={e => this.handleChange(e)} className="inputStyle3" id="companyAddress" name="companyAddress" placeholder="Company Name" required/>
+                                                <input value={this.state.companyAddress} onChange={e => this.handleChange(e)} className="inputStyle3" id="companyAddress" name="companyAddress" placeholder="Company Name" required/>
                                             </td>
                                             <td width="1%"></td>
                                             <td>
-                                                <input onClick={e => this.onSubmitCustomer(e, 1)} type="submit" value="Confirm"/>
+                                                <input onClick={e => this.onSubmit(e, 1)} type="submit" value="Confirm"/>
                                             </td>
                                         </tr>
                                         <br/><br/>
@@ -289,19 +378,19 @@ class setting extends React.Component{
                                             </td>
                                             <td width="1%"></td>
                                             <td>
-                                                <input onClick={e => this.onSubmitCustomer(e, 2)} type="submit" value="Confirm"/>
+                                                <input onClick={e => this.onSubmit(e, 2)} type="submit" value="Confirm"/>
                                             </td>
                                         </tr>
                                         <br/><br/>
-                                        <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.deleteAccount(e)} >Delete Account </p>
-
+                                        <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.onSubmit(e, 3)} >Delete Account </p>
+                                        
                                         <br/><br/>
                                         <p class="header" style={{paddingBottom:"40px", paddingRight:"20px", borderBottom:"1px solid #ddd" , cursor: "pointer"}} onClick={e => this.logOutCustomer(e)}>Log out </p>
-
+                                        
                                     </td>
 
 
-
+                            
 
                             </table>
                         </div>

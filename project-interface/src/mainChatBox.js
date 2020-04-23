@@ -9,6 +9,8 @@ import history from './history';
 import Navbar from './components/Navbar';
 import Buttombar from './components/Buttombar';
 import './mainChatBox.css';
+import NavbarSigned from './components/Navbar-signed';
+import NavbarSignedSP from './components/Navbar-signedSP';
 
 
 class mainChatBox extends React.Component{
@@ -17,7 +19,8 @@ class mainChatBox extends React.Component{
         this.state={
             customerName:'',
             signedData: '',
-            signedDataSP:''
+            signedDataSP:'',
+            previousChat: []
         }  
     } 
     handleChange = (e) =>{
@@ -57,6 +60,22 @@ class mainChatBox extends React.Component{
 
             )
         )
+
+        fetch("http://localhost:9000/api/chat/", {
+                credentials: 'include'})
+            .then(
+                res => res.json().then( data => ({
+                    data: data,
+                    status: res.status
+                })).then(res => {
+                    console.log(res.stats, res.data);
+                    this.setState({
+                        previousChat: res.data
+                    })
+                }
+
+                )
+            )
     }
 
     onSubmit = (e) =>{
@@ -73,29 +92,34 @@ class mainChatBox extends React.Component{
         })
     }
 
+    goesChat = (e, data)=>{
+        this.props.history.push({
+            pathname:'/chatBox',
+            data: data
+        })
+    }
+
     clickService = (e, value)=>{
         console.log(value)
     }
 
     //Test out list of services
     render(){
-        const { data } = this.props.location;
-        console.log(data);
+
         let customerArray = [];
-        
         if(this.state.signedData){
-            for (let i = 0; i < 3; i++){
+            for (let i = 0; i < this.state.previousChat.length; i++){
                 customerArray.push(
                     //customer boxes
                     <div>
                         <tr>
                             <td style={{paddingTop:"50px"}}>
-                                <p class="header" style={{fontSize:"25px"}}>Customer name</p>
+                                <p class="header" style={{fontSize:"25px"}} onClick={e => this.goesChat(e, this.state.previousChat[i].service_id)}>{this.state.previousChat[i].customer_id.name}</p>
                             </td>
                         </tr>
                         <tr>
                             <td style= {{paddingBottom:"40px",paddingRight:"20px", borderBottom: "1px solid #ddd"}}>
-                                You: Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet
+                                {this.state.previousChat[i].content}
                             </td>
                         </tr>
                     </div>
@@ -104,7 +128,7 @@ class mainChatBox extends React.Component{
 
             return(
                 <div>
-                    <Navbar/>
+                    <NavbarSigned/>
                     <div class="row" style={{borderBottom : "1px solid #ddd"}}>
                         <div class="col-md-1"></div>
                         <div class="col-md-10">
@@ -126,9 +150,47 @@ class mainChatBox extends React.Component{
                 </div>
             );
         } else if(this.state.signedDataSP){
+            for (let i = 0; i < this.state.previousChat.length; i++){
+                customerArray.push(
+                    //customer boxes
+                    <div>
+                        <tr>
+                            <td style={{paddingTop:"50px"}}>
+                                <p class="header" style={{fontSize:"25px"}} onClick={e => this.goesChat(e, this.state.previousChat[i].customer_id)}>{this.state.previousChat[i].customer_id.name}</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style= {{paddingBottom:"40px",paddingRight:"20px", borderBottom: "1px solid #ddd"}}>
+                                {this.state.previousChat[i].content}
+                            </td>
+                        </tr>
+                    </div>
+                );
+            }
+
             return(
-                <div></div>
-            )
+                <div>
+                    <NavbarSignedSP/>
+                    <div class="row" style={{borderBottom : "1px solid #ddd"}}>
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
+                            <br /><br /><br /><br /><br /><br /><br />
+                            <p class="textmain"> Chatbox</p>
+                            <br /><br /><br />
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
+                            <table>
+                                {customerArray}
+                            </table>
+                        </div>
+                    </div>   
+                    <Buttombar/>
+                </div>
+            );
         } else{
             return(
                 <div></div>
