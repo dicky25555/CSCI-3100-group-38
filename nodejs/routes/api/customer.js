@@ -139,12 +139,12 @@ router.delete('/', auth.required, auth.customer, function(req, res)
 router.get('/profile', auth.required, auth.customer, function(req, res)
 {
   var id = req.user.id;
-  search_params = {_id: id};
+  search_param = {_id: id};
 
-  if (search_params !== undefined)
+  if (search_param !== undefined)
   {
     Customer.findOne(
-      search_params,
+      search_param,
       'username name details',
       function(err, doc) {
         if (err)
@@ -174,7 +174,7 @@ router.get('/profile', auth.required, auth.customer, function(req, res)
 router.put('/', auth.required, auth.customer, function(req, res)
 {
   var id = req.user.id;
-  search_params = {_id: id};
+  search_param = {_id: id};
 
   if ((req.body["name"] !== undefined) && (req.body["details"] !== undefined))
   {

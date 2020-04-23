@@ -17,7 +17,7 @@ router.post('/', auth.required, function(req, res)
     add_params = {customer_id: user_id};
 
     if (req.body["service_id"] !== undefined)
-      addparams.service_id = req.body["service_id"];
+      add_params.service_id = req.body["service_id"];
     else
       valid = false;
   }
@@ -26,7 +26,7 @@ router.post('/', auth.required, function(req, res)
     add_params = {service_id: user_id};
 
     if (req.body["customer_id"] !== undefined)
-      addparams.customer_id = req.body["customer_id"];
+      add_params.customer_id = req.body["customer_id"];
     else
       valid = false;
   }
@@ -35,7 +35,7 @@ router.post('/', auth.required, function(req, res)
   {
     add_params.content = req.body["content"];
 
-    var chat = new Chat({add_params});
+    var chat = new Chat(add_params);
 
     chat.save(function(err) {
         if (err)
