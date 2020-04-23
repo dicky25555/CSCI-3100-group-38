@@ -14,7 +14,7 @@ router.post('/', auth.required, function(req, res)
 
   if (req.user.status == 'C')
   {
-    add_params = {customer_id: user_id};
+    add_params = {customer_id: user_id, origin: 'C'};
 
     if (req.body["service_id"] !== undefined)
       add_params.service_id = req.body["service_id"];
@@ -23,7 +23,7 @@ router.post('/', auth.required, function(req, res)
   }
   else if (req.user.status == 'S')
   {
-    add_params = {service_id: user_id};
+    add_params = {service_id: user_id, origin: 'S'};
 
     if (req.body["customer_id"] !== undefined)
       add_params.customer_id = req.body["customer_id"];
@@ -103,16 +103,16 @@ router.get('/', auth.required, function(req, res)
     search_params = {customer_id: user_id};
     sort_params = {service_id: 1};
 
-    if (req.body["dest_id"] !== undefined)
-      search_params.service_id = req.body["dest_id"];
+    if (req.query["dest_id"] !== undefined)
+      search_params.service_id = req.query["dest_id"];
   }
   else if (req.user.status == 'S')
   {
     search_params = {service_id: user_id};
     sort_params = {customer_id: 1};
 
-    if (req.body["dest_id"] !== undefined)
-      search_params.customer_id = req.body["dest_id"];
+    if (req.query["dest_id"] !== undefined)
+      search_params.customer_id = req.query["dest_id"];
   }
 
   // Sort ascending time
@@ -122,8 +122,8 @@ router.get('/', auth.required, function(req, res)
   {
     Chat.find(search_params)
         .sort(sort_params)
-        .populate('service_id', 'username')
-        .populate('customer_id', 'username')
+        .populate('service_id', 'username name')
+        .populate('customer_id', 'username name')
         .exec(
         function(err, docs) {
           if (err)
