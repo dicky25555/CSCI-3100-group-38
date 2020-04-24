@@ -5,13 +5,15 @@ import Buttombar from './components/Buttombar';
 import 'bootstrap/dist/css/bootstrap.css';
 import './components/font/Montserrat-Regular.ttf';
 import './serviceCategories.css';
+import NavbarSignedSP from './components/Navbar-signedSP';
 
 class serviceCategories extends Component{
     constructor(props){
         super(props);
         this.state = {
             categoriesList : [],
-            signedData: ''
+            signedData: '',
+            signedDataSP:''
         }
     }
 
@@ -43,6 +45,21 @@ class serviceCategories extends Component{
                 console.log(res.status, res.data);
                 this.setState({
                     signedData: res.data
+                })
+            }
+
+            )
+        )
+        fetch("http://localhost:9000/api/service/profile", {
+        credentials: 'include'})
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.stats, res.data);
+                this.setState({
+                    signedDataSP: res.data
                 })
             }
 
@@ -84,17 +101,24 @@ class serviceCategories extends Component{
                 );
             }
         }
-        if (!this.state.signedData){
+        if (this.state.signedData){
             navigationBar.push(
                 <div>
-                    <Navbar/>
+                    <NavbarSigned/>
+                </div>
+            )
+        }
+        else if(this.state.signedDataSP){
+            navigationBar.push(
+                <div>
+                    <NavbarSignedSP/>
                 </div>
             )
         }
         else{
             navigationBar.push(
                 <div>
-                    <NavbarSigned/>
+                    <Navbar/>
                 </div>
             )
         }

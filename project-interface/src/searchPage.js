@@ -10,12 +10,15 @@ import Navbar from './components/Navbar';
 import NavbarSigned from './components/Navbar-signed';
 import Buttombar from './components/Buttombar';
 import './searchPage.css';
+import NavbarSignedSP from './components/Navbar-signedSP';
 
 
 class searchPage extends React.Component{
     constructor(props){
         super(props);
         this.state={
+            signedDataSP:'',
+            signedData:'',
             serviceName:'',
             location:'',
             serviceList: [],
@@ -107,7 +110,7 @@ class searchPage extends React.Component{
                 })
             )  
         } else{
-            fetch("http://localhost:9000/api/service?limit=10&page=1", {
+            fetch("http://localhost:9000/api/service?limit=25&page=1", {
                 credentials: 'include',
                 method: 'GET',
                 headers: {"Content-Type" : "application/json"}
@@ -135,6 +138,21 @@ class searchPage extends React.Component{
                 console.log(res.stats, res.data);
                 this.setState({
                     signedData: res.data
+                })
+            }
+
+            )
+        )
+        fetch("http://localhost:9000/api/service/profile", {
+        credentials: 'include'})
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.stats, res.data);
+                this.setState({
+                    signedDataSP: res.data
                 })
             }
 
@@ -193,17 +211,23 @@ class searchPage extends React.Component{
 			
         }
 		
-        if (!this.state.signedData){
+        if (this.state.signedData){
             navigationBar.push(
                 <div>
-                    <Navbar/>
+                    <NavbarSigned/>
                 </div>
+            )
+        }else if(this.state.signedDataSP){
+            navigationBar.push(
+            <div>
+                <NavbarSignedSP/>
+            </div>
             )
         }
         else{
             navigationBar.push(
                 <div>
-                    <NavbarSigned/>
+                    <Navbar/>
                 </div>
             )
         }

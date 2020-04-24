@@ -22,7 +22,7 @@ class setting extends React.Component{
             formValid: false,
             apiResponse: '',
             signedData: '',
-            signedDataSP: '',
+            signedDataSP: ''
         }
     }
 
@@ -53,21 +53,6 @@ class setting extends React.Component{
     }
 	
     componentDidMount(){
-        fetch("http://localhost:9000/api/customer/profile", {
-        credentials: 'include'})
-        .then(
-            res => res.json().then( data => ({
-                data: data,
-                status: res.status
-            })).then(res => {
-                console.log(res.stats, res.data);
-                this.setState({
-                    signedData: res.data
-                })
-                console.log(res.data)
-            }
-            )
-        )
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -83,6 +68,22 @@ class setting extends React.Component{
 
             )
         )
+        fetch("http://localhost:9000/api/customer/profile", {
+        credentials: 'include'})
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.stats, res.data);
+                this.setState({
+                    signedData: res.data
+                })
+                console.log(res.data)
+            }
+            )
+        )
+        
     }
 
     validateChangesCustomer(value){
@@ -162,10 +163,10 @@ class setting extends React.Component{
         }
     }
     
-    onSubmitService = (e, value) =>{
+    onSubmit = (e, value) =>{
         e.preventDefault();
         this.validateChangesCustomer(value);
-        if(!this.state.signedData){
+        if(this.state.signedDataSP){
             if(value == 1){
                 const signUpForm = {
                     name : this.state.companyName ,
@@ -208,7 +209,7 @@ class setting extends React.Component{
             }
         }
         
-        else if(this.state.signedDataSP){
+        else if(this.state.signedData){
 			if(value == 1){
                 const signUpForm = {
                     name : this.state.firstname + " " + this.state.lastname,
@@ -278,12 +279,8 @@ class setting extends React.Component{
             })
     }
     render(){
-        console.log(this.state.signedData);
-        if(!this.state.signedData && !this.state.signedDataSP){
-            return(
-                <div></div>
-            )
-        }else if(this.state.signedData){
+        console.log(this.state.signedDataSP);
+        if(this.state.signedData){
             return(
             
                 <div>
@@ -346,7 +343,9 @@ class setting extends React.Component{
                     <Buttombar/>
                 </div>
             );
-        } else {
+        } 
+        else 
+        if (this.state.signedDataSP){
             return(
                 <div>
                     <NavbarSignedSP/>
@@ -363,7 +362,7 @@ class setting extends React.Component{
                                                 <input value={this.state.companyName} onChange={e => this.handleChange(e)} className="inputStyle3" id="companyName" name="companyName" placeholder="Company Name" required/>
                                             </td>
                                             <td>
-                                                <input value={this.state.companyAddress} onChange={e => this.handleChange(e)} className="inputStyle3" id="companyAddress" name="companyAddress" placeholder="Company Name" required/>
+                                                <input value={this.state.companyAddress} onChange={e => this.handleChange(e)} className="inputStyle3" id="companyAddress" name="companyAddress" placeholder="Company Address" required/>
                                             </td>
                                             <td width="1%"></td>
                                             <td>
@@ -397,6 +396,10 @@ class setting extends React.Component{
                     </div>
                     <Buttombar/>
                 </div>
+            )
+        }else {
+            return(
+                <div></div>
             )
         }
     }

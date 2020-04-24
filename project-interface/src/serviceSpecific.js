@@ -3,12 +3,14 @@ import history from './history';
 import NavbarSigned from './components/Navbar-signed'
 import Navbar from './components/Navbar';
 import Buttombar from './components/Buttombar';
+import NavbarSignedSP from './components/Navbar-signedSP';
 
 class serviceSpecific extends React.Component{
     
     constructor(props){
         super(props);
         this.state = {
+            signedDataSP:'',
             signedData: '',
             reviewText: '',
             rating: '',
@@ -50,16 +52,20 @@ class serviceSpecific extends React.Component{
     }
 
     bookmarkService = (e, serviceId) => {
-        console.log(this.state.signedData._id)
-        console.log(serviceId)
-        const data = {
-            service_id: serviceId,
-            customer_id: this.state.signedData._id
+        if(this.state.signedData){
+            console.log(this.state.signedData._id)
+            console.log(serviceId)
+            const data = {
+                service_id: serviceId,
+                customer_id: this.state.signedData._id
+            }
+            console.log(data)
+            var dataJSON = JSON.stringify(data)
+            console.log(dataJSON)
+            this.submitBookmark(dataJSON)
+        }else{
+            alert("You have to signed in as customer");
         }
-        console.log(data)
-        var dataJSON = JSON.stringify(data)
-        console.log(dataJSON)
-        this.submitBookmark(dataJSON)
     }
 
     postReview = (e, serviceId) => {
@@ -67,38 +73,43 @@ class serviceSpecific extends React.Component{
         console.log(this.state.reviewText);
         console.log(this.state.rating);
         console.log(serviceId);
-        if (this.state.reviewText && this.state.rating ){
-            const data = {
-                service_id: serviceId,
-                rating: this.state.rating,
-                customer_review: this.state.reviewText
-            }
-            var dataJSON = JSON.stringify(data);
-            fetch("http://localhost:9000/api/review/",{
-                credentials: 'include',
-                method: 'POST',
-                body: dataJSON,
-                headers: {"Content-Type" : "application/json"}
-            }).then(res => res.text())
-            .then(res => console.log(res))
-            .then(fetch("http://localhost:9000/api/review?service_id=" + serviceId + "&limit=10&page=1",{
-                credentials: 'include',
-                method: 'GET',
-                headers: {"Content-Type" : "application/json"}
-            }).then(res => res.json()
-            .then(data => ({
-                data: data,
-                status: res.status
-            })))
-            .then(res =>{
-                console.log(res.status, res.data)
-                this.setState({
-                    reviewData: res.data
-                })
-            }))
+        if(this.state.signedData){
+            if (this.state.reviewText && this.state.rating ){
+                const data = {
+                    service_id: serviceId,
+                    rating: this.state.rating,
+                    customer_review: this.state.reviewText
+                }
+                var dataJSON = JSON.stringify(data);
+                fetch("http://localhost:9000/api/review/",{
+                    credentials: 'include',
+                    method: 'POST',
+                    body: dataJSON,
+                    headers: {"Content-Type" : "application/json"}
+                }).then(res => res.text())
+                .then(res => console.log(res))
+                .then(fetch("http://localhost:9000/api/review?service_id=" + serviceId + "&limit=10&page=1",{
+                    credentials: 'include',
+                    method: 'GET',
+                    headers: {"Content-Type" : "application/json"}
+                }).then(res => res.json()
+                .then(data => ({
+                    data: data,
+                    status: res.status
+                })))
+                .then(res =>{
+                    console.log(res.status, res.data)
+                    this.setState({
+                        reviewText: '',
+                        reviewData: res.data
+                    })
+                }))
 
+            } else{
+                alert("Input your review accordingly!")
+            }
         } else{
-            alert("Input your review accordingly!")
+            alert("You have to sign in as customer");
         }
     }
 
@@ -116,6 +127,21 @@ class serviceSpecific extends React.Component{
                             })
                         })
                     )
+        fetch("http://localhost:9000/api/service/profile", {
+        credentials: 'include'})
+        .then(
+            res => res.json().then( data => ({
+                data: data,
+                status: res.status
+            })).then(res => {
+                console.log(res.stats, res.data);
+                this.setState({
+                    signedDataSP: res.data
+                })
+            }
+
+            )
+        )
         const { data } = this.props.location;
         
         if(data){
@@ -140,10 +166,14 @@ class serviceSpecific extends React.Component{
     }
 
     goesToChat = (e, data)=>{
+        if(this.state.signedData){
         this.props.history.push({
             pathname:'/chatbox',
             data: data
         })    
+        }else{
+            alert("You have to signed in as customer");
+        }
     }
 
     render(){
@@ -151,17 +181,23 @@ class serviceSpecific extends React.Component{
         const { data } = this.props.location;
         if(data){
             var navigationBar = [];
-            if (!this.state.signedData){
+            if (this.state.signedData){
                 navigationBar.push(
                     <div>
-                        <Navbar/>
+                        <NavbarSigned/>
+                    </div>
+                )
+            }else if(this.state.signedDataSP){
+                navigationBar.push(
+                    <div>
+                        <NavbarSignedSP/>
                     </div>
                 )
             }
             else{
                 navigationBar.push(
                     <div>
-                        <NavbarSigned/>
+                        <Navbar/>
                     </div>
                 )
             }
@@ -216,10 +252,7 @@ class serviceSpecific extends React.Component{
 
                         <table>
                             <tr>
-                                <td style={{width:"100px", textAlign:"right", paddingTop:"30px"}}>
-                                    <p class="header" style={{color:"#5318FB"}}> 9.7</p>
 
-                                </td>
                                 <td style={{paddingTop:"30px"}}>
                                     <p class="header">{data.name}</p>
                                 </td>
@@ -228,9 +261,7 @@ class serviceSpecific extends React.Component{
                                 </td>
                             </tr>
                             <tr>
-                                <td style={{textAlign:"right", verticalAlign:"top", paddingRight:"20px"}}>
-                                    <sub>/10</sub>
-                                </td>
+
                                 <td colspan="2" style={{paddingBottom:"40px", paddingRight:"20px"}}>
                                     <sub>{data.category_id.name}</sub> 
                                     <br />{data.details}

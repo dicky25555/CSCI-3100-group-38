@@ -36,7 +36,7 @@ class NavbarSigned extends React.Component{
                             <td width="12%">
                                 <span class="service" style={{cursor:"pointer"}} onClick={() => history.push('/mainChatBox')}>Chatbox</span>
                             </td>
-                            <td align="right" style={{paddingRight:"2%", cursor:"pointer"}} onClick={() => history.push('/setting')}>
+                            <td align="right" style={{paddingRight:"2%", cursor:"pointer"}} >
                                 <img src={profilebutton} width="22%" style={{paddingTop: "5px", alignItems: "right", paddingBottom: "5px", cursor:"pointer"}} onClick={() => history.push('/setting')}/>
                                 <img src={logoutbutton} width="22%" style={{paddingTop: "5px", alignItems: "right", paddingBottom: "5px", cursor:"pointer"}} onClick={e => this.logOutCustomer(e)}/>
                             </td>

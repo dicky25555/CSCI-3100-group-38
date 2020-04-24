@@ -5,13 +5,15 @@ import Buttombar from './components/Buttombar';
 import 'bootstrap/dist/css/bootstrap.css';
 import './components/font/Montserrat-Regular.ttf';
 import './serviceCategories.css';
+import NavbarSignedSP from './components/Navbar-signedSP';
 
 class categoriesList extends Component{
     constructor(props){
         super(props);
         this.state = {
             apiResponse: [],
-            signedData: ''
+            signedData: '',
+            signedDataSP: ''
         }
         
     }
@@ -50,6 +52,22 @@ class categoriesList extends Component{
                             })
                         })
                     )
+                fetch("http://localhost:9000/api/service/profile", {
+                    credentials: 'include'})
+                    .then(
+                        res => res.json().then( data => ({
+                            data: data,
+                            status: res.status
+                        })).then(res => {
+                            console.log(res.stats, res.data);
+                            this.setState({
+                                signedDataSP: res.data
+                            })
+                        }
+
+                        )
+                    )
+                
         }
 
     }
@@ -74,23 +92,14 @@ class categoriesList extends Component{
                 listOfCompanies.push(
                     <div>
                         <tr>
-                            <td style={{width:"100px", textAlign:"right" ,paddingTop:"30px"}}>
-                                <p class="header" style={{color:"#5318FB"}}>9.7</p>
 
-                            </td>
                             <td style={{paddingTop:"30px"}}>
                                 <p class="header" style={{cursor:"pointer"}} onClick={e => this.goesSpecificService(e, this.state.apiResponse[count])}>{this.state.apiResponse[count].name}</p>
                             </td>
                         </tr>
+
                         <tr>
-                            <td style={{ align:"right",paddingTop:"30px", width:"60px"}}>
-                                <sub style={{color:"#5318FB"}}>BOOKMARK</sub>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td style={{textAlign:"right", verticalAlign:"top", paddingRight:"20px",borderBottom: "1px solid #ddd"}}>
-                                <sub>/10</sub>
-                            </td>
+
                             <td colspan="2" style={{paddingBottom:"40px", paddingRight:"20px",borderBottom: "1px solid #ddd"}}>
                                 <sub>{categoryName}</sub> 
                                 <br />{this.state.apiResponse[count].details}
@@ -103,17 +112,23 @@ class categoriesList extends Component{
         }else{
             this.returnPage();
         }
-        if (!this.state.signedData){
-            navigationBar.push(
-                <div>
-                    <Navbar/>
-                </div>
-            )
-        }
-        else{
+        if (this.state.signedData){
             navigationBar.push(
                 <div>
                     <NavbarSigned/>
+                </div>
+            )
+        }else if(this.state.signedDataSP){
+            navigationBar.push(
+                <div>
+                    <NavbarSignedSP/>
+                </div>
+            )
+        }
+        else{ 
+            navigationBar.push(
+                <div>
+                    <Navbar/>
                 </div>
             )
         }
