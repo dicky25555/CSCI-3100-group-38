@@ -1,4 +1,5 @@
-// tested!
+// Bookmark API
+// Handles all requests that needed to interact with Bookmark of each user
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
@@ -6,10 +7,11 @@ var auth = require('../auth');
 
 var Bookmark = mongoose.model('Bookmark');
 
+// Bookmark a service for a customer API - body: {service_id}
 router.post('/', auth.required, auth.customer, function(req, res)
 {
   // Assume the input {service_id, customer_id} using POST
-  if (req.body["customer_id"] !== undefined)
+  if (req.body["service_id"] !== undefined)
   {
     var customer_id = req.user.id;
     var service_id = req.body["service_id"];
@@ -19,24 +21,44 @@ router.post('/', auth.required, auth.customer, function(req, res)
         service_id: service_id
     });
 
-    bookmark.save(function(err) {
-      if (err)
-      {
-        console.log(err);
-        res.send("Server: saving error!");
-      }
-      else
-      {
-        console.log("Created new bookmark");
-        res.status(201);
-        res.send("Created new bookmark!");
-      }
-    });
+    // Find any identical bookmarks to prevent duplicates
+    Bookmark.findOne(
+      {customer_id: customer_id,
+       service_id: service_id},
+      function(err, doc) {
+        if (err)
+        {
+          console.log(err);
+          res.send("Server: saving error!");
+        }
+        else if (doc == null)
+        {
+          bookmark.save(function(err) {
+            if (err)
+            {
+              console.log(err);
+              res.send("Server: saving error!");
+            }
+            else
+            {
+              console.log("Created new bookmark");
+              res.status(201);
+              res.send("Created new bookmark!");
+            }
+          });
+        }
+        else
+        {
+          console.log("Bookmark exists!");
+          res.send("Duplicate!");
+        }
+      });
   }
   else
     res.send("Post parameters undefined");
 });
 
+// Delete customer bookmark API - params: {id}, returns bookmark before delete
 router.delete('/:id', auth.required, auth.customer, function(req, res)
 {
   var user_id = req.user.id;
@@ -74,6 +96,10 @@ router.delete('/:id', auth.required, auth.customer, function(req, res)
     res.send("Cannot Remove! Wrong Body!");
 });
 
+/* Retrieve bookmarks of user API
+   - query: {service_id, sortService}
+   - returns [bookmark]
+   - sortService can be "asc" for ascending name and "desc" for descending name */
 router.get('/', auth.required, auth.customer, function(req, res)
 {
   // Assume sorting ascending order name of service

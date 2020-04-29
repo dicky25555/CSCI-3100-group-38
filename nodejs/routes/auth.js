@@ -1,3 +1,6 @@
+// Middleware to authenticate the user
+
+// Required means user needed to login before accessing the API
 exports.required = (req, res, next) =>
 {
   if (!req.isAuthenticated())
@@ -6,6 +9,8 @@ exports.required = (req, res, next) =>
     return next();
 };
 
+/* Optional means user does not need to login before accessing the API,
+   but cannot access the API after logged in (for example sign in page) */
 exports.optional = (req, res, next) =>
 {
   if (req.isAuthenticated())
@@ -14,6 +19,7 @@ exports.optional = (req, res, next) =>
     return next();
 };
 
+// Only customer are allowed to access the API
 exports.customer = (req, res, next) =>
 {
   if (req.user.status != 'C')
@@ -22,6 +28,7 @@ exports.customer = (req, res, next) =>
     return next();
 };
 
+// Only service are allowed to access the API
 exports.service = (req, res, next) =>
 {
   if (req.user.status != 'S')

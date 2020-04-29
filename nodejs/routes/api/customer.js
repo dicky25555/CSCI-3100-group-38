@@ -1,4 +1,5 @@
-// tested till delete
+// Customer API
+// Handles all requests that needed to interact with collections of Customer
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
@@ -10,10 +11,9 @@ var Review = mongoose.model('Review');
 var Bookmark = mongoose.model('Bookmark');
 var Chat = mongoose.model('Chat');
 
-// Register post
+// Sign Up API - body: {username, password, name, details}
 router.post('/signup', auth.optional, function(req, res)
 {
-  // Assume the input {username, password, name, details} using POST
   var condition = (req.body["username"] !== undefined) && (req.body["password"] !== undefined);
   condition = condition && (req.body["name"] !== undefined);
   condition = condition && (req.body["details"] !== undefined);
@@ -46,19 +46,20 @@ router.post('/signup', auth.optional, function(req, res)
     res.send("Post parameters undefined");
 });
 
-// Login post
+// Login API - body: null
 router.post('/login', auth.optional, passport.authenticate('local-customer', {}), function(req, res){
   res.send(req.isAuthenticated());
 });
 
-// Logout post
+// Logout API - body: null
 router.post('/logout', auth.required, function(req, res)
 {
   req.logout();
   res.send(true);
 });
 
-// Delete self and related properties
+/* Delete account of self API - body: null +
+   Delete all other items related to account */
 router.delete('/', auth.required, auth.customer, function(req, res)
 {
   var id = req.user.id;
@@ -135,7 +136,7 @@ router.delete('/', auth.required, auth.customer, function(req, res)
     res.send("Cannot Remove! Wrong Body!");
 });
 
-// Need auth first - for getting personal info of self
+// Profile of self API - return {username, name, details}
 router.get('/profile', auth.required, auth.customer, function(req, res)
 {
   var id = req.user.id;
@@ -168,9 +169,10 @@ router.get('/profile', auth.required, auth.customer, function(req, res)
     res.send("Cannot Find! Not found!");
 });
 
-// Need auth first - for updating personal info of self
-// CANNOT UPDATE USERNAME
-// either update passord only, or update data
+/* Update account API
+   - returns {username, name, address} before update
+   - Can only update password only or {name, details} at a time
+   - Cannot update username                                     */
 router.put('/', auth.required, auth.customer, function(req, res)
 {
   var id = req.user.id;
@@ -182,6 +184,7 @@ router.put('/', auth.required, auth.customer, function(req, res)
   }
   else if (req.body["password"] !== undefined)
   {
+    // Encryption
     var salt = crypto.randomBytes(16).toString('hex');
     var hash = crypto.pbkdf2Sync(req.body["password"], salt, 10000, 512, 'sha512').toString('hex');
 

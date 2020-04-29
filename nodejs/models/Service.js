@@ -1,6 +1,6 @@
+// Service model - store service info
 var mongoose = require('mongoose');
 
-// Service model
 var ServiceSchema = mongoose.Schema({
     category_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Category'},
     username: {type: String, required: true, unique: true},

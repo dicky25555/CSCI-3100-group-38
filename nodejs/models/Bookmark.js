@@ -1,6 +1,6 @@
+// Bookmark model - store bookmark of user
 var mongoose = require('mongoose');
 
-// Bookmark model
 var BookmarkSchema = mongoose.Schema({
     customer_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Customer'},
     service_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Service'}

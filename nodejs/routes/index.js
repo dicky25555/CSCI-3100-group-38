@@ -6,6 +6,7 @@ router.get('/', function(req, res, next) {
   res.render('index', { title: 'Testing Index' });
 });
 
+// API router
 router.use('/api', require('./api'));
 
 module.exports = router;

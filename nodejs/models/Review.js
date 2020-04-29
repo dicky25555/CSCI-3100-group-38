@@ -1,6 +1,6 @@
+// Review model - store review on a service
 var mongoose = require('mongoose');
 
-// Review model
 var ReviewSchema = mongoose.Schema({
     service_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Service'},
     review_date: {type: Date, required: true, default: Date.now},

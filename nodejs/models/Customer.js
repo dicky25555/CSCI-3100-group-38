@@ -1,6 +1,6 @@
+// Customer model - store customer info
 var mongoose = require('mongoose');
 
-// Customer model
 var CustomerSchema = mongoose.Schema({
     username: {type: String, required: true, unique: true},
     name: {type: String, required: true},

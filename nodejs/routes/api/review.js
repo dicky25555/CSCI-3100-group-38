@@ -1,4 +1,5 @@
-// Completed!
+// Review API
+// Handles all requests that needed to interact with Reviews on services page
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
@@ -6,10 +7,11 @@ var auth = require('../auth');
 
 var Review = mongoose.model('Review');
 
+// Post a new review API - body: {service_id, review_date, rating, costumer_id, customer_review}
 router.post("/", auth.required, auth.customer, function(req, res)
 {
   var id = req.user.id;
-  // Assume the input {service_id, review_date, rating, costumer_id, customer_review} using POST
+
   var condition = (req.body["service_id"] !== undefined);
   condition = condition && (req.body["rating"] !== undefined);
   condition = condition && (req.body["customer_review"] !== undefined);
@@ -41,13 +43,17 @@ router.post("/", auth.required, auth.customer, function(req, res)
     res.send("Post parameters undefined");
 });
 
+/* Review retrieval API
+   - query: {service_id, customer_id, sortDate, sortRating}
+   - returns [{customer_id, service_id, content, origin, date_created}, ...]
+   - query is interchangeable
+   - sortDate and sortRating can be "asc" for ascending and "desc" for descending           */
 router.get('/', function(req, res)
 {
   // Assume sorting ascending date;
   var sort_params = {review_date: 1};
   var search_params = {};
 
-  // Assume input is query. search service_id or customer_id, sortDate sortRating
   if (req.query["service_id"] !== undefined)
     search_params = {service_id: req.query["service_id"]};
   else if (req.query["customer_id"] !== undefined)
@@ -93,6 +99,8 @@ router.get('/', function(req, res)
     res.send("Cannot Find! Not found!");
 });
 
+/* Delete a review API - params: /review_id/
+   Delete the review with review id */
 router.delete('/:id', auth.required, auth.customer, function(req, res)
 {
   var user_id = req.user.id;
@@ -128,9 +136,12 @@ router.delete('/:id', auth.required, auth.customer, function(req, res)
     res.send("Cannot Remove! Wrong Body!");
 });
 
-router.put('/', auth.required, auth.customer, function(req, res)
+/* Update review API - DISABLED
+   - returns review before update
+   - body: {rating, customer_review, id}
+   - To use change the auth middleware                          */
+router.put('/', auth.required, auth.optional, function(req, res)
 {
-  // Assume the input in JSON. {id, customer_review, rating}
   var condition = (req.body["rating"] !== undefined);
   condition = condition && (req.body["customer_review"] !== undefined);
   condition = condition && (req.body["id"] !== undefined);

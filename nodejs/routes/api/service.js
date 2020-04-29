@@ -1,4 +1,5 @@
-// tested till delete
+// Service API
+// Handles all requests that needed to interact with collections of Service
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
@@ -10,9 +11,9 @@ var Review = mongoose.model('Review');
 var Bookmark = mongoose.model('Bookmark');
 var Chat = mongoose.model('Chat');
 
+// Sign Up API - body: {username, password, category_id, name, address, details}
 router.post('/signup', auth.optional, function(req, res)
 {
-  // Assume the input {username, password, category_id, name, address, details} using POST
   var condition = (req.body["username"] !== undefined) && (req.body["password"] !== undefined);
   condition = condition && (req.body["category_id"] !== undefined);
   condition = condition && (req.body["name"] !== undefined);
@@ -49,20 +50,20 @@ router.post('/signup', auth.optional, function(req, res)
     res.send("Post parameters undefined");
 });
 
-// Login post
+// Login API - body: null
 router.post('/login', auth.optional, passport.authenticate('local-service', {}), function(req, res){
   res.send(req.isAuthenticated());
 });
 
-// Logout post
+// Logout API - body: null
 router.post('/logout', auth.required, function(req, res)
 {
   req.logout();
   res.send(true);
 });
 
-// NOT FINISHED - for now delete other than transaction
-// Need auth first - option to delete account of self
+/* Delete account of self API - body: null +
+   Delete all other items related to account */
 router.delete('/', auth.required, auth.service, function(req, res)
 {
   var id = req.user.id;
@@ -136,6 +137,7 @@ router.delete('/', auth.required, auth.service, function(req, res)
     res.send("Cannot Remove! Wrong Body!");
 });
 
+// Profile of self API - return {username, category_id, name, address, details}
 router.get('/profile', auth.required, auth.service, function(req, res)
 {
   var id = req.user.id;
@@ -167,13 +169,19 @@ router.get('/profile', auth.required, auth.service, function(req, res)
     res.send("Cannot Find! Not found!");
 });
 
+/* Search service API
+   - query: {name, address, details, category_id, sortName, limit, page}
+   - returns [{username, category_id, name, address, details}, ...]
+   - query is interchangeable, but limit and page is required
+   - limit is the number of items in a page
+   - page is the page number
+   - sortName can be "asc" for ascending and "desc" for descending        */
 router.get('/', function(req, res)
 {
   // Assume sorting ascending date;
   var sort_params = {name: 1};
   var search_params = {};
 
-  // Assume input is query. search service_id or customer_id, sortDate sortRating, limit page
   if (req.query["name"] !== undefined)
     search_params.name = {$regex: req.query["name"]};
 
@@ -218,8 +226,10 @@ router.get('/', function(req, res)
     res.send("Cannot Find! Not found!");
 });
 
-// CANNOT UPDATE USERNAME
-// either update passord only, or update data
+/* Update account API
+   - returns {username, category_id, name, details, address} before update
+   - Can only update password only or {name, category_id, details, address} at a time
+   - Cannot update username                                                           */
 router.put('/', auth.required, auth.service, function(req, res)
 {
   var id = req.user.id;
@@ -231,6 +241,7 @@ router.put('/', auth.required, auth.service, function(req, res)
   }
   else if (req.body["password"] !== undefined)
   {
+    // Encryption
     var salt = crypto.randomBytes(16).toString('hex');
     var hash = crypto.pbkdf2Sync(req.body["password"], salt, 10000, 512, 'sha512').toString('hex');
 

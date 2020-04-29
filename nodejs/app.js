@@ -1,6 +1,4 @@
-// Encrypter
-global.crypto = require('crypto');
-
+// Initialize dependencies
 var createError = require('http-errors');
 var express = require('express');
 const session = require('express-session');
@@ -13,6 +11,9 @@ var MongoStore = require('connect-mongo')(session);
 
 var app = express();
 
+// Initialize encrypter
+global.crypto = require('crypto');
+
 // Initialize body parser
 const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({extended: false}));
@@ -21,7 +22,6 @@ app.use(bodyParser.urlencoded({extended: false}));
 var mongo = require('mongodb');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://admin:admin@localhost/csci3100');
-//mongoose.connect('mongodb://localhost:27017/data');
 var db = mongoose.connection;
 
 // Execute on connection failure
@@ -33,19 +33,18 @@ db.once('open', function ()
   console.log("Connection is open...");
 });
 
-// Models
+// Initialize MongoDB models
 require('./models/Customer.js');
 require('./models/Service.js');
 require('./models/Category.js');
 require('./models/Chat.js');
 require('./models/Bookmark.js');
 require('./models/Review.js');
-require('./models/Online.js');
 
-// Config
+// Initialize authenticator
 require('./config/passport.js');
 
-// Session
+// Initialize session
 app.use(session({
     secret: 'Key',
     resave: false,
@@ -59,11 +58,11 @@ app.use(session({
     })
 }));
 
-// Authenticator
+// Initialize authenticator
 app.use(passport.initialize());
 app.use(passport.session());
 
-// CORS
+// Set up CORS
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 
 // Router modules

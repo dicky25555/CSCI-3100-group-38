@@ -1,4 +1,6 @@
-// Completed! Havent test delete with service
+// Category API
+// Handles all requests that needed to interact with service categories
+// Since there is no admin page, authentication has not been made
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
@@ -6,10 +8,9 @@ var router = express.Router();
 var Category = mongoose.model('Category');
 var Service = mongoose.model('Service');
 
-// What to do with this?
+// Save a new category API - body: {name}
 router.post('/', function(req, res)
 {
-  // Assume the input {name: name} using POST
   if (req.body["name"] !== undefined)
   {
     var name = req.body["name"];
@@ -36,10 +37,9 @@ router.post('/', function(req, res)
     res.send("Post parameters undefined");
 });
 
-// What to do with this?
+// Delete a category API - params: /category_id/, returns {name} before delete
 router.delete('/:id', function(req, res)
 {
-  // Assume input is using url and data
   if (req.params["id"] !== undefined)
     var id = req.params["id"];
 
@@ -88,9 +88,9 @@ router.delete('/:id', function(req, res)
     res.send("Cannot Remove! Wrong Body!");
 });
 
+// Update category API - params: /category_id/, body: {name}, returns {name} before update
 router.put('/:id', function(req, res)
 {
-  // Assume the input is using param and data
   if ((req.params["id"] !== undefined) && (req.body["name"] !== undefined))
   {
     var id = req.params["id"];
@@ -122,13 +122,17 @@ router.put('/:id', function(req, res)
     res.send("Cannot Update! Wrong URL!");
 });
 
+/* Retrieve category API
+   - query: {id, name, exact, sortName}
+   - empty query returns all category
+   - returns [{_id, name}, ..]
+   - sortName can be "asc" for ascending and "desc" for descending
+   - exact can be "false" for wrapping search and "true" for exact search */
 router.get('/', function(req, res)
 {
   // Assume sorting ascending order name;
   var sort_params = {name: 1};
 
-  // Assume input is query. id=id or name=name or name=name&exact=false
-  // If no query, just send everything
   if ((Object.keys(req.query).length === 0) || ((Object.keys(req.query).length === 1) && (req.query["sortName"] !== undefined)))
     search_params = {};
   else if (req.query["id"] !== undefined)

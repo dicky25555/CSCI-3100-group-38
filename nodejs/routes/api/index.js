@@ -9,7 +9,7 @@ var bookmark = require('./bookmark.js');
 var customer = require('./customer.js');
 var chat = require('./chat.js');
 
-// Handling database requests
+// Route the database handler
 router.use('/category', category);
 router.use('/service', service);
 router.use('/review', review);

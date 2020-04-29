@@ -1,6 +1,6 @@
+// Category model - store category of services
 var mongoose = require('mongoose');
 
-// Category model
 var CategorySchema = mongoose.Schema({
     name: {type: String, required: true, unique: true}
 });

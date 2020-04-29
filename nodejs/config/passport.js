@@ -1,3 +1,4 @@
+// Configuration for authentication
 const express = require('express');
 const mongoose = require('mongoose');
 const session = require('express-session');
@@ -7,6 +8,8 @@ var LocalStrategy = require('passport-local').Strategy;
 var Customer = mongoose.model('Customer');
 var Service = mongoose.model('Service');
 
+
+// Authentication strategy for customer
 passport.use('local-customer', new LocalStrategy(
   function(username, password, cb) {
     Customer.findOne({ username: username })
@@ -30,6 +33,8 @@ passport.use('local-customer', new LocalStrategy(
     });
 }));
 
+
+// Authentication strategy for service
 passport.use('local-service', new LocalStrategy(
   function(username, password, cb) {
     Service.findOne({ username: username })
@@ -53,6 +58,8 @@ passport.use('local-service', new LocalStrategy(
     });
 }));
 
+
+// Storing and retrieveing session from client
 passport.serializeUser(function(user, cb) {
     cb(null, {
       id: user.id,

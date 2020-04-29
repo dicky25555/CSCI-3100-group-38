@@ -1,6 +1,6 @@
+// Chat model - store chat line
 var mongoose = require('mongoose');
 
-// Chat model
 var ChatSchema = mongoose.Schema({
     customer_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Customer'},
     service_id: {type: mongoose.Schema.Types.ObjectId, ref: 'Service'},

@@ -1,5 +1,5 @@
-// Completed!
-// Assume no updating chat (obviously)
+// Chat API
+// Handles all requests that needed to interact with Chats between services and customer
 var express = require('express');
 var mongoose = require('mongoose');
 var router = express.Router();
@@ -7,11 +7,13 @@ var auth = require('../auth');
 
 var Chat = mongoose.model('Chat');
 
+// Send a new chat API - body: {customer_id, content} or {service_id, content}
 router.post('/', auth.required, function(req, res)
 {
   var user_id = req.user.id;
   var valid = true;
 
+  // Check if the authenticated user is customer or service
   if (req.user.status == 'C')
   {
     add_params = {customer_id: user_id, origin: 'C'};
@@ -55,6 +57,8 @@ router.post('/', auth.required, function(req, res)
     res.send("Post parameters undefined");
 });
 
+/* Delete a chat API - params: /chat_id/
+   Delete the chat with chat id that user has */
 router.delete('/:id', auth.required, function(req, res)
 {
   var user_id = req.user.id;
@@ -62,6 +66,7 @@ router.delete('/:id', auth.required, function(req, res)
   if (req.params["id"] !== undefined)
     search_params = {_id: req.params["id"]};
 
+  // Check if the authenticated user is customer or service
   if (req.user.status == 'C')
     search_params.customer_id = user_id;
   else if (req.user.status == 'S')
@@ -94,10 +99,15 @@ router.delete('/:id', auth.required, function(req, res)
     res.send("Cannot Remove! Wrong Body!");
 });
 
+/* Chat retrieval API
+   - query: {dest_id}
+   - returns [{customer_id, service_id, content, origin, date_created}, ...]
+   - sorting is assumed to be ascending in time (like a chat flow)           */
 router.get('/', auth.required, function(req, res)
 {
   var user_id = req.user.id;
 
+  // Check if the authenticated user is customer or service
   if (req.user.status == 'C')
   {
     search_params = {customer_id: user_id};
