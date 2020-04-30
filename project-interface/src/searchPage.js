@@ -89,7 +89,7 @@ class searchPage extends React.Component{
     componentDidMount(){
         const {data} = this.props.location;
         
-        console.log(data)
+        console.log(data)		//getting correct Service Provider data
         if(data){
             var parsedData = JSON.parse(data)
             console.log(parsedData.serviceName)
@@ -128,6 +128,7 @@ class searchPage extends React.Component{
             )  
         }      
 
+		// Read whether customer users are signed in
 		fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -143,6 +144,7 @@ class searchPage extends React.Component{
 
             )
         )
+		// Read whether SP users are signed in
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -185,7 +187,7 @@ class searchPage extends React.Component{
         let servicesArray = [];
         for (let i = 0; i < this.state.serviceList.length; i++){
 
-				servicesArray.push(
+				servicesArray.push(				//push read data to List for showing later.
 					<div>
 					<tr>
 		   
@@ -211,7 +213,7 @@ class searchPage extends React.Component{
 			
         }
 		
-        if (this.state.signedData){
+        if (this.state.signedData){					//Check which NavBar the site should show.
             navigationBar.push(
                 <div>
                     <NavbarSigned/>
@@ -232,7 +234,7 @@ class searchPage extends React.Component{
             )
         }
 
-        return(
+        return(									//return searched results with CSS.
             <div>
                 <div>
                     {navigationBar}

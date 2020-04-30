@@ -22,6 +22,7 @@ class serviceCategories extends Component{
     }
 
     componentDidMount(){
+		// Read categories data from mongoose.
         fetch("http://localhost:9000/api/category")
         .then(
             res => res.json().then( data => ({
@@ -35,6 +36,7 @@ class serviceCategories extends Component{
             })
         )
 
+		// Read whether customer users are signed in
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -50,6 +52,7 @@ class serviceCategories extends Component{
 
             )
         )
+		// Read whether SP users are signed in
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -78,7 +81,7 @@ class serviceCategories extends Component{
     render(){
         var categoriesArray = [];
         var navigationBar = [];
-        for(let i=0; i < this.state.categoriesList.length; i++){
+        for(let i=0; i < this.state.categoriesList.length; i++){				//pushing searched categories services to the List for further showing.
             if(i%2 == 0){
                 categoriesArray.push(
                     <div>
@@ -101,7 +104,7 @@ class serviceCategories extends Component{
                 );
             }
         }
-        if (this.state.signedData){
+        if (this.state.signedData){							//Check which NavBar the site should show.
             navigationBar.push(
                 <div>
                     <NavbarSigned/>
@@ -122,7 +125,7 @@ class serviceCategories extends Component{
                 </div>
             )
         }
-        return(
+        return												//Returning service according to Categories with CSS.
             <div>
                 <div>
                     {navigationBar}

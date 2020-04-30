@@ -19,6 +19,7 @@ class signup extends React.Component {
         };
     }
 
+	//Confirm sign up after validate.
     sendData(data){
         fetch("http://localhost:9000/api/customer/signup", {
             method: 'POST',
@@ -30,6 +31,7 @@ class signup extends React.Component {
             .catch(err => err);
     }
 
+	//Handling changes
     handleChange = (e) =>{
         this.setState({
             [e.target.name]: e.target.value
@@ -37,6 +39,7 @@ class signup extends React.Component {
     }
 
 
+	//Validate sign up after onClick
     validateSignUp(){
         var inputFirstName = document.getElementById("fname");
         var inputLastName = document.getElementById("lname");
@@ -56,6 +59,8 @@ class signup extends React.Component {
         }
     }
 
+
+	//Handling sign up after onClick
     onSubmit = (e) =>{
         e.preventDefault();
         this.validateSignUp();
@@ -76,6 +81,7 @@ class signup extends React.Component {
     }
 
     componentDidMount(){
+		// Read whether customer users are signed in
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -91,6 +97,7 @@ class signup extends React.Component {
 
             )
         )
+		// Read whether SP users are signed in
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -108,7 +115,7 @@ class signup extends React.Component {
         )
     }
     render(){
-        if(!this.state.signedData && !this.state.signedDataSP){
+        if(!this.state.signedData && !this.state.signedDataSP){					//Confirming sign up are only for NON-SIGNED user.
             return (
                 <div>
                     <Navbar/>

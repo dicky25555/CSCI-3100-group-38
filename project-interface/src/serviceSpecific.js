@@ -18,18 +18,21 @@ class serviceSpecific extends React.Component{
         }
     }
 
+	// Handling onChange.
     handleChange = (e) =>{
         this.setState({
             [e.target.name]: e.target.value
         })
     }
 
+	//Redirection.
     returnPage = (e) => {
         this.props.history.push({
             pathname: "/serviceCategories",
         })
     }
 
+	//Redirection.
     returnPrevious = (e, category) => {
         this.props.history.push({
             pathname: "/categoriesList",
@@ -38,6 +41,7 @@ class serviceSpecific extends React.Component{
         })
     }
 
+	//Submission
     submitBookmark(data){
         fetch("http://localhost:9000/api/bookmark/", {
             credentials: 'include',
@@ -51,6 +55,7 @@ class serviceSpecific extends React.Component{
         )
     }
 
+	//OnClick for Bookmark.
     bookmarkService = (e, serviceId) => {
         if(this.state.signedData){
             console.log(this.state.signedData._id)
@@ -68,6 +73,8 @@ class serviceSpecific extends React.Component{
         }
     }
 
+
+	//OnClick for Posting review by adding review to Mongoose.
     postReview = (e, serviceId) => {
         e.preventDefault();
         console.log(this.state.reviewText);
@@ -114,6 +121,7 @@ class serviceSpecific extends React.Component{
     }
 
     componentDidMount(){
+	// Read whether customer users are signed in
         fetch("http://localhost:9000/api/customer/profile", {
                     credentials: 'include'})
                     .then(
@@ -127,6 +135,7 @@ class serviceSpecific extends React.Component{
                             })
                         })
                     )
+		// Read whether SP users are signed in
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -143,7 +152,8 @@ class serviceSpecific extends React.Component{
             )
         )
         const { data } = this.props.location;
-        
+		
+        //Getting Review for further showing.
         if(data){
             fetch("http://localhost:9000/api/review?service_id=" + data._id + "&limit=10&page=1",{
                 credentials: 'include',
@@ -181,7 +191,7 @@ class serviceSpecific extends React.Component{
         const { data } = this.props.location;
         if(data){
             var navigationBar = [];
-            if (this.state.signedData){
+            if (this.state.signedData){								//Check which NavBar the site should show.
                 navigationBar.push(
                     <div>
                         <NavbarSigned/>
@@ -202,6 +212,7 @@ class serviceSpecific extends React.Component{
                 )
             }
 
+			//PUSH read data to review List.
             for(let count = 0; count < this.state.reviewData.length; count++){
                 var reviewerName = ''
                 if(this.state.reviewData[count].customer_id){
@@ -235,7 +246,7 @@ class serviceSpecific extends React.Component{
                     </div>
                 )
             }
-            return(
+            return(											//return services with review with CSS.
                 <div>
                     <div>
                         {navigationBar}

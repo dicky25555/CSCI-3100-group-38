@@ -34,6 +34,7 @@ class chatBox extends React.Component{
     }
 
     componentDidMount(){
+		// Read whether customer users are signed in
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -49,6 +50,7 @@ class chatBox extends React.Component{
 
             )
         )
+		// Read whether SP users are signed in
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -72,7 +74,7 @@ class chatBox extends React.Component{
                 dest_id : data._id
             }
             var chatDataJSON = JSON.stringify(chatData);
-            fetch("http://localhost:9000/api/chat?dest_id=" + data._id, {
+            fetch("http://localhost:9000/api/chat?dest_id=" + data._id, {		//getting chatbox data from DB.
                 credentials: 'include'})
             .then(
                 res => res.json().then( data => ({
@@ -182,12 +184,12 @@ class chatBox extends React.Component{
         if(this.state.signedData){
             navigationBar.push(
                 <div>
-                    <NavbarSigned/>
+                    <NavbarSigned/>						//Showing SignedNavBar for SIGNED-USER only.
                 </div>
             )
             console.log(this.state.previousChat);
                 let chatBoxArray = [];
-                for (let i = 0; i < this.state.previousChat.length; i++){
+                for (let i = 0; i < this.state.previousChat.length; i++){		//pushing read chat data into List for showing.
                     if(this.state.previousChat[i].origin === "C"){
                     chatBoxArray.push(
                         <div>
@@ -241,7 +243,7 @@ class chatBox extends React.Component{
                 }
                 
 
-                return(
+                return(					//return chatBox with CSS.
                     <div>
                         {navigationBar}
                         <div class="row" style={{paddingTop:"20px"}}>

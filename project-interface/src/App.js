@@ -25,6 +25,7 @@ class App extends Component {
         })
     }
 
+	// onsubmit handling and -> to searchPage
     onSubmit = (e) =>{
         e.preventDefault();
         const signUpForm = {
@@ -40,7 +41,9 @@ class App extends Component {
         })
     }
 
+
     componentDidMount(){
+		// Read whether customer users are signed in
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -56,6 +59,8 @@ class App extends Component {
 
             )
         )
+		
+		// Read whether SP users are signed in
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -72,7 +77,7 @@ class App extends Component {
             )
         )
     }
-
+	// this return the first main page of the site.
     render(){
 
         const { data } = this.props.location;
@@ -84,7 +89,7 @@ class App extends Component {
         }
         console.log(this.state.signedData);
         var navigationBar = [];
-        if (!this.state.signedData && !this.state.signedDataSP){
+        if (!this.state.signedData && !this.state.signedDataSP){		//Check which NavBar the site should show.
             navigationBar.push(
                 <div>
                     <Navbar/>
@@ -105,7 +110,7 @@ class App extends Component {
                 </div>
             )
         }
-        return (
+        return (		//return the main page with CSS.
             <div>
                 <div>
                     {navigationBar}

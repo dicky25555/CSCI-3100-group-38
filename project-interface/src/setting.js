@@ -53,6 +53,7 @@ class setting extends React.Component{
     }
 	
     componentDidMount(){
+		// Read whether SP users are signed in
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -68,6 +69,7 @@ class setting extends React.Component{
 
             )
         )
+		// Read whether customer users are signed in
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -86,6 +88,8 @@ class setting extends React.Component{
         
     }
 
+
+	//Checking correct info for input
     validateChangesCustomer(value){
         var inputFirstName = document.getElementById("fname");
         var inputLastName = document.getElementById("lname");
@@ -108,7 +112,6 @@ class setting extends React.Component{
 		}
     }
 	
-
     onSubmitCustomer = (e, value) =>{
         e.preventDefault();
         this.validateChangesCustomer(value);
@@ -163,9 +166,12 @@ class setting extends React.Component{
         }
     }
     
+	
     onSubmit = (e, value) =>{
         e.preventDefault();
         this.validateChangesCustomer(value);
+		
+		//Confirming + Handling onSubmit on chaning info for SP user.
         if(this.state.signedDataSP){
             if(value == 1){
                 const signUpForm = {
@@ -209,6 +215,7 @@ class setting extends React.Component{
             }
         }
         
+		//Confirming + Handling onSubmit on changing info for Customer.
         else if(this.state.signedData){
 			if(value == 1){
                 const signUpForm = {
@@ -258,6 +265,8 @@ class setting extends React.Component{
         }
     }
 
+
+	//Handling login for customer + redirection
     logOutCustomer = (e) =>{
         fetch("http://localhost:9000/api/customer/logout",{
             method: 'POST',
@@ -268,6 +277,8 @@ class setting extends React.Component{
                 })
             })
     }
+	
+	//Handling login for SP + redirection
     logOutService = (e) =>{
         fetch("http://localhost:9000/api/service/logout",{
             method: 'POST',
@@ -280,7 +291,7 @@ class setting extends React.Component{
     }
     render(){
         console.log(this.state.signedDataSP);
-        if(this.state.signedData){
+        if(this.state.signedData){										//return correct settings for customer users.
             return(
             
                 <div>
@@ -345,7 +356,7 @@ class setting extends React.Component{
             );
         } 
         else 
-        if (this.state.signedDataSP){
+        if (this.state.signedDataSP){										//return correct settings for SP users.
             return(
                 <div>
                     <NavbarSignedSP/>

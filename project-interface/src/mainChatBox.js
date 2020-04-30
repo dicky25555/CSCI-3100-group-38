@@ -23,13 +23,14 @@ class mainChatBox extends React.Component{
             previousChat: []
         }  
     } 
-    handleChange = (e) =>{
+    handleChange = (e) =>{				//handling onChange.
         this.setState({
             [e.target.name]: e.target.value
         })
     }
 
     componentDidMount(){
+		// Read whether customer users are signed in
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -45,6 +46,7 @@ class mainChatBox extends React.Component{
 
             )
         )
+		// Read whether SP users are signed in
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -61,6 +63,8 @@ class mainChatBox extends React.Component{
             )
         )
 
+
+		//Read main ChatBox data from mongoose.
         fetch("http://localhost:9000/api/chat/", {
                 credentials: 'include'})
             .then(
@@ -77,7 +81,8 @@ class mainChatBox extends React.Component{
                 )
             )
     }
-
+	
+	//Handling on submit after typing.
     onSubmit = (e) =>{
         e.preventDefault();
         const signUpForm = {
@@ -98,16 +103,16 @@ class mainChatBox extends React.Component{
             data: data
         })
     }
-
+	//For debug.
     clickService = (e, value)=>{
         console.log(value)
     }
-
+	
     //Test out list of services
     render(){
 
         let customerArray = [];
-        if(this.state.signedData){
+        if(this.state.signedData){							//return correct DIV for customer users with CSS.
             for (let i = 0; i < this.state.previousChat.length; i++){
                 customerArray.push(
                     //customer boxes
@@ -149,7 +154,7 @@ class mainChatBox extends React.Component{
                     <Buttombar/>
                 </div>
             );
-        } else if(this.state.signedDataSP){
+        } else if(this.state.signedDataSP){					//return correct DIV for SP users with CSS.
             for (let i = 0; i < this.state.previousChat.length; i++){
                 customerArray.push(
                     //customer boxes

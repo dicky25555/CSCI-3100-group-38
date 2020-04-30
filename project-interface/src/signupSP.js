@@ -32,6 +32,7 @@ class signupSP extends React.Component{
         };
     }
 
+	//Confirm sign up after validate.
     sendData(data){
         fetch("http://localhost:9000/api/service/signup", {
             method: 'POST',
@@ -46,7 +47,8 @@ class signupSP extends React.Component{
         
     }
 
-    componentDidMount(){
+    componentDidMount
+		// Read whether customer users are signed in
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -62,6 +64,7 @@ class signupSP extends React.Component{
 
             )
         )
+		// Read whether SP users are signed in
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -77,6 +80,8 @@ class signupSP extends React.Component{
 
             )
         )
+		
+		// Read category data for signup usage.
         fetch("http://localhost:9000/api/category")
         .then(
             res => res.json().then( data => ({
@@ -91,11 +96,14 @@ class signupSP extends React.Component{
         )
     }
 
+	//Handling changes.
     handleChange = (e) =>{
         this.setState({
             [e.target.name]: e.target.value
         })
     }
+	
+	//Handling sign up after onClick
     onSubmitFirst = (e) =>{
         //f.preventDefault();
         console.log("Test")
@@ -105,6 +113,8 @@ class signupSP extends React.Component{
     }
 
 
+
+	//Validate sign up after onClick
     validateSignUp(){
         var inputFirstName = document.getElementById("fname");
         var inputLastName = document.getElementById("lname");
@@ -135,6 +145,7 @@ class signupSP extends React.Component{
         }
     }
 
+	//Handling sign up after onClick.
     onFinish = (e) =>{
         e.preventDefault();
         this.validateSignUp();
@@ -176,7 +187,7 @@ class signupSP extends React.Component{
             
             )
         }
-        if(!this.state.signedData && !this.state.signedDataSP){
+        if(!this.state.signedData && !this.state.signedDataSP){				//Confirming sign up are only for NON-SIGNED user.
 
             return(
 

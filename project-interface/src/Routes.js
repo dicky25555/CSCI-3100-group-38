@@ -1,3 +1,5 @@
+//Route file to check which site are the react js redirecting to
+
 import React, {Component} from "react";
 import {Router, Switch, Route} from "react-router-dom";
 

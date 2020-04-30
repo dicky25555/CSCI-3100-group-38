@@ -27,6 +27,7 @@ class categoriesList extends Component{
     componentDidMount(){
         const {data} = this.props.location;
         if(data){
+			// Read categories data from mongoose
             fetch("http://localhost:9000/api/service?category_id=" + data._id +"&limit=10&page=1")
                 .then(
                     res => res.json().then( data => ({
@@ -39,39 +40,41 @@ class categoriesList extends Component{
                         })
                     })
                 )
-                fetch("http://localhost:9000/api/customer/profile", {
-                    credentials: 'include'})
-                    .then(
-                        res => res.json().then( data => ({
-                            data: data,
-                            status: res.status
-                        })).then(res => {
-                            console.log(res.stats, res.data);
-                            this.setState({
-                                signedData: res.data
-                            })
-                        })
-                    )
-                fetch("http://localhost:9000/api/service/profile", {
-                    credentials: 'include'})
-                    .then(
-                        res => res.json().then( data => ({
-                            data: data,
-                            status: res.status
-                        })).then(res => {
-                            console.log(res.stats, res.data);
-                            this.setState({
-                                signedDataSP: res.data
-                            })
-                        }
+			// Read whether customer users are signed in
+			fetch("http://localhost:9000/api/customer/profile", {
+				credentials: 'include'})
+				.then(
+					res => res.json().then( data => ({
+						data: data,
+						status: res.status
+					})).then(res => {
+						console.log(res.stats, res.data);
+						this.setState({
+							signedData: res.data
+						})
+					})
+				)
+			// Read whether SP users are signed in
+			fetch("http://localhost:9000/api/service/profile", {
+				credentials: 'include'})
+				.then(
+					res => res.json().then( data => ({
+						data: data,
+						status: res.status
+					})).then(res => {
+						console.log(res.stats, res.data);
+						this.setState({
+							signedDataSP: res.data
+						})
+					}
 
-                        )
-                    )
-                
+					)
+				)
+			
         }
 
     }
-
+	// Redirect to -< serviceSpecific
     goesSpecificService = (e, companyData) =>{
         e.preventDefault();
         this.props.history.push({
@@ -88,7 +91,7 @@ class categoriesList extends Component{
             var categoryName = data.name; 
 
             console.log(this.state.apiResponse.name)
-            for(let count = 0; count<this.state.apiResponse.length; count++){
+            for(let count = 0; count<this.state.apiResponse.length; count++){			//Adding Categories data into the List for output.
                 listOfCompanies.push(
                     <div>
                         <tr>
@@ -112,7 +115,7 @@ class categoriesList extends Component{
         }else{
             this.returnPage();
         }
-        if (this.state.signedData){
+        if (this.state.signedData){						//Check which NavBar the site should show.
             navigationBar.push(
                 <div>
                     <NavbarSigned/>
@@ -132,7 +135,7 @@ class categoriesList extends Component{
                 </div>
             )
         }
-        return(
+        return(											//Return Categories List with CSS.
             <div>
                 <div>
                     {navigationBar}

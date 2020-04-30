@@ -23,6 +23,7 @@ class Login extends React.Component {
         }
     }
     componentDidMount(){
+		// Read whether customer users are signed in
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -38,6 +39,7 @@ class Login extends React.Component {
 
             )
         )
+		// Read whether SP users are signed in
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -55,7 +57,7 @@ class Login extends React.Component {
         )
     }
 
-    sendData(data){
+    sendData(data){								//Checking Login successful or not by checking with mongoose.
         fetch("http://localhost:9000/api/customer/login", {
             method: 'POST',
             credentials: 'include',
@@ -93,6 +95,7 @@ class Login extends React.Component {
             [e.target.name]: e.target.value
         })
     }
+	// Handling on submit clicking.
     onSubmit = (e) =>{
         e.preventDefault();
         const signUpForm = {
@@ -109,10 +112,10 @@ class Login extends React.Component {
 
 
     render(){
-        if(!this.state.signedData && !this.state.signedDataSP){
+        if(!this.state.signedData && !this.state.signedDataSP){						//To confirm unsigned-users ONLY
 
         
-            return (
+            return (																//Returning sign in box with CSS.
                 <div>
                     <Navbar/>
                     <div class="row">
