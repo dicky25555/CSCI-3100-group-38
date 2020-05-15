@@ -125,7 +125,7 @@ class serviceCategories extends Component{
                 </div>
             )
         }
-        return												//Returning service according to Categories with CSS.
+        return(												//Returning service according to Categories with CSS.
             <div>
                 <div>
                     {navigationBar}

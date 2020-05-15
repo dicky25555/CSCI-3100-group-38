@@ -47,10 +47,10 @@ class signupSP extends React.Component{
         
     }
 
-    componentDidMount
+    componentDidMount(){
 		// Read whether customer users are signed in
         fetch("http://localhost:9000/api/customer/profile", {
-        credentials: 'include'})
+		credentials: 'include'})
         .then(
             res => res.json().then( data => ({
                 data: data,
