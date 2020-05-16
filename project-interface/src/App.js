@@ -7,6 +7,8 @@ import Buttombar from './components/Buttombar';
 import './components/font/Montserrat-Regular.ttf';
 import 'bootstrap/dist/css/bootstrap.css';
 
+
+//The main page of the application 
 class App extends Component {
     constructor(props){
         super(props);
@@ -19,13 +21,14 @@ class App extends Component {
         }
     }
 
+    //Handle changes in the searchbox
     handleChange = (e) =>{
         this.setState({
             [e.target.name]: e.target.value
         })
     }
 
-	// onsubmit handling and -> to searchPage
+    //Submit the search parameter to thethe searchPage for the result 
     onSubmit = (e) =>{
         e.preventDefault();
         const signUpForm = {
@@ -41,9 +44,10 @@ class App extends Component {
         })
     }
 
-
+    //Check whether the page has been logged in by customer or service provider
     componentDidMount(){
-		// Read whether customer users are signed in
+        //Check whether the page is logged in as customer
+        //If it has been logged in, the signedData will contain the customer's data
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -59,8 +63,9 @@ class App extends Component {
 
             )
         )
-		
-		// Read whether SP users are signed in
+        
+        //Check whether the page is logged in as service provider
+        //If it has been logged in, the signedDataSP will contain the service provider's data
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -77,7 +82,7 @@ class App extends Component {
             )
         )
     }
-	// this return the first main page of the site.
+
     render(){
 
         const { data } = this.props.location;
@@ -89,13 +94,16 @@ class App extends Component {
         }
         console.log(this.state.signedData);
         var navigationBar = [];
-        if (!this.state.signedData && !this.state.signedDataSP){		//Check which NavBar the site should show.
+        
+        //Handle the heading of the main page, if it is not signed in, it will show the default heading
+        if (!this.state.signedData && !this.state.signedDataSP){
             navigationBar.push(
                 <div>
                     <Navbar/>
                 </div>
             )
         }
+        //If the page is logged in as service provider, the page will show the heading for service provider 
         else if(this.state.signedDataSP){
             navigationBar.push(
                 <div>
@@ -103,6 +111,7 @@ class App extends Component {
                 </div>
             )
         }
+        // if the page is logged in as customer, the page will show the heading for the customer
         else{
             navigationBar.push(
                 <div>
@@ -110,7 +119,7 @@ class App extends Component {
                 </div>
             )
         }
-        return (		//return the main page with CSS.
+        return (
             <div>
                 <div>
                     {navigationBar}

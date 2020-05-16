@@ -22,8 +22,9 @@ class bookmarkPage extends React.Component{
             bookmarkList: []
         }  
     } 
-	
-	// update Bookmark Pages after confirm + update mongoose DB
+
+    //Remove the bookmarked service provider (if you are signed in as customer)
+    // After removing the bookmark page, the page will return the main page
     removeBookmark = (e, id) => {
         fetch("http://localhost:9000/api/bookmark/" + id, {
             credentials: 'include',
@@ -38,8 +39,9 @@ class bookmarkPage extends React.Component{
         )
     }
 
+    
     componentDidMount(){
-		// Read whether customer users are signed in
+        //Check whether the page is signed in as customer  
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -56,7 +58,8 @@ class bookmarkPage extends React.Component{
             )
         )
         console.log(this.state.signedData)
-		// Read Bookmark data from Mongoose DB
+
+        //Get bookmark list of the customer
         fetch("http://localhost:9000/api/bookmark?customer_id=" + this.state.signedData._id + "&limit=10&page=1",{
             credentials: 'include',
             method: 'GET',
@@ -86,7 +89,7 @@ class bookmarkPage extends React.Component{
         console.log(this.state.bookmarkList)
         if(this.state.signedData){
             if(this.state.bookmarkList){
-            for (let i = 0; i < this.state.bookmarkList.length; i++){		//add up bookmark list from read data.
+            for (let i = 0; i < this.state.bookmarkList.length; i++){
                 bookmarkArray.push(
                     <div>
                         <tr>
@@ -115,7 +118,7 @@ class bookmarkPage extends React.Component{
 
             return(
                 <div>
-                    <NavbarSigned/>						//Show signed NavBar for SIGNED-IN user only.
+                    <NavbarSigned/>
                     <div class="row" style={{borderBottom:"1px solid #ddd"}}>
                         <div class="col-md-1"></div>
                         <div class="col-md-10">

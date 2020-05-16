@@ -18,21 +18,20 @@ class serviceSpecific extends React.Component{
         }
     }
 
-	// Handling onChange.
     handleChange = (e) =>{
         this.setState({
             [e.target.name]: e.target.value
         })
     }
 
-	//Redirection.
+    //Return to serviceCategories page
     returnPage = (e) => {
         this.props.history.push({
             pathname: "/serviceCategories",
         })
     }
 
-	//Redirection.
+    //Return to categoriesList page
     returnPrevious = (e, category) => {
         this.props.history.push({
             pathname: "/categoriesList",
@@ -41,7 +40,7 @@ class serviceSpecific extends React.Component{
         })
     }
 
-	//Submission
+    //Submit the bookmarked company to the backend
     submitBookmark(data){
         fetch("http://localhost:9000/api/bookmark/", {
             credentials: 'include',
@@ -55,7 +54,7 @@ class serviceSpecific extends React.Component{
         )
     }
 
-	//OnClick for Bookmark.
+    //Bookmark the service and it will pop up in the bookmarkPage
     bookmarkService = (e, serviceId) => {
         if(this.state.signedData){
             console.log(this.state.signedData._id)
@@ -73,8 +72,7 @@ class serviceSpecific extends React.Component{
         }
     }
 
-
-	//OnClick for Posting review by adding review to Mongoose.
+    //Post review about the service provider 
     postReview = (e, serviceId) => {
         e.preventDefault();
         console.log(this.state.reviewText);
@@ -121,7 +119,9 @@ class serviceSpecific extends React.Component{
     }
 
     componentDidMount(){
-	// Read whether customer users are signed in
+        //Check whether the page is logged in as customer
+        //If it has been logged in, the signedData will contain the customer's data
+        
         fetch("http://localhost:9000/api/customer/profile", {
                     credentials: 'include'})
                     .then(
@@ -135,7 +135,10 @@ class serviceSpecific extends React.Component{
                             })
                         })
                     )
-		// Read whether SP users are signed in
+        
+        //Check whether the page is logged in as service provider
+        //If it has been logged in, the signedDataSP will contain the service provider's data
+        
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -152,8 +155,9 @@ class serviceSpecific extends React.Component{
             )
         )
         const { data } = this.props.location;
-		
-        //Getting Review for further showing.
+        
+        //Get the data from the selected company from the previous page
+        //If there is data/ selected category, the data will get the details of company from the backend 
         if(data){
             fetch("http://localhost:9000/api/review?service_id=" + data._id + "&limit=10&page=1",{
                 credentials: 'include',
@@ -175,6 +179,7 @@ class serviceSpecific extends React.Component{
         }
     }
 
+    //If the chat is selected, it will go to the chat page to chat with the service provider
     goesToChat = (e, data)=>{
         if(this.state.signedData){
         this.props.history.push({
@@ -191,7 +196,7 @@ class serviceSpecific extends React.Component{
         const { data } = this.props.location;
         if(data){
             var navigationBar = [];
-            if (this.state.signedData){								//Check which NavBar the site should show.
+            if (this.state.signedData){
                 navigationBar.push(
                     <div>
                         <NavbarSigned/>
@@ -212,7 +217,6 @@ class serviceSpecific extends React.Component{
                 )
             }
 
-			//PUSH read data to review List.
             for(let count = 0; count < this.state.reviewData.length; count++){
                 var reviewerName = ''
                 if(this.state.reviewData[count].customer_id){
@@ -246,7 +250,7 @@ class serviceSpecific extends React.Component{
                     </div>
                 )
             }
-            return(											//return services with review with CSS.
+            return(
                 <div>
                     <div>
                         {navigationBar}

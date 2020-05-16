@@ -23,11 +23,13 @@ class categoriesList extends Component{
         })
     }
 
+    //Check whether the page has been logged in by customer or service provider
     
     componentDidMount(){
         const {data} = this.props.location;
+
+        //Get the data from serviceCategories which contain the data regarding the selected category
         if(data){
-			// Read categories data from mongoose
             fetch("http://localhost:9000/api/service?category_id=" + data._id +"&limit=10&page=1")
                 .then(
                     res => res.json().then( data => ({
@@ -40,41 +42,47 @@ class categoriesList extends Component{
                         })
                     })
                 )
-			// Read whether customer users are signed in
-			fetch("http://localhost:9000/api/customer/profile", {
-				credentials: 'include'})
-				.then(
-					res => res.json().then( data => ({
-						data: data,
-						status: res.status
-					})).then(res => {
-						console.log(res.stats, res.data);
-						this.setState({
-							signedData: res.data
-						})
-					})
-				)
-			// Read whether SP users are signed in
-			fetch("http://localhost:9000/api/service/profile", {
-				credentials: 'include'})
-				.then(
-					res => res.json().then( data => ({
-						data: data,
-						status: res.status
-					})).then(res => {
-						console.log(res.stats, res.data);
-						this.setState({
-							signedDataSP: res.data
-						})
-					}
+                //Check whether the page is logged in as customer
+                //If it has been logged in, the signedData will contain the customer's data
+        
+                fetch("http://localhost:9000/api/customer/profile", {
+                    credentials: 'include'})
+                    .then(
+                        res => res.json().then( data => ({
+                            data: data,
+                            status: res.status
+                        })).then(res => {
+                            console.log(res.stats, res.data);
+                            this.setState({
+                                signedData: res.data
+                            })
+                        })
+                    )
 
-					)
-				)
-			
+                //Check whether the page is logged in as service provider
+                //If it has been logged in, the signedDataSP will contain the service provider's data
+        
+                fetch("http://localhost:9000/api/service/profile", {
+                    credentials: 'include'})
+                    .then(
+                        res => res.json().then( data => ({
+                            data: data,
+                            status: res.status
+                        })).then(res => {
+                            console.log(res.stats, res.data);
+                            this.setState({
+                                signedDataSP: res.data
+                            })
+                        }
+
+                        )
+                    )
+                
         }
 
     }
-	// Redirect to -< serviceSpecific
+
+    //Push to the serviceSpecific page if the company is selected
     goesSpecificService = (e, companyData) =>{
         e.preventDefault();
         this.props.history.push({
@@ -82,6 +90,7 @@ class categoriesList extends Component{
             data: companyData
         })
     }
+
     render(){
         const { data } = this.props.location;
         var listOfCompanies = [];
@@ -91,7 +100,8 @@ class categoriesList extends Component{
             var categoryName = data.name; 
 
             console.log(this.state.apiResponse.name)
-            for(let count = 0; count<this.state.apiResponse.length; count++){			//Adding Categories data into the List for output.
+            //Show all the companies based on category
+            for(let count = 0; count<this.state.apiResponse.length; count++){
                 listOfCompanies.push(
                     <div>
                         <tr>
@@ -115,7 +125,7 @@ class categoriesList extends Component{
         }else{
             this.returnPage();
         }
-        if (this.state.signedData){						//Check which NavBar the site should show.
+        if (this.state.signedData){
             navigationBar.push(
                 <div>
                     <NavbarSigned/>
@@ -135,7 +145,7 @@ class categoriesList extends Component{
                 </div>
             )
         }
-        return(											//Return Categories List with CSS.
+        return(
             <div>
                 <div>
                     {navigationBar}

@@ -23,7 +23,6 @@ class loginSP extends React.Component{
     }
 
     componentDidMount(){
-		// Read whether customer users are signed in
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -39,7 +38,6 @@ class loginSP extends React.Component{
 
             )
         )
-		// Read whether SP users are signed in
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -57,8 +55,8 @@ class loginSP extends React.Component{
         )
     }
 
-    sendData(data){								//Checking SP login data with Mongoose 
-        fetch("http://localhost:9000/api/service/login", {	
+    sendData(data){
+        fetch("http://localhost:9000/api/service/login", {
             method: 'POST',
             credentials: 'include',
             body: data,
@@ -95,8 +93,6 @@ class loginSP extends React.Component{
             [e.target.name]: e.target.value
         })
     }
-	
-	//Handling on submit after user confirm action.
     onSubmit = (e) =>{
         e.preventDefault();
         const signUpForm = {
@@ -110,8 +106,8 @@ class loginSP extends React.Component{
 
     }
     render(){
-        if(!this.state.signedData && !this.state.signedDataSP){				//To confirm unsigned user access only.
-            return(															//Return SP user sign up box with CSS.
+        if(!this.state.signedData && !this.state.signedDataSP){
+            return(
                 <div>
                     <Navbar/>
                     <div class="row">

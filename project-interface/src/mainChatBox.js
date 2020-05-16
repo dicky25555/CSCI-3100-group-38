@@ -23,14 +23,18 @@ class mainChatBox extends React.Component{
             previousChat: []
         }  
     } 
-    handleChange = (e) =>{				//handling onChange.
+    handleChange = (e) =>{
         this.setState({
             [e.target.name]: e.target.value
         })
     }
 
+    //Check whether the page has been logged in by customer or service provider
+
     componentDidMount(){
-		// Read whether customer users are signed in
+        //Check whether the page is logged in as customer
+        //If it has been logged in, the signedData will contain the customer's data
+        
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -46,7 +50,10 @@ class mainChatBox extends React.Component{
 
             )
         )
-		// Read whether SP users are signed in
+        
+        //Check whether the page is logged in as service provider
+        //If it has been logged in, the signedDataSP will contain the service provider's data
+        
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -62,9 +69,8 @@ class mainChatBox extends React.Component{
 
             )
         )
-
-
-		//Read main ChatBox data from mongoose.
+        
+        //Get the data of previous chats 
         fetch("http://localhost:9000/api/chat/", {
                 credentials: 'include'})
             .then(
@@ -81,8 +87,7 @@ class mainChatBox extends React.Component{
                 )
             )
     }
-	
-	//Handling on submit after typing.
+
     onSubmit = (e) =>{
         e.preventDefault();
         const signUpForm = {
@@ -97,25 +102,27 @@ class mainChatBox extends React.Component{
         })
     }
 
+    //Goes to chat page 
     goesChat = (e, data)=>{
         this.props.history.push({
             pathname:'/chatBox',
             data: data
         })
     }
-	//For debug.
+
     clickService = (e, value)=>{
         console.log(value)
     }
-	
-    //Test out list of services
+
+
     render(){
 
         let customerArray = [];
-        if(this.state.signedData){							//return correct DIV for customer users with CSS.
+        if(this.state.signedData){
+            //Get all the lists of chats
             for (let i = 0; i < this.state.previousChat.length; i++){
                 customerArray.push(
-                    //customer boxes
+
                     <div>
                         <tr>
                             <td style={{paddingTop:"50px"}}>
@@ -154,7 +161,7 @@ class mainChatBox extends React.Component{
                     <Buttombar/>
                 </div>
             );
-        } else if(this.state.signedDataSP){					//return correct DIV for SP users with CSS.
+        } else if(this.state.signedDataSP){
             for (let i = 0; i < this.state.previousChat.length; i++){
                 customerArray.push(
                     //customer boxes

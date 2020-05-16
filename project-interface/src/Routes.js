@@ -1,5 +1,3 @@
-//Route file to check which site are the react js redirecting to
-
 import React, {Component} from "react";
 import {Router, Switch, Route} from "react-router-dom";
 
@@ -18,6 +16,7 @@ import chatBox from './chatBox';
 import bookmarkPage from './bookmarkPage';
 import serviceSpecific from './serviceSpecific';
 
+//Controls the page transition based on url 
 export default class Routes extends Component{
     render(){
         return(

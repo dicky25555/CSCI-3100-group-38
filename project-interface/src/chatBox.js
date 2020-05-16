@@ -33,8 +33,12 @@ class chatBox extends React.Component{
         }
     }
 
+    //Check whether the page has been logged in by customer or service provider
+
     componentDidMount(){
-		// Read whether customer users are signed in
+        //Check whether the page is logged in as customer
+        //If it has been logged in, the signedData will contain the customer's data
+        
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -50,7 +54,10 @@ class chatBox extends React.Component{
 
             )
         )
-		// Read whether SP users are signed in
+
+        //Check whether the page is logged in as service provider
+        //If it has been logged in, the signedDataSP will contain the service provider's data
+        
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -68,13 +75,14 @@ class chatBox extends React.Component{
         )
         
         const {data} = this.props.location;
+        //Get the data from mainChatBox page 
         console.log(data)
         if(data){
             var chatData = {
                 dest_id : data._id
             }
             var chatDataJSON = JSON.stringify(chatData);
-            fetch("http://localhost:9000/api/chat?dest_id=" + data._id, {		//getting chatbox data from DB.
+            fetch("http://localhost:9000/api/chat?dest_id=" + data._id, {
                 credentials: 'include'})
             .then(
                 res => res.json().then( data => ({
@@ -102,7 +110,7 @@ class chatBox extends React.Component{
     }
 
 
-
+    //Send the chat to backend as customer
     sendChatCustomer = (e, serviceId, serviceData) => {
         const chatData = {
             customer_id: this.state.signedData._id,
@@ -140,6 +148,7 @@ class chatBox extends React.Component{
         
     }
 
+    //Send the chat as a service provider
     sendChatService = (e, customer_id, customerData) => {
         const chatData = {
             service_id: this.state.signedDataSP._id,
@@ -175,7 +184,7 @@ class chatBox extends React.Component{
             })   
         
     }
-    //Test out list of services
+
     render(){
         const {data} = this.props.location;
         console.log(data);
@@ -184,12 +193,13 @@ class chatBox extends React.Component{
         if(this.state.signedData){
             navigationBar.push(
                 <div>
-                    <NavbarSigned/>						//Showing SignedNavBar for SIGNED-USER only.
+                    <NavbarSigned/>
                 </div>
             )
             console.log(this.state.previousChat);
                 let chatBoxArray = [];
-                for (let i = 0; i < this.state.previousChat.length; i++){		//pushing read chat data into List for showing.
+                //Show the previous chats with the service provider/customer
+                for (let i = 0; i < this.state.previousChat.length; i++){
                     if(this.state.previousChat[i].origin === "C"){
                     chatBoxArray.push(
                         <div>
@@ -243,7 +253,7 @@ class chatBox extends React.Component{
                 }
                 
 
-                return(					//return chatBox with CSS.
+                return(
                     <div>
                         {navigationBar}
                         <div class="row" style={{paddingTop:"20px"}}>
@@ -459,6 +469,7 @@ class chatBox extends React.Component{
             )
         }
     }else{
+        //If the page is not signed in as customer or service provider , goes back to mainchatbox
         this.props.history.push({
             pathname: "/mainChatBox"
         })

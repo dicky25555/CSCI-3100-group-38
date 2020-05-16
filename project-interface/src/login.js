@@ -22,8 +22,11 @@ class Login extends React.Component {
             signedDataSP: ''
         }
     }
+
+    //Check whether the page has been logged in by customer or service provider
     componentDidMount(){
-		// Read whether customer users are signed in
+        //Check whether the page is logged in as customer
+        //If it has been logged in, the signedData will contain the customer's data
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -39,7 +42,10 @@ class Login extends React.Component {
 
             )
         )
-		// Read whether SP users are signed in
+
+        //Check whether the page is logged in as service provider
+        //If it has been logged in, the signedDataSP will contain the service provider's data
+        
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -57,7 +63,9 @@ class Login extends React.Component {
         )
     }
 
-    sendData(data){								//Checking Login successful or not by checking with mongoose.
+
+    //Submit the data the email and password to the backend to check whether they are valid
+    sendData(data){
         fetch("http://localhost:9000/api/customer/login", {
             method: 'POST',
             credentials: 'include',
@@ -68,6 +76,7 @@ class Login extends React.Component {
             console.log(response);
             this.state.apiResponse = response.ok;
             console.log(this.state.apiResponse);
+            //if it is not valid, there will be an alert 
             if(!response.ok){
                 alert('Your username or password is wrong');
             } else{
@@ -95,7 +104,8 @@ class Login extends React.Component {
             [e.target.name]: e.target.value
         })
     }
-	// Handling on submit clicking.
+
+    //Get the username and password 
     onSubmit = (e) =>{
         e.preventDefault();
         const signUpForm = {
@@ -112,10 +122,10 @@ class Login extends React.Component {
 
 
     render(){
-        if(!this.state.signedData && !this.state.signedDataSP){						//To confirm unsigned-users ONLY
+        if(!this.state.signedData && !this.state.signedDataSP){
 
         
-            return (																//Returning sign in box with CSS.
+            return (
                 <div>
                     <Navbar/>
                     <div class="row">

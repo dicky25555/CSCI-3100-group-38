@@ -24,12 +24,15 @@ class searchPage extends React.Component{
             serviceList: [],
         }  
     } 
+
+    //Handle the changes of input in the search box
     handleChange = (e) =>{
         this.setState({
             [e.target.name]: e.target.value
         })
     }
 
+    //Submit serviceName and location that is typed on the search box and update the searchPage
     onSubmit = (e) =>{
         e.preventDefault();
         const signUpForm = {
@@ -49,7 +52,7 @@ class searchPage extends React.Component{
        console.log(this.state.serviceList);
     }
 
-    
+    //get the data from the backend with the parameter from onSubmit and show the data
     getService(data){
         console.log(data.serviceName)
         this.setState({
@@ -74,22 +77,18 @@ class searchPage extends React.Component{
         console.log(this.state.serviceList)
         
     }
-    bookmarkService = (e, value)=>{
-        console.log(value)
-        e.preventDefault();
-        const getService = {
-            service_id: value,
-        }
-        var dataJSON = JSON.stringify(getService);
-        console.log(dataJSON);
-
-        this.sendData(dataJSON);
-    }
-
+    /*
+    Check whether the page is logged in as customer or service provider or none.
+    If the page is a result of transition from main page with parameter for searching,
+    it will query to the backend to get the data with the parameters
+    */
     componentDidMount(){
         const {data} = this.props.location;
         
-        console.log(data)		//getting correct Service Provider data
+        console.log(data)
+        
+        //If there is searchBox data being passed from the main page,
+        //it will query from the backend and show the data that is obtained
         if(data){
             var parsedData = JSON.parse(data)
             console.log(parsedData.serviceName)
@@ -128,7 +127,9 @@ class searchPage extends React.Component{
             )  
         }      
 
-		// Read whether customer users are signed in
+        //Check whether the page is logged in as customer
+        //If it has been logged in, the signedData will contain the customer's data
+        
 		fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -144,7 +145,10 @@ class searchPage extends React.Component{
 
             )
         )
-		// Read whether SP users are signed in
+        
+        //Check whether the page is logged in as service provider
+        //If it has been logged in, the signedDataSP will contain the service provider's data
+        
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -187,7 +191,7 @@ class searchPage extends React.Component{
         let servicesArray = [];
         for (let i = 0; i < this.state.serviceList.length; i++){
 
-				servicesArray.push(				//push read data to List for showing later.
+				servicesArray.push(
 					<div>
 					<tr>
 		   
@@ -213,7 +217,7 @@ class searchPage extends React.Component{
 			
         }
 		
-        if (this.state.signedData){					//Check which NavBar the site should show.
+        if (this.state.signedData){
             navigationBar.push(
                 <div>
                     <NavbarSigned/>
@@ -234,7 +238,7 @@ class searchPage extends React.Component{
             )
         }
 
-        return(									//return searched results with CSS.
+        return(
             <div>
                 <div>
                     {navigationBar}

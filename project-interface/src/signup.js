@@ -18,8 +18,9 @@ class signup extends React.Component {
             signedDataSP: ''
         };
     }
-
-	//Confirm sign up after validate.
+    /*
+    Send the data to the backend and get the response 
+    */
     sendData(data){
         fetch("http://localhost:9000/api/customer/signup", {
             method: 'POST',
@@ -31,15 +32,16 @@ class signup extends React.Component {
             .catch(err => err);
     }
 
-	//Handling changes
     handleChange = (e) =>{
         this.setState({
             [e.target.name]: e.target.value
         })
     }
 
-
-	//Validate sign up after onClick
+    /*Check whether the input is complete and valid
+    The required input will be first name, last name, email and password
+    The password should contain at least 8 digit
+    */
     validateSignUp(){
         var inputFirstName = document.getElementById("fname");
         var inputLastName = document.getElementById("lname");
@@ -59,8 +61,10 @@ class signup extends React.Component {
         }
     }
 
-
-	//Handling sign up after onClick
+    /*
+    Submit the customer's data to the backend.
+    If the input is validated, it will register to the backend and show successfull message
+    */ 
     onSubmit = (e) =>{
         e.preventDefault();
         this.validateSignUp();
@@ -81,7 +85,6 @@ class signup extends React.Component {
     }
 
     componentDidMount(){
-		// Read whether customer users are signed in
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -97,7 +100,6 @@ class signup extends React.Component {
 
             )
         )
-		// Read whether SP users are signed in
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -115,7 +117,8 @@ class signup extends React.Component {
         )
     }
     render(){
-        if(!this.state.signedData && !this.state.signedDataSP){					//Confirming sign up are only for NON-SIGNED user.
+        //If the page is logged in by the customer or service provider, it will return to the main page
+        if(!this.state.signedData && !this.state.signedDataSP){
             return (
                 <div>
                     <Navbar/>

@@ -51,9 +51,12 @@ class setting extends React.Component{
 			box.style.display = "none";
 		}
     }
-	
+
+    //Check whether the page has been logged in by customer or service provider    
     componentDidMount(){
-		// Read whether SP users are signed in
+        //Check whether the page is logged in as customer
+        //If it has been logged in, the signedData will contain the customer's data
+        
         fetch("http://localhost:9000/api/service/profile", {
         credentials: 'include'})
         .then(
@@ -69,7 +72,11 @@ class setting extends React.Component{
 
             )
         )
-		// Read whether customer users are signed in
+
+        
+        //Check whether the page is logged in as service provider
+        //If it has been logged in, the signedDataSP will contain the service provider's data
+        
         fetch("http://localhost:9000/api/customer/profile", {
         credentials: 'include'})
         .then(
@@ -88,8 +95,6 @@ class setting extends React.Component{
         
     }
 
-
-	//Checking correct info for input
     validateChangesCustomer(value){
         var inputFirstName = document.getElementById("fname");
         var inputLastName = document.getElementById("lname");
@@ -112,6 +117,7 @@ class setting extends React.Component{
 		}
     }
 	
+
     onSubmitCustomer = (e, value) =>{
         e.preventDefault();
         this.validateChangesCustomer(value);
@@ -166,13 +172,12 @@ class setting extends React.Component{
         }
     }
     
-	
     onSubmit = (e, value) =>{
         e.preventDefault();
         this.validateChangesCustomer(value);
-		
-		//Confirming + Handling onSubmit on chaning info for SP user.
+        //If the page is signed in as service provider 
         if(this.state.signedDataSP){
+            //Change company details
             if(value == 1){
                 const signUpForm = {
                     name : this.state.companyName ,
@@ -189,6 +194,7 @@ class setting extends React.Component{
                     window.location.reload()
                 )
             }else if(value == 2){
+                //Change service provider's password
                 const signUpForm = {
                     password: this.state.servicePassword
                 }
@@ -203,7 +209,7 @@ class setting extends React.Component{
                     window.location.reload()
                 )
             }else if(value == 3){
-
+                //Delete service provider's account
                 fetch("http://localhost:9000/api/service/", {
                     method: 'DELETE',
                     credentials: 'include',
@@ -215,9 +221,10 @@ class setting extends React.Component{
             }
         }
         
-		//Confirming + Handling onSubmit on changing info for Customer.
+        //If the page is signed in as customer
         else if(this.state.signedData){
 			if(value == 1){
+                //Change customer's name 
                 const signUpForm = {
                     name : this.state.firstname + " " + this.state.lastname,
                     details : "Newcomer"
@@ -233,6 +240,7 @@ class setting extends React.Component{
                     window.location.reload()
                 )
 			}else if(value == 2){
+                //Change customer's password
 				const signUpForm = {
                     password: this.state.customerPassword
                 }
@@ -247,6 +255,7 @@ class setting extends React.Component{
                     window.location.reload()
                 )
 			}else if(value == 3){
+                //Delete customer's account
 				const signUpForm = {
                     password: this.state.customerPassword
                 }
@@ -265,8 +274,7 @@ class setting extends React.Component{
         }
     }
 
-
-	//Handling login for customer + redirection
+    //Logout as customer and return to home page
     logOutCustomer = (e) =>{
         fetch("http://localhost:9000/api/customer/logout",{
             method: 'POST',
@@ -277,8 +285,8 @@ class setting extends React.Component{
                 })
             })
     }
-	
-	//Handling login for SP + redirection
+
+    //Logout as service provier and return to home page
     logOutService = (e) =>{
         fetch("http://localhost:9000/api/service/logout",{
             method: 'POST',
@@ -291,7 +299,9 @@ class setting extends React.Component{
     }
     render(){
         console.log(this.state.signedDataSP);
-        if(this.state.signedData){										//return correct settings for customer users.
+
+        //If the page is signed in as customer
+        if(this.state.signedData){
             return(
             
                 <div>
@@ -356,7 +366,8 @@ class setting extends React.Component{
             );
         } 
         else 
-        if (this.state.signedDataSP){										//return correct settings for SP users.
+        if (this.state.signedDataSP){
+            //If the page is signed is as service provider
             return(
                 <div>
                     <NavbarSignedSP/>
@@ -409,6 +420,8 @@ class setting extends React.Component{
                 </div>
             )
         }else {
+            // If the page is neither signed in as customer and service provider, 
+            // will return to home page immediately 
             return(
                 <div></div>
             )
